@@ -1,4 +1,4 @@
-# mcpsense
+# MCPSense
 
 **Security scanner for MCP servers. Think ESLint + Snyk, but for the Model Context Protocol.**
 
@@ -9,7 +9,7 @@
 
 ---
 
-## What is mcpsense?
+## What is MCPSense?
 
 mcpsense scans MCP (Model Context Protocol) servers for security vulnerabilities, spec compliance issues, and tool quality problems before they reach production. It catches prompt injection in tool descriptions, command injection risks, SSRF vectors, overly permissive resource access, and more.
 
@@ -92,7 +92,7 @@ mcpsense scan ./mcp.json --format json --output report.json
 
 ---
 
-## What mcpsense Checks
+## What MCPSense Checks
 
 ### Spec Compliance
 
@@ -276,4 +276,4 @@ To add a new check, implement the `checks.Check` interface and register it in `c
 
 MIT. See [LICENSE](LICENSE) for details.
 
-Built by Faizan.
+Built by Faizan with ❤️.
