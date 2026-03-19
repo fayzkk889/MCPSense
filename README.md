@@ -56,7 +56,7 @@ mcpsense scan ./my-mcp-server
 ## Install
 
 ```bash
-go install github.com/faizan/mcpsense@latest
+go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/faizan/mcpsense/releases).
