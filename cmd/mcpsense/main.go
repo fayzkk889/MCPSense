@@ -15,6 +15,8 @@ import (
 
 var version = "0.1.0"
 
+const configFile = ".mcpsenserc.json"
+
 func main() {
 	if err := rootCmd().Execute(); err != nil {
 		os.Exit(1)
@@ -56,10 +58,30 @@ Target auto-detection:
   *.json file       manifest mode
   directory         static analysis mode
   http:// or https: live mode (SSE endpoint)
-  command string    live mode (stdio process)`,
+  command string    live mode (stdio process)
+
+Configuration is loaded from .mcpsenserc.json in the current directory.
+CLI flags override config file values.`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			target := args[0]
+
+			// Load .mcpsenserc.json as a baseline; CLI flags override each field.
+			cfg := loadConfig()
+
+			// Resolve effective values: explicit CLI flag wins over config file default.
+			if !cmd.Flags().Changed("format") && cfg.Format != "" {
+				format = cfg.Format
+			}
+			if !cmd.Flags().Changed("severity") && cfg.MinSeverity != "" {
+				minSev = cfg.MinSeverity
+			}
+			if !cmd.Flags().Changed("checks") && len(cfg.CheckIDs) > 0 {
+				checkIDs = strings.Join(cfg.CheckIDs, ",")
+			}
+			if !cmd.Flags().Changed("exclude") && len(cfg.ExcludeIDs) > 0 {
+				excludeIDs = strings.Join(cfg.ExcludeIDs, ",")
+			}
 
 			// Parse scan mode.
 			scanMode := scanner.ModeAuto
@@ -80,12 +102,16 @@ Target auto-detection:
 			var onlyIDs, skipIDs []string
 			if checkIDs != "" {
 				for _, id := range strings.Split(checkIDs, ",") {
-					onlyIDs = append(onlyIDs, strings.TrimSpace(id))
+					if id := strings.TrimSpace(id); id != "" {
+						onlyIDs = append(onlyIDs, id)
+					}
 				}
 			}
 			if excludeIDs != "" {
 				for _, id := range strings.Split(excludeIDs, ",") {
-					skipIDs = append(skipIDs, strings.TrimSpace(id))
+					if id := strings.TrimSpace(id); id != "" {
+						skipIDs = append(skipIDs, id)
+					}
 				}
 			}
 
@@ -101,11 +127,12 @@ Target auto-detection:
 				return fmt.Errorf("scan failed: %w", err)
 			}
 
-			// Apply minimum severity filter.
-			if minSev != "" {
-				rep.Findings = filterBySeverity(rep.Findings, parseSeverity(minSev))
-				rep.CalculateScore()
-			}
+			// Apply minimum severity filter and recompute the score so it
+			// reflects only the findings that are actually reported.
+			minSeverity := parseSeverity(minSev)
+			rep.Findings = filterBySeverity(rep.Findings, minSeverity)
+			rep.Summary = summarize(rep.Findings)
+			rep.CalculateScore()
 
 			// Select output writer.
 			out := os.Stdout
@@ -119,13 +146,12 @@ Target auto-detection:
 			}
 
 			// Render report.
-			fmt_ := report.Format(strings.ToLower(format))
-			reporter := report.New(fmt_, noColor)
+			reporter := report.New(report.Format(strings.ToLower(format)), noColor)
 			if err := reporter.Write(rep, out); err != nil {
 				return fmt.Errorf("writing report: %w", err)
 			}
 
-			// Exit with non-zero if critical or high findings exist.
+			// Exit non-zero when critical or high findings remain after filtering.
 			for _, f := range rep.Findings {
 				if f.Severity == models.SeverityCritical || f.Severity == models.SeverityHigh {
 					os.Exit(1)
@@ -162,15 +188,18 @@ func initConfigCmd() *cobra.Command {
 		Use:   "init",
 		Short: "Generate a .mcpsenserc.json config file with default settings",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if _, err := os.Stat(configFile); err == nil {
+				return fmt.Errorf("%s already exists, remove it first if you want to regenerate", configFile)
+			}
 			cfg := defaultConfig()
 			data, err := json.MarshalIndent(cfg, "", "  ")
 			if err != nil {
 				return err
 			}
-			if err := os.WriteFile(".mcpsenserc.json", data, 0600); err != nil {
+			if err := os.WriteFile(configFile, data, 0600); err != nil {
 				return fmt.Errorf("writing config file: %w", err)
 			}
-			fmt.Println("Created .mcpsenserc.json with default settings.")
+			fmt.Printf("Created %s with default settings.\n", configFile)
 			return nil
 		},
 	}
@@ -191,6 +220,20 @@ func defaultConfig() MCPSenseConfig {
 		CheckIDs:    []string{},
 		Format:      "cli",
 	}
+}
+
+// loadConfig reads .mcpsenserc.json from the current directory.
+// Returns default config silently if the file does not exist.
+func loadConfig() MCPSenseConfig {
+	cfg := defaultConfig()
+	data, err := os.ReadFile(configFile)
+	if err != nil {
+		return cfg // file absent is not an error
+	}
+	if err := json.Unmarshal(data, &cfg); err != nil {
+		fmt.Fprintf(os.Stderr, "warning: could not parse %s: %v\n", configFile, err)
+	}
+	return cfg
 }
 
 // parseSeverity converts a severity string to a models.Severity value.
@@ -219,4 +262,19 @@ func filterBySeverity(findings []models.Finding, minSev models.Severity) []model
 		}
 	}
 	return filtered
+}
+
+// summarize recomputes the Summary from a (potentially filtered) findings slice.
+func summarize(findings []models.Finding) models.Summary {
+	bySeverity := make(map[models.Severity]int)
+	byCategory := make(map[models.Category]int)
+	for _, f := range findings {
+		bySeverity[f.Severity]++
+		byCategory[f.Category]++
+	}
+	return models.Summary{
+		Total:      len(findings),
+		BySeverity: bySeverity,
+		ByCategory: byCategory,
+	}
 }

@@ -114,7 +114,7 @@ func (r *CLIReporter) writeSummary(w io.Writer, report *models.Report) {
 		if count == 0 {
 			count = 0
 		}
-		label := fmt.Sprintf("%d %s", count, strings.Title(string(sev))) //nolint:staticcheck
+		label := fmt.Sprintf("%d %s", count, capitalizeFirst(string(sev)))
 		parts = append(parts, severityColor(sev).Sprint(label))
 	}
 	fmt.Fprintf(w, "  Summary: %s\n", strings.Join(parts, " │ "))
@@ -163,6 +163,14 @@ func scoreColor(score int) *color.Color {
 
 func colorHiBlack(s string) string {
 	return colorInfo.Sprint(s)
+}
+
+// capitalizeFirst returns s with the first character uppercased.
+func capitalizeFirst(s string) string {
+	if s == "" {
+		return ""
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
 }
 
 func truncate(s string, max int) string {
