@@ -2,8 +2,8 @@
 
 **Security scanner for MCP servers. Think ESLint + Snyk, but for the Model Context Protocol.**
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/faizan/mcpsense/ci.yml?branch=main)](https://github.com/faizan/mcpsense/actions)
-[![Coverage](https://img.shields.io/badge/coverage-80%25-green)](https://github.com/faizan/mcpsense/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/fayzkk889/MCPSense/ci.yml?branch=main)](https://github.com/fayzkk889/MCPSense/actions)
+[![Coverage](https://img.shields.io/badge/coverage-80%25-green)](https://github.com/fayzkk889/MCPSense/actions)
 [![Go Version](https://img.shields.io/badge/go-1.22%2B-blue)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
