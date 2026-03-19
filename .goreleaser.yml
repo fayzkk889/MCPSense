@@ -52,8 +52,8 @@ changelog:
 
 release:
   github:
-    owner: faizan
-    name: mcpsense
+    owner: fayzkk889
+    name: MCPSense
   draft: false
   prerelease: auto
   name_template: "mcpsense v{{.Version}}"
