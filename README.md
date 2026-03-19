@@ -59,7 +59,7 @@ mcpsense scan ./my-mcp-server
 go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
 
-Or download a pre-built binary from the [releases page](https://github.com/faizan/mcpsense/releases).
+Or download a pre-built binary from the [releases page](https://github.com/fayzkk889/MCPSense/releases).
 
 ---
 
@@ -216,7 +216,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install mcpsense
-        run: go install github.com/faizan/mcpsense@latest
+        run: go install github.com/fayzkk889/MCPSense@latest
 
       - name: Scan MCP manifest
         run: mcpsense scan ./mcp.json --format json --output mcpsense-report.json
