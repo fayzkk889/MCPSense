@@ -1,0 +1,83 @@
+{
+  "name": "compliant_server",
+  "version": "1.0.0",
+  "description": "A well-configured MCP server that follows all security and quality best practices.",
+  "auth": {
+    "type": "oauth2"
+  },
+  "tools": [
+    {
+      "name": "search_documents",
+      "description": "Searches documents in the workspace by keyword and returns matching document titles and snippets.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search keyword or phrase to look for across all workspace documents.",
+            "maxLength": 256
+          },
+          "max_results": {
+            "type": "integer",
+            "description": "Maximum number of results to return.",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "required": ["query"],
+        "examples": [
+          { "query": "quarterly report", "max_results": 10 }
+        ]
+      }
+    },
+    {
+      "name": "create_note",
+      "description": "Creates a new note with the given title and body text in the notes collection.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the note, displayed in the notes list.",
+            "maxLength": 128
+          },
+          "body": {
+            "type": "string",
+            "description": "The full text content of the note.",
+            "maxLength": 10000
+          }
+        },
+        "required": ["title", "body"],
+        "examples": [
+          { "title": "Meeting notes", "body": "Discussed Q3 roadmap items." }
+        ]
+      }
+    },
+    {
+      "name": "list_notes",
+      "description": "Lists all notes in the workspace, returning their IDs, titles, and creation timestamps.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of notes to return.",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "examples": [
+          { "limit": 20 }
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "file:///workspace/notes",
+      "name": "notes_directory",
+      "description": "The notes directory containing all user notes.",
+      "mimeType": "inode/directory"
+    }
+  ]
+}

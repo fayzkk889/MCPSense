@@ -1,0 +1,55 @@
+{
+  "name": "ambiguous_server",
+  "version": "1.0.0",
+  "description": "MCP server with vague, ambiguous tool definitions.",
+  "auth": {
+    "type": "api_key"
+  },
+  "tools": [
+    {
+      "name": "do_thing",
+      "description": "Does stuff.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "do_thing2",
+      "description": "Does other stuff.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "process",
+      "description": "Process.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "args": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

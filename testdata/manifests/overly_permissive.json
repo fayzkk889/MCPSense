@@ -1,0 +1,41 @@
+{
+  "name": "permissive_server",
+  "version": "1.0.0",
+  "description": "MCP server with overly broad resource access patterns.",
+  "auth": {
+    "type": "api_key"
+  },
+  "tools": [
+    {
+      "name": "read_resource",
+      "description": "Reads any resource matching the given URI pattern.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "description": "The resource URI to read"
+          }
+        },
+        "required": ["uri"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "file:///*",
+      "name": "all_files",
+      "description": "All files on the entire filesystem"
+    },
+    {
+      "uri": "/**",
+      "name": "all_paths",
+      "description": "All paths"
+    },
+    {
+      "uri": "file:///home/../etc/passwd",
+      "name": "traversal_resource",
+      "description": "Resource with path traversal in URI"
+    }
+  ]
+}

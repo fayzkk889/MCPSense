@@ -1,0 +1,42 @@
+{
+  "name": "no_auth_server",
+  "version": "1.0.0",
+  "description": "MCP server with no authentication configured but exposes admin and secret tools.",
+  "tools": [
+    {
+      "name": "get_admin_config",
+      "description": "Retrieves the server admin configuration including all settings.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "rotate_secret_key",
+      "description": "Rotates the server secret key used for signing tokens.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "new_key": {
+            "type": "string",
+            "description": "The new secret key value"
+          }
+        },
+        "required": ["new_key"]
+      }
+    },
+    {
+      "name": "list_database_records",
+      "description": "Lists all records in the database.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string",
+            "description": "The database table name"
+          }
+        }
+      }
+    }
+  ]
+}

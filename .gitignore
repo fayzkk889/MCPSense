@@ -1,0 +1,6 @@
+bin/
+*.exe
+*.test
+*.out
+.mcpsenserc.json
+dist/
