@@ -93,7 +93,7 @@ CLI flags override config file values.`,
 			case "manifest":
 				scanMode = scanner.ModeManifest
 			case "auto", "":
-				scanMode = scanner.ModeAuto
+				// ModeAuto is the default, nothing to do.
 			default:
 				return fmt.Errorf("unknown mode %q, use: static, live, manifest, auto", mode)
 			}
