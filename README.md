@@ -26,7 +26,7 @@ mcpsense scans MCP (Model Context Protocol) servers for security vulnerabilities
 mcpsense scan ./my-mcp-server
 
 ╔══════════════════════════════════════════════════════╗
-║  mcpsense v0.1.0 — MCP Server Security Scanner       ║
+║   mcpsense — MCP Server Security Scanner             ║
 ╠══════════════════════════════════════════════════════╣
 ║  Target:  ./my-mcp-server                            ║
 ║  Mode:    static                                     ║
@@ -216,7 +216,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install mcpsense
-        run: go install github.com/fayzkk889/MCPSense@latest
+        run: go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 
       - name: Scan MCP manifest
         run: mcpsense scan ./mcp.json --format json --output mcpsense-report.json
