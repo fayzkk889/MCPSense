@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/faizan/mcpsense/internal/checks"
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // scanManifest loads and parses an MCP manifest JSON file into the scan context.

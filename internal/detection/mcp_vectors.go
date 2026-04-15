@@ -1,6 +1,6 @@
 package detection
 
-import "github.com/faizan/mcpsense/internal/models"
+import "github.com/fayzkk889/MCPSense/internal/models"
 
 // loadMCPPatterns registers MCP-specific attack vector patterns.
 func (e *PatternEngine) loadMCPPatterns() {

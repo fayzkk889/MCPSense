@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // JSONReporter writes the full report as formatted JSON.

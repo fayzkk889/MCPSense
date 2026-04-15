@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // knownMCPVersions lists protocol versions considered valid.

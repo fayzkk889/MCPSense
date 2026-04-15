@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // InjectionCheck detects prompt injection patterns in tool descriptions.

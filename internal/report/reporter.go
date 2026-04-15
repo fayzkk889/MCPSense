@@ -3,7 +3,7 @@ package report
 import (
 	"io"
 
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // Reporter defines the interface for report output formats.
