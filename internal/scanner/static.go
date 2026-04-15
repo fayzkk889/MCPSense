@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/faizan/mcpsense/internal/checks"
-	"github.com/faizan/mcpsense/internal/models"
-	"github.com/faizan/mcpsense/internal/utils"
+	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 )
 
 // scanStatic performs static analysis on the target directory.

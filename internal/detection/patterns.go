@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // PatternMatch represents a single match found by the pattern engine.

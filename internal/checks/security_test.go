@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/faizan/mcpsense/internal/detection"
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/detection"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 func newTestCtx() *ScanContext {

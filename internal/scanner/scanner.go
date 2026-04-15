@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/faizan/mcpsense/internal/checks"
-	"github.com/faizan/mcpsense/internal/detection"
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/detection"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // ScanMode describes how a scan is performed.

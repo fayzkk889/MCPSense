@@ -8,9 +8,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/faizan/mcpsense/internal/models"
-	"github.com/faizan/mcpsense/internal/report"
-	"github.com/faizan/mcpsense/internal/scanner"
+	"github.com/fayzkk889/MCPSense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/report"
+	"github.com/fayzkk889/MCPSense/internal/scanner"
 )
 
 var version = "0.1.0"

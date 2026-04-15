@@ -1,6 +1,6 @@
 package detection
 
-import "github.com/faizan/mcpsense/internal/models"
+import "github.com/fayzkk889/MCPSense/internal/models"
 
 // loadCorePatterns registers prompt injection patterns ported from P.I. SHIELD concepts.
 func (e *PatternEngine) loadCorePatterns() {

@@ -1,8 +1,8 @@
 package checks
 
 import (
-	"github.com/faizan/mcpsense/internal/detection"
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/detection"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // ScanContext holds all input data available to checks during a scan.

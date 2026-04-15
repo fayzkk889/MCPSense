@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faizan/mcpsense/internal/checks"
-	"github.com/faizan/mcpsense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // scanLive connects to a live MCP server and interrogates it for tools and resources.
