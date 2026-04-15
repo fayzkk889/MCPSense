@@ -1,4 +1,4 @@
-module github.com/faizan/mcpsense
+module github.com/fayzkk889/mcpsense
 
 go 1.24.7
 
