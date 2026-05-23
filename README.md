@@ -52,6 +52,13 @@ mcpsense scan ./my-mcp-server
 ## Install
 
 ```bash
+# Linux / macOS
+curl -sSL https://raw.githubusercontent.com/fayzkk889/MCPSense/main/install.sh | sh
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/fayzkk889/MCPSense/main/install.ps1 | iex
+
+# With Go
 go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
 
@@ -278,4 +285,4 @@ To add a new check, implement the `checks.Check` interface and register it in `c
 
 MIT. See [LICENSE](LICENSE).
 
-Built by [Faizan](https://github.com/fayzkk889).
+Built by [Faizan](https://github.com/fayzkk889) with ❤️
