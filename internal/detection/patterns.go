@@ -28,6 +28,7 @@ type Pattern struct {
 	Description string
 	Category    string
 	Remediation string
+	Target      string // "description" or "source" — which content type this pattern applies to
 }
 
 // PatternEngine holds all registered patterns and runs them against content.
@@ -50,6 +51,42 @@ func (e *PatternEngine) Scan(content string) []PatternMatch {
 
 	for _, p := range e.patterns {
 		// Run against both original and lowercased content
+		locs := p.Regex.FindAllStringIndex(lower, -1)
+		for _, loc := range locs {
+			matched := content[loc[0]:loc[1]]
+			matches = append(matches, PatternMatch{
+				PatternID:   p.ID,
+				PatternName: p.Name,
+				Severity:    p.Severity,
+				Description: p.Description,
+				Category:    p.Category,
+				Remediation: p.Remediation,
+				MatchedText: matched,
+				Offset:      loc[0],
+			})
+		}
+	}
+	return matches
+}
+
+// ScanDescriptions runs only description-targeted patterns against the given content.
+func (e *PatternEngine) ScanDescriptions(content string) []PatternMatch {
+	return e.scanWithFilter(content, "description")
+}
+
+// ScanSource runs only source-targeted patterns against the given content.
+func (e *PatternEngine) ScanSource(content string) []PatternMatch {
+	return e.scanWithFilter(content, "source")
+}
+
+func (e *PatternEngine) scanWithFilter(content string, target string) []PatternMatch {
+	var matches []PatternMatch
+	lower := strings.ToLower(content)
+
+	for _, p := range e.patterns {
+		if p.Target != target {
+			continue
+		}
 		locs := p.Regex.FindAllStringIndex(lower, -1)
 		for _, loc := range locs {
 			matched := content[loc[0]:loc[1]]
@@ -110,7 +147,7 @@ func (e *PatternEngine) Patterns() []Pattern {
 	return e.patterns
 }
 
-func compilePattern(id, name, pattern string, severity models.Severity, description, category, remediation string) Pattern {
+func compilePattern(id, name, pattern string, severity models.Severity, description, category, remediation, target string) Pattern {
 	return Pattern{
 		ID:          id,
 		Name:        name,
@@ -119,5 +156,6 @@ func compilePattern(id, name, pattern string, severity models.Severity, descript
 		Description: description,
 		Category:    category,
 		Remediation: remediation,
+		Target:      target,
 	}
 }

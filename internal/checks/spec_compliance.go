@@ -11,7 +11,7 @@ import (
 )
 
 // knownMCPVersions lists protocol versions considered valid.
-var knownMCPVersions = []string{"2024-11-05", "2025-03-26", "0.1", "0.2", "1.0"}
+var knownMCPVersions = []string{"2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"}
 
 // toolNamePattern matches valid tool names: snake_case, alphanumeric and underscores only.
 var toolNamePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
@@ -232,9 +232,9 @@ func (c *SpecProtocolVersionCheck) Run(ctx *ScanContext) []models.Finding {
 	if ctx.Manifest == nil {
 		return nil
 	}
-	version := strings.TrimSpace(ctx.Manifest.Version)
+	version := strings.TrimSpace(ctx.Manifest.ProtocolVersion)
 	if version == "" {
-		return nil // Already reported by SPEC-001
+		return nil // Protocol version is only available from live server interrogation
 	}
 	for _, known := range knownMCPVersions {
 		if version == known {
@@ -243,8 +243,8 @@ func (c *SpecProtocolVersionCheck) Run(ctx *ScanContext) []models.Finding {
 	}
 	return []models.Finding{{
 		ID:          "SPEC-005",
-		Title:       fmt.Sprintf("Unknown protocol version %q", version),
-		Description: fmt.Sprintf("The declared version %q is not a recognized MCP protocol version.", version),
+		Title:       "Unknown protocol version " + version,
+		Description: fmt.Sprintf("The server reported protocol version %q which is not a recognized MCP protocol version.", version),
 		Severity:    models.SeverityInfo,
 		Category:    models.CategorySpec,
 		Remediation: fmt.Sprintf("Use a known MCP protocol version. Known versions: %s", strings.Join(knownMCPVersions, ", ")),

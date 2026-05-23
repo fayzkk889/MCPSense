@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -104,7 +105,7 @@ func TestDetectMode(t *testing.T) {
 		{"http://localhost:8080", ModeLive},
 		{"./my-server --port 8080", ModeLive},
 		{"/path/to/directory", ModeStatic},
-		{"./server-dir", ModeLive}, // starts with ./
+		{"./server-dir", ModeLive}, // starts with ./ and doesn't exist
 	}
 
 	for _, tt := range tests {
@@ -113,6 +114,31 @@ func TestDetectMode(t *testing.T) {
 			assert.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func TestDetectMode_WithFiles(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// 1. A regular non-executable file
+	plainFile := filepath.Join(tmpDir, "plain.txt")
+	err := os.WriteFile(plainFile, []byte("hello"), 0644)
+	require.NoError(t, err)
+	assert.Equal(t, ModeStatic, detectMode(plainFile))
+
+	// 2. A directory
+	subDir := filepath.Join(tmpDir, "my-dir")
+	err = os.Mkdir(subDir, 0755)
+	require.NoError(t, err)
+	assert.Equal(t, ModeStatic, detectMode(subDir))
+
+	// 3. An executable file
+	execFile := filepath.Join(tmpDir, "run-me")
+	if runtime.GOOS == "windows" {
+		execFile += ".exe"
+	}
+	err = os.WriteFile(execFile, []byte("binary"), 0755)
+	require.NoError(t, err)
+	assert.Equal(t, ModeLive, detectMode(execFile))
 }
 
 func TestScanManifest_MissingAuth(t *testing.T) {

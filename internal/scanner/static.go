@@ -2,6 +2,7 @@ package scanner
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -26,6 +27,62 @@ func (s *Scanner) scanStatic(target string, ctx *checks.ScanContext) error {
 		ctx.Manifest = manifest
 	}
 
+	// Try to locate and parse MCP client config files.
+	clientConfig := s.tryLoadClientConfig(target)
+	if clientConfig != nil {
+		ctx.ClientConfig = clientConfig
+	}
+
+	return nil
+}
+
+// scanConfig loads and parses an MCP client config file for security analysis.
+func (s *Scanner) scanConfig(target string, ctx *checks.ScanContext) error {
+	data, err := os.ReadFile(target)
+	if err != nil {
+		return fmt.Errorf("reading config %q: %w", target, err)
+	}
+	var config models.MCPClientConfig
+	if err := json.Unmarshal(data, &config); err != nil {
+		return fmt.Errorf("parsing config %q: %w", target, err)
+	}
+	ctx.ClientConfig = &config
+	return nil
+}
+
+// tryLoadClientConfig attempts to find and parse MCP client config files in the target directory.
+// These are the config files that IDEs (Cursor, Claude Desktop, VS Code) use to define which
+// MCP servers to connect to. They are a critical attack surface for command injection.
+func (s *Scanner) tryLoadClientConfig(root string) *models.MCPClientConfig {
+	candidates := []string{
+		filepath.Join(root, "mcp.json"),
+		filepath.Join(root, ".mcp.json"),
+		filepath.Join(root, ".cursor", "mcp.json"),
+		filepath.Join(root, ".vscode", "mcp.json"),
+		filepath.Join(root, "claude_desktop_config.json"),
+	}
+
+	// Check home directory configs if scanning the home dir
+	home, err := os.UserHomeDir()
+	if err == nil {
+		candidates = append(candidates,
+			filepath.Join(home, ".claude.json"),
+			filepath.Join(home, "Library", "Application Support", "Claude", "claude_desktop_config.json"),
+			filepath.Join(home, ".config", "Claude", "claude_desktop_config.json"),
+			filepath.Join(home, "AppData", "Roaming", "Claude", "claude_desktop_config.json"),
+		)
+	}
+
+	for _, path := range candidates {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			continue
+		}
+		var config models.MCPClientConfig
+		if err := json.Unmarshal(data, &config); err == nil && len(config.MCPServers) > 0 {
+			return &config
+		}
+	}
 	return nil
 }
 

@@ -1,0 +1,171 @@
+name: "MCPSense MCP Security Scanner"
+description: "Scan MCP servers and configurations for security vulnerabilities, spec compliance issues, and tool poisoning."
+author: "fayzkk889"
+
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  target:
+    description: "Target to scan: a file path, directory, or URL."
+    required: true
+  mode:
+    description: "Scan mode: auto, static, live, manifest, config"
+    required: false
+    default: "auto"
+  severity:
+    description: "Minimum severity to report: critical, high, medium, low, info"
+    required: false
+    default: "low"
+  format:
+    description: "Output format: sarif, cli, json"
+    required: false
+    default: "sarif"
+  sarif-upload:
+    description: "Upload SARIF results to GitHub Code Scanning (requires security-events: write permission)"
+    required: false
+    default: "true"
+  fail-on:
+    description: "Fail the workflow if findings at this severity or above are found: critical, high, medium, low, none"
+    required: false
+    default: "high"
+  version:
+    description: "MCPSense version to use (e.g., 0.1.2). Defaults to latest."
+    required: false
+    default: "latest"
+
+outputs:
+  score:
+    description: "The overall security score (0-100)"
+    value: ${{ steps.scan.outputs.score }}
+  findings-count:
+    description: "Total number of findings"
+    value: ${{ steps.scan.outputs.findings_count }}
+  sarif-file:
+    description: "Path to the SARIF output file"
+    value: ${{ steps.scan.outputs.sarif_file }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Determine version
+      id: version
+      shell: bash
+      run: |
+        VERSION="${{ inputs.version }}"
+        if [ "$VERSION" = "latest" ]; then
+          VERSION=$(curl -s https://api.github.com/repos/fayzkk889/MCPSense/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/' || echo "0.1.2")
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Download MCPSense
+      shell: bash
+      run: |
+        VERSION="${{ steps.version.outputs.version }}"
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+        ARCH=$(uname -m)
+        case "$ARCH" in
+          x86_64) ARCH="amd64" ;;
+          aarch64|arm64) ARCH="arm64" ;;
+        esac
+        URL="https://github.com/fayzkk889/MCPSense/releases/download/v${VERSION}/MCPSense_${VERSION}_${OS}_${ARCH}.tar.gz"
+        echo "Downloading MCPSense v${VERSION} from ${URL}"
+        curl -sL "$URL" -o mcpsense.tar.gz
+        tar -xzf mcpsense.tar.gz mcpsense
+        chmod +x mcpsense
+        echo "$(pwd)" >> $GITHUB_PATH
+
+    - name: Run scan
+      id: scan
+      shell: bash
+      run: |
+        SARIF_FILE="mcpsense-results.sarif"
+        JSON_FILE="mcpsense-results.json"
+
+        # Always generate JSON for parsing metadata
+        ./mcpsense scan "${{ inputs.target }}" \
+          --mode "${{ inputs.mode }}" \
+          --severity "${{ inputs.severity }}" \
+          --format json \
+          --output "$JSON_FILE" || true
+
+        # Parse score and findings count from JSON output
+        if [ -f "$JSON_FILE" ]; then
+          SCORE=$(cat "$JSON_FILE" | grep -o '"score":[0-9]*' | head -1 | cut -d: -f2 || echo "0")
+          COUNT=$(cat "$JSON_FILE" | grep -o '"total":[0-9]*' | head -1 | cut -d: -f2 || echo "0")
+          echo "score=$SCORE" >> $GITHUB_OUTPUT
+          echo "findings_count=$COUNT" >> $GITHUB_OUTPUT
+        fi
+
+        # Generate SARIF if requested
+        if [ "${{ inputs.format }}" = "sarif" ]; then
+          ./mcpsense scan "${{ inputs.target }}" \
+            --mode "${{ inputs.mode }}" \
+            --severity "${{ inputs.severity }}" \
+            --format sarif \
+            --output "$SARIF_FILE" || true
+          echo "sarif_file=$SARIF_FILE" >> $GITHUB_OUTPUT
+        fi
+
+        # Also print CLI output to the log for visibility
+        ./mcpsense scan "${{ inputs.target }}" \
+          --mode "${{ inputs.mode }}" \
+          --severity "${{ inputs.severity }}" \
+          --format cli \
+          --no-color || true
+
+    - name: Upload SARIF to GitHub Code Scanning
+      if: inputs.sarif-upload == 'true' && inputs.format == 'sarif'
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: mcpsense-results.sarif
+        category: mcpsense
+      continue-on-error: true
+
+    - name: Check fail threshold
+      shell: bash
+      run: |
+        FAIL_ON="${{ inputs.fail-on }}"
+        if [ "$FAIL_ON" = "none" ]; then
+          echo "No fail threshold set, skipping."
+          exit 0
+        fi
+
+        JSON_FILE="mcpsense-results.json"
+        if [ ! -f "$JSON_FILE" ]; then
+          echo "No results file found, skipping threshold check."
+          exit 0
+        fi
+
+        # Map severity to numeric value for comparison
+        severity_value() {
+          case "$1" in
+            critical) echo 4 ;;
+            high) echo 3 ;;
+            medium) echo 2 ;;
+            low) echo 1 ;;
+            *) echo 0 ;;
+          esac
+        }
+
+        THRESHOLD=$(severity_value "$FAIL_ON")
+
+        # Check if any finding meets or exceeds the threshold
+        HAS_CRITICAL=$(cat "$JSON_FILE" | grep -c '"severity":"critical"' || true)
+        HAS_HIGH=$(cat "$JSON_FILE" | grep -c '"severity":"high"' || true)
+        HAS_MEDIUM=$(cat "$JSON_FILE" | grep -c '"severity":"medium"' || true)
+        HAS_LOW=$(cat "$JSON_FILE" | grep -c '"severity":"low"' || true)
+
+        SHOULD_FAIL=0
+        if [ "$THRESHOLD" -le 4 ] && [ "$HAS_CRITICAL" -gt 0 ]; then SHOULD_FAIL=1; fi
+        if [ "$THRESHOLD" -le 3 ] && [ "$HAS_HIGH" -gt 0 ]; then SHOULD_FAIL=1; fi
+        if [ "$THRESHOLD" -le 2 ] && [ "$HAS_MEDIUM" -gt 0 ]; then SHOULD_FAIL=1; fi
+        if [ "$THRESHOLD" -le 1 ] && [ "$HAS_LOW" -gt 0 ]; then SHOULD_FAIL=1; fi
+
+        if [ "$SHOULD_FAIL" -eq 1 ]; then
+          echo "::error::MCPSense found findings at or above '$FAIL_ON' severity. Failing workflow."
+          exit 1
+        fi
+
+        echo "No findings at or above '$FAIL_ON' severity. Passing."

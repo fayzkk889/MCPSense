@@ -1,7 +1,11 @@
 package scanner
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
@@ -16,6 +20,7 @@ const (
 	ModeStatic   ScanMode = "static"
 	ModeLive     ScanMode = "live"
 	ModeManifest ScanMode = "manifest"
+	ModeConfig   ScanMode = "config"
 	ModeAuto     ScanMode = "auto"
 )
 
@@ -58,6 +63,8 @@ func (s *Scanner) Scan(target string) (*models.Report, error) {
 	switch mode {
 	case ModeManifest:
 		err = s.scanManifest(target, ctx)
+	case ModeConfig:
+		err = s.scanConfig(target, ctx)
 	case ModeStatic:
 		err = s.scanStatic(target, ctx)
 	case ModeLive:
@@ -88,16 +95,50 @@ func (s *Scanner) runChecks(ctx *checks.ScanContext) []models.Finding {
 
 // detectMode infers the scan mode from the target string.
 func detectMode(target string) ScanMode {
-	if strings.HasSuffix(target, ".json") {
-		return ModeManifest
-	}
 	if strings.HasPrefix(target, "http://") || strings.HasPrefix(target, "https://") {
 		return ModeLive
 	}
+
+	if strings.HasSuffix(target, ".json") {
+		// Try to detect whether this is a client config or a manifest.
+		// Client configs have a top-level "mcpServers" key.
+		data, err := os.ReadFile(target)
+		if err == nil {
+			var raw map[string]json.RawMessage
+			if json.Unmarshal(data, &raw) == nil {
+				if _, hasServers := raw["mcpServers"]; hasServers {
+					return ModeConfig
+				}
+			}
+		}
+		return ModeManifest
+	}
+
+	// If the target is a regular file (not a directory) AND it is executable, return ModeLive
+	info, err := os.Stat(target)
+	if err == nil {
+		if info.IsDir() {
+			return ModeStatic
+		}
+		// Check for executable: on Unix check permission bits, on Windows check extension
+		isExec := false
+		if runtime.GOOS == "windows" {
+			ext := strings.ToLower(filepath.Ext(target))
+			isExec = ext == ".exe" || ext == ".bat" || ext == ".cmd"
+		} else {
+			isExec = info.Mode().Perm()&0111 != 0
+		}
+		if isExec {
+			return ModeLive
+		}
+		return ModeStatic
+	}
+
 	// A target that looks like a shell command (contains spaces, starts with ./).
 	if strings.Contains(target, " ") || strings.HasPrefix(target, "./") || strings.HasPrefix(target, "../") {
 		return ModeLive
 	}
+
 	// Default to static analysis for directory targets.
 	return ModeStatic
 }
