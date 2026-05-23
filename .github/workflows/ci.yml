@@ -65,7 +65,7 @@ jobs:
           cache: true
 
       - name: Build binary
-        run: go build -o bin/mcpsense ./cmd/mcpsense/
+        run: go build -ldflags "-X main.version=$(git describe --tags --always --dirty)" -o bin/mcpsense ./cmd/mcpsense/
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4

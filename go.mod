@@ -1,6 +1,6 @@
 module github.com/fayzkk889/MCPSense
 
-go 1.24.7
+go 1.22
 
 require (
 	github.com/fatih/color v1.18.0

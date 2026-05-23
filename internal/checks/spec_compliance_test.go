@@ -122,7 +122,7 @@ func TestSpecResourceURICheck_PathTraversalURI(t *testing.T) {
 
 func TestSpecProtocolVersionCheck_KnownVersion(t *testing.T) {
 	ctx := newTestCtx()
-	ctx.Manifest = &models.MCPManifest{Name: "test", Version: "2024-11-05"}
+	ctx.Manifest = &models.MCPManifest{Name: "test", ProtocolVersion: "2024-11-05"}
 
 	check := &SpecProtocolVersionCheck{}
 	findings := check.Run(ctx)
@@ -131,7 +131,7 @@ func TestSpecProtocolVersionCheck_KnownVersion(t *testing.T) {
 
 func TestSpecProtocolVersionCheck_UnknownVersion(t *testing.T) {
 	ctx := newTestCtx()
-	ctx.Manifest = &models.MCPManifest{Name: "test", Version: "0.0.0-unknown"}
+	ctx.Manifest = &models.MCPManifest{Name: "test", ProtocolVersion: "0.0.0-unknown"}
 
 	check := &SpecProtocolVersionCheck{}
 	findings := check.Run(ctx)

@@ -7,9 +7,10 @@ import (
 
 // ScanContext holds all input data available to checks during a scan.
 type ScanContext struct {
-	Manifest    *models.MCPManifest
-	SourceFiles map[string]string
-	Patterns    *detection.PatternEngine
+	Manifest     *models.MCPManifest
+	ClientConfig *models.MCPClientConfig
+	SourceFiles  map[string]string
+	Patterns     *detection.PatternEngine
 }
 
 // Check defines the interface all checks must implement.
@@ -46,6 +47,18 @@ func NewRegistry() *Registry {
 	r.Register(&CommandInjectionCheck{})
 	r.Register(&DataExfilCheck{})
 
+	// Tool poisoning checks
+	r.Register(&InvisibleUnicodeCheck{})
+	r.Register(&HomoglyphCheck{})
+	r.Register(&ExfilInstructionCheck{})
+	r.Register(&CrossToolManipulationCheck{})
+	r.Register(&AnnotationIntegrityCheck{})
+
+	// Client config checks
+	r.Register(&ConfigCommandInjectionCheck{})
+	r.Register(&ConfigEnvLeakageCheck{})
+	r.Register(&ConfigUnverifiedSourceCheck{})
+
 	// Tool quality checks
 	r.Register(&DescriptionClarityCheck{})
 	r.Register(&AmbiguousParamCheck{})
@@ -53,6 +66,7 @@ func NewRegistry() *Registry {
 	r.Register(&DuplicateToolCheck{})
 	r.Register(&MissingExamplesCheck{})
 	r.Register(&ExcessiveToolCountCheck{})
+	r.Register(&InputConstraintCheck{})
 
 	return r
 }

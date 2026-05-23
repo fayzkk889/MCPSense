@@ -18,6 +18,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Tool description contains directive language that attempts to manipulate agent behavior, such as prioritizing this tool over others.",
 			"mcp-injection",
 			"Remove directive language from tool descriptions. Descriptions should explain what the tool does, not instruct the agent on when or how to use it relative to other tools.",
+			"description",
 		),
 
 		// MCP-002: Path traversal in resource URIs or string values
@@ -29,6 +30,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Content contains path traversal sequences that could allow access to files outside the intended directory.",
 			"path-traversal",
 			"Validate and sanitize all file paths. Use filepath.Clean() and verify the result is within the allowed base directory before any file operation.",
+			"source",
 		),
 
 		// MCP-003: Shell command execution patterns (Go)
@@ -41,6 +43,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Source code invokes a shell interpreter via exec.Command, which can allow arbitrary command execution if inputs are not sanitized.",
 			"command-exec",
 			"Avoid spawning shell interpreters. Use exec.Command with explicit argument lists instead of shell -c. Never pass user input as part of a shell command string.",
+			"source",
 		),
 
 		// MCP-004: Shell command execution via string formatting (Go)
@@ -52,6 +55,7 @@ func mcpSpecificPatterns() []Pattern {
 			"User input is interpolated into an exec.Command call using fmt.Sprintf, enabling command injection.",
 			"command-exec",
 			"Never use string formatting to build command arguments. Pass arguments as separate strings to exec.Command.",
+			"source",
 		),
 
 		// MCP-005: Python subprocess with shell=True
@@ -63,6 +67,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Python subprocess call uses shell=True, which enables shell injection if user input is included.",
 			"command-exec",
 			"Remove shell=True and pass command arguments as a list. Never interpolate user input into shell command strings.",
+			"source",
 		),
 
 		// MCP-006: Python os.system
@@ -74,6 +79,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Python os.system is used, which invokes a shell and is vulnerable to command injection.",
 			"command-exec",
 			"Replace os.system with subprocess.run using a list of arguments and shell=False.",
+			"source",
 		),
 
 		// MCP-007: Node.js child_process exec
@@ -85,6 +91,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Node.js child_process.exec is used, which invokes a shell and is vulnerable to command injection.",
 			"command-exec",
 			"Replace child_process.exec with child_process.execFile or child_process.spawn with an explicit argument array.",
+			"source",
 		),
 
 		// MCP-008: SSRF via unchecked URL input (patterns match lowercased content)
@@ -96,6 +103,7 @@ func mcpSpecificPatterns() []Pattern {
 			"An HTTP request is made using a variable URL without apparent domain validation, creating a Server-Side Request Forgery risk.",
 			"ssrf",
 			"Validate URLs against an allowlist of permitted domains before making outbound requests. Reject requests to private IP ranges and internal hostnames.",
+			"source",
 		),
 
 		// MCP-009: Overly broad resource URI glob
@@ -107,6 +115,7 @@ func mcpSpecificPatterns() []Pattern {
 			"Resource URI pattern uses a wildcard that grants access to an excessively broad set of files or paths.",
 			"resource-scope",
 			"Restrict resource URIs to the minimum required scope. Use explicit paths rather than wildcards, or constrain wildcards to specific subdirectories.",
+			"description",
 		),
 
 		// MCP-010: String fields in inline JSON schema definitions (heuristic)
@@ -121,6 +130,7 @@ func mcpSpecificPatterns() []Pattern {
 			"A string input field in an inline schema definition may lack a maxLength constraint.",
 			"input-validation",
 			"Add maxLength to all string input schema properties to prevent excessively large inputs and potential denial-of-service conditions.",
+			"description",
 		),
 
 		// MCP-011: SQL query string construction (patterns match lowercased content)
@@ -132,6 +142,7 @@ func mcpSpecificPatterns() []Pattern {
 			"User input appears to be interpolated directly into a SQL query string, enabling SQL injection.",
 			"sql-injection",
 			"Use parameterized queries or prepared statements. Never concatenate or format user input into SQL strings.",
+			"source",
 		),
 
 		// MCP-012: Hardcoded secrets
@@ -143,6 +154,7 @@ func mcpSpecificPatterns() []Pattern {
 			"A hardcoded secret, API key, or password was found in the source code.",
 			"secrets",
 			"Remove hardcoded secrets from source code. Use environment variables or a secrets manager. Rotate any exposed credentials immediately.",
+			"source",
 		),
 	}
 }

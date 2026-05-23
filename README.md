@@ -6,16 +6,9 @@
 [![Go Version](https://img.shields.io/badge/go-1.22%2B-blue)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
----
+MCPSense scans MCP servers, source code, and client configurations for security vulnerabilities, spec compliance issues, and tool quality problems. It detects tool poisoning attacks (invisible Unicode injection, cross-tool manipulation, annotation lying), client config command injection (the CVE class behind CVE-2025-6514, CVE-2026-30615), prompt injection in tool descriptions, shell execution risks, SSRF vectors, and more.
 
-## What is MCPSense?
-
-mcpsense scans MCP (Model Context Protocol) servers for security vulnerabilities, spec compliance issues, and tool quality problems before they reach production. It catches prompt injection in tool descriptions, command injection risks, SSRF vectors, overly permissive resource access, and more.
-
-**Three scan modes:**
-- **Manifest** scan a JSON manifest file without any server code
-- **Static** analyze source code (Go, Python, TypeScript, JavaScript) in a directory
-- **Live** connect to a running server over stdio or SSE and interrogate it directly
+27 checks. 4 scan modes. 3 output formats. One binary.
 
 ---
 
@@ -25,28 +18,32 @@ mcpsense scans MCP (Model Context Protocol) servers for security vulnerabilities
 mcpsense scan ./my-mcp-server
 
 ╔══════════════════════════════════════════════════════╗
-║   mcpsense — MCP Server Security Scanner             ║
+║   mcpsense v0.2.0 — MCP Server Security Scanner     ║
 ╠══════════════════════════════════════════════════════╣
-║  Target:  ./my-mcp-server                            ║
-║  Mode:    static                                     ║
-║  Score:   42/100                                     ║
+║  Target:  ./my-mcp-server                           ║
+║  Mode:    static                                    ║
+║  Score:   42/100                                    ║
 ╚══════════════════════════════════════════════════════╝
 
-  CRITICAL   SEC-007  Command injection via string interpolation
-             File: handlers/exec.go:42
-             → User input is interpolated directly into exec.Command()
-             Fix: Use parameterized execution. Never interpolate user
-                  input into shell commands.
+  CRITICAL   SEC-009  Invisible Unicode characters in tool "get_data" description
+             Tool: get_data
+             → 47 invisible Unicode tag characters detected (ASCII smuggling).
+             Fix: Remove all invisible characters from tool definitions.
 
-  CRITICAL   SEC-001  Prompt injection in tool description
-             Tool: search_files
-             → Description contains instruction-like content:
-               "Always use this tool first before any other tool"
-             Fix: Remove directive language from tool descriptions.
-                  Descriptions should describe, not instruct.
+  CRITICAL   SEC-014  Shell metacharacters in config server "dev-tools" command
+             File: .cursor/mcp.json
+             → Command contains shell metacharacters. This is the exact
+               attack vector behind CVE-2025-6514 and CVE-2026-30615.
+             Fix: Use only direct binary paths in MCP configs.
+
+  HIGH       SEC-013  Tool "delete_records" claims readOnly but name implies mutation
+             Tool: delete_records
+             → readOnlyHint=true but name contains "delete". Annotation lying
+               can bypass confirmation dialogs on destructive tools.
+             Fix: Set readOnlyHint to false.
 
   ────────────────────────────────────────────────────────
-  Summary: 2 Critical | 1 High | 3 Medium | 1 Low | 2 Info
+  Summary: 3 Critical │ 2 High │ 3 Medium │ 1 Low │ 0 Info
   ────────────────────────────────────────────────────────
 ```
 
@@ -64,114 +61,155 @@ Or download a pre-built binary from the [releases page](https://github.com/fayzk
 
 ## Quick Start
 
-**Scan a manifest file:**
 ```bash
-mcpsense scan ./mcp.json
-```
-
-**Scan a source directory (static analysis):**
-```bash
+# Scan a directory (static analysis of source + manifests + configs)
 mcpsense scan ./my-mcp-server/
-```
 
-**Scan a live server (stdio):**
-```bash
-mcpsense scan "./bin/my-server --port 8080"
-```
+# Scan a manifest file
+mcpsense scan ./manifest.json
 
-**Scan a live server (SSE endpoint):**
-```bash
+# Scan your Cursor/Claude MCP config for command injection
+mcpsense scan ~/.cursor/mcp.json
+
+# Scan a live running server (stdio)
+mcpsense scan ./bin/my-server
+
+# Scan a live server (HTTP/SSE)
 mcpsense scan https://my-server.example.com
+
+# Output as SARIF for GitHub Code Scanning
+mcpsense scan . --format sarif --output results.sarif
+
+# Output as JSON for CI/CD
+mcpsense scan . --format json --output report.json
 ```
 
-**Output as JSON for CI/CD pipelines:**
-```bash
-mcpsense scan ./mcp.json --format json --output report.json
-```
+---
+
+## Scan Modes
+
+| Mode | Trigger | What It Does |
+|------|---------|-------------|
+| **static** | Directory path | Reads source files (Go, Python, TypeScript, JS) + discovers manifests and client configs |
+| **manifest** | JSON file with tool definitions | Analyzes tool definitions, descriptions, schemas, and annotations |
+| **config** | JSON file with `mcpServers` key | Scans MCP client configs (mcp.json, claude_desktop_config.json) for command injection, env leakage, supply chain risks |
+| **live** | URL or executable binary | Connects to a running MCP server via stdio or HTTP, performs full protocol handshake, interrogates tools |
+
+Mode is auto-detected. Override with `--mode static|manifest|config|live`.
 
 ---
 
 ## What MCPSense Checks
 
-### Spec Compliance
+### Security (16 checks)
 
-| ID | Name | Severity | Category |
-|----|------|----------|----------|
-| SPEC-001 | Valid manifest structure | Medium | spec-compliance |
-| SPEC-002 | Tool input schema validity | High | spec-compliance |
-| SPEC-003 | Tool naming conventions | Low | spec-compliance |
-| SPEC-004 | Resource URI format | Medium | spec-compliance |
-| SPEC-005 | Protocol version compatibility | Info | spec-compliance |
+| ID | Name | Severity | What It Catches |
+|----|------|----------|----------------|
+| SEC-001 | Prompt injection in tool descriptions | Critical | Directive language that manipulates agent behavior |
+| SEC-002 | Shell command execution | High | exec.Command, subprocess.run, os.system in source |
+| SEC-003 | SSRF risk | High | Unvalidated URLs passed to HTTP clients |
+| SEC-004 | Path traversal | High | ../../../etc/passwd style access patterns |
+| SEC-005 | Missing authentication | Medium | Servers exposing sensitive tools without auth |
+| SEC-006 | Overly permissive resource access | Medium | Wildcard URIs like file:///* |
+| SEC-007 | Command injection via interpolation | Critical | User input interpolated into shell commands |
+| SEC-008 | Data exfiltration vectors | Medium | Tools that read and return arbitrary file contents |
+| SEC-009 | Invisible Unicode characters | Critical | Zero-width spaces, ASCII smuggling via tag characters (U+E0000 range) |
+| SEC-010 | Homoglyph / mixed script detection | High | Cyrillic 'а' vs Latin 'a' in tool names, mixed-script bypasses |
+| SEC-011 | Data exfiltration instructions | Critical | Descriptions telling agents to read ~/.ssh/id_rsa or send credentials |
+| SEC-012 | Cross-tool manipulation | High/Critical | "Always use this tool first", "ignore other tools" in descriptions |
+| SEC-013 | Annotation integrity mismatch | High | readOnlyHint=true on tools named "delete_user", destructiveHint=false on "drop_table" |
+| SEC-014 | Config command injection | Critical | Shell metacharacters in mcp.json server entries (CVE-2025-6514 class) |
+| SEC-015 | Sensitive env var leakage | Medium | AWS_SECRET_ACCESS_KEY, GITHUB_TOKEN passed to MCP servers |
+| SEC-016 | Unverified server source | Medium/High | Unpinned npx packages, HTTP (non-HTTPS) server URLs |
 
-### Security
+### Spec Compliance (5 checks)
 
-| ID | Name | Severity | Category |
-|----|------|----------|----------|
-| SEC-001 | Prompt injection in tool descriptions | Critical | security |
-| SEC-002 | Shell command execution | High | security |
-| SEC-003 | SSRF risk | High | security |
-| SEC-004 | Path traversal | High | security |
-| SEC-005 | Missing authentication | Medium | security |
-| SEC-006 | Overly permissive resource access | Medium | security |
-| SEC-007 | Command injection via string interpolation | Critical | security |
-| SEC-008 | Data exfiltration vectors | Medium | security |
+| ID | Name | Severity |
+|----|------|----------|
+| SPEC-001 | Valid manifest structure | Medium |
+| SPEC-002 | Tool input schema validity | High |
+| SPEC-003 | Tool naming conventions | Low |
+| SPEC-004 | Resource URI format | Medium |
+| SPEC-005 | Protocol version compatibility | Info |
 
-### Tool Quality
+### Tool Quality (7 checks)
 
-| ID | Name | Severity | Category |
-|----|------|----------|----------|
-| QUAL-001 | Description clarity score | Medium/Low | tool-quality |
-| QUAL-002 | Ambiguous parameter names | Medium | tool-quality |
-| QUAL-003 | Missing parameter descriptions | Low | tool-quality |
-| QUAL-004 | Duplicate or overlapping tools | Low | tool-quality |
-| QUAL-005 | Missing examples | Info | tool-quality |
-| QUAL-006 | Excessive tool count | Info | tool-quality |
-| QUAL-007 | Missing input constraints | Low | tool-quality |
+| ID | Name | Severity |
+|----|------|----------|
+| QUAL-001 | Description clarity score | Medium/Low |
+| QUAL-002 | Ambiguous parameter names | Medium |
+| QUAL-003 | Missing parameter descriptions | Low |
+| QUAL-004 | Duplicate or overlapping tools | Low |
+| QUAL-005 | Missing examples | Info |
+| QUAL-006 | Excessive tool count | Info |
+| QUAL-007 | Missing input constraints | Low |
 
 ---
 
 ## Output Formats
 
 ### CLI (default)
-
-Colored terminal output with severity-coded findings and inline remediation guidance.
-
 ```bash
 mcpsense scan ./mcp.json
 ```
+Colored terminal output with severity-coded findings and inline remediation.
 
 ### JSON
-
-Structured JSON output for CI/CD pipelines and programmatic consumption.
-
 ```bash
 mcpsense scan ./mcp.json --format json
 ```
+Structured output for CI/CD pipelines and programmatic consumption.
 
-```json
-{
-  "target": "./mcp.json",
-  "scan_mode": "manifest",
-  "timestamp": "2024-11-05T12:00:00Z",
-  "score": 72,
-  "findings": [
-    {
-      "id": "SEC-001",
-      "title": "Prompt injection in tool description: search_files",
-      "description": "Tool description contains directive language...",
-      "severity": "critical",
-      "category": "security",
-      "location": { "tool_name": "search_files" },
-      "remediation": "Remove instruction-like language from tool descriptions."
-    }
-  ],
-  "summary": {
-    "total": 5,
-    "by_severity": { "critical": 1, "high": 2, "medium": 1, "low": 1, "info": 0 },
-    "by_category": { "security": 3, "spec-compliance": 1, "tool-quality": 1 }
-  }
-}
+### SARIF
+```bash
+mcpsense scan ./mcp.json --format sarif --output results.sarif
 ```
+SARIF 2.1.0 output for GitHub Code Scanning, VS Code, and any SARIF-compatible tool. Upload to GitHub's Security tab for inline PR annotations.
+
+---
+
+## GitHub Action
+
+Add MCPSense to your CI/CD pipeline with 4 lines:
+
+```yaml
+# .github/workflows/mcpsense.yml
+name: MCP Security Scan
+on:
+  push:
+    paths: ["**mcp*.json", "**claude_desktop_config.json", ".cursor/**"]
+  pull_request:
+
+permissions:
+  security-events: write
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: fayzkk889/MCPSense@v0.2.0
+        with:
+          target: "."
+          format: "sarif"
+          sarif-upload: "true"
+          fail-on: "high"
+```
+
+**Action inputs:**
+
+| Input | Default | Description |
+|-------|---------|-------------|
+| `target` | (required) | File, directory, or URL to scan |
+| `mode` | `auto` | Scan mode: auto, static, live, manifest, config |
+| `format` | `sarif` | Output format: sarif, cli, json |
+| `severity` | `low` | Minimum severity to report |
+| `fail-on` | `high` | Fail workflow at this severity or above |
+| `sarif-upload` | `true` | Upload SARIF to GitHub Code Scanning |
+| `version` | `latest` | MCPSense version to use |
+
+**Action outputs:** `score`, `findings-count`, `sarif-file`
 
 ---
 
@@ -181,63 +219,29 @@ mcpsense scan ./mcp.json --format json
 mcpsense scan <target> [flags]
 
 Flags:
-  -m, --mode string      Scan mode: static, live, manifest, auto (default "auto")
-  -f, --format string    Output format: cli, json (default "cli")
-  -s, --severity string  Minimum severity to report: critical, high, medium, low, info (default "low")
-  -c, --checks string    Comma-separated list of check IDs to run (default: all)
-      --exclude string   Comma-separated list of check IDs to skip
+  -m, --mode string      Scan mode: static, live, manifest, config, auto (default "auto")
+  -f, --format string    Output format: cli, json, sarif (default "cli")
+  -s, --severity string  Minimum severity: critical, high, medium, low, info (default "low")
+  -c, --checks string    Comma-separated check IDs to run (default: all)
+      --exclude string   Comma-separated check IDs to skip
       --probe            Enable active probing in live mode
   -o, --output string    Output file path (default: stdout)
       --no-color         Disable colored output
+
+Other commands:
+  mcpsense init          Create .mcpsenserc.json with defaults
+  mcpsense version       Print version
 ```
-
-**Auto-detection rules:**
-- `*.json` target uses manifest mode
-- Directory target uses static mode
-- `http://` or `https://` target uses live (SSE) mode
-- Command string target uses live (stdio) mode
-
----
-
-## CI/CD Integration
-
-**GitHub Actions example:**
-
-```yaml
-name: MCP Security Scan
-
-on: [push, pull_request]
-
-jobs:
-  mcpsense:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install mcpsense
-        run: go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
-
-      - name: Scan MCP manifest
-        run: mcpsense scan ./mcp.json --format json --output mcpsense-report.json
-
-      - name: Upload report
-        uses: actions/upload-artifact@v4
-        with:
-          name: mcpsense-report
-          path: mcpsense-report.json
-```
-
-mcpsense exits with code 1 if any Critical or High findings are present, making it easy to block merges on security issues.
 
 ---
 
 ## Configuration
 
-Generate a `.mcpsenserc.json` for project-level defaults:
-
 ```bash
 mcpsense init
 ```
+
+Creates `.mcpsenserc.json`:
 
 ```json
 {
@@ -250,22 +254,21 @@ mcpsense init
 
 | Field | Description |
 |-------|-------------|
-| `min_severity` | Only report findings at or above this severity level |
-| `exclude_ids` | Check IDs to skip entirely (useful for suppressing false positives) |
-| `check_ids` | Run only these specific check IDs (empty means all checks run) |
+| `min_severity` | Only report findings at or above this level |
+| `exclude_ids` | Check IDs to skip (suppress known false positives) |
+| `check_ids` | Run only these checks (empty = all) |
 | `format` | Default output format |
 
 ---
 
 ## Contributing
 
-Contributions are welcome. Please:
+Contributions welcome.
 
-1. Fork the repository and create a feature branch
+1. Fork and create a feature branch
 2. Write tests alongside your changes
 3. Ensure `go test ./...` passes
-4. Ensure `golangci-lint run ./...` passes
-5. Submit a pull request with a clear description of the change
+4. Submit a PR with a clear description
 
 To add a new check, implement the `checks.Check` interface and register it in `checks.NewRegistry()`.
 
@@ -273,6 +276,6 @@ To add a new check, implement the `checks.Check` interface and register it in `c
 
 ## License
 
-MIT. See [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).
 
-Built by Faizan with ❤️.
+Built by [Faizan](https://github.com/fayzkk889).

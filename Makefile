@@ -1,6 +1,6 @@
 .PHONY: build test lint run clean install
 
-VERSION  := 0.1.0
+VERSION  := $(shell git describe --tags --always --dirty)
 BINARY   := mcpsense
 LDFLAGS  := -ldflags "-X main.version=$(VERSION)"
 

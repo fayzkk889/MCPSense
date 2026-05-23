@@ -18,6 +18,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content attempts to override system instructions by telling the model to ignore previous directives.",
 			"injection",
 			"Remove instruction-overriding language. Tool descriptions and inputs should never contain directives aimed at the model itself.",
+			"description",
 		),
 		compilePattern(
 			"PI-002",
@@ -27,6 +28,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content attempts to replace or nullify the system prompt.",
 			"injection",
 			"Remove any language that attempts to reset or replace model instructions. Descriptions should describe tool behavior, not manipulate model context.",
+			"description",
 		),
 		compilePattern(
 			"PI-003",
@@ -36,6 +38,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content attempts to redefine the model's identity or role.",
 			"injection",
 			"Remove identity-redefining language from tool descriptions and parameters.",
+			"description",
 		),
 
 		// PI-004: Role hijacking patterns
@@ -47,6 +50,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content attempts to hijack the model's role by asking it to act as a different entity.",
 			"injection",
 			"Remove persona-switching language from tool-facing content. Descriptions should explain tool functionality, not assign new roles to the model.",
+			"description",
 		),
 
 		// PI-005: Instruction extraction
@@ -58,6 +62,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content attempts to extract the model's system prompt or internal instructions.",
 			"injection",
 			"Remove extraction-prompting language. Tool descriptions should not instruct the model to reveal its configuration.",
+			"description",
 		),
 
 		// PI-006: Delimiter injection
@@ -69,6 +74,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content contains structural delimiters used by LLMs to separate system context from user input.",
 			"injection",
 			"Strip or escape LLM-specific delimiter tokens before including content in tool definitions or responses.",
+			"description",
 		),
 
 		// PI-007: Encoding evasion (base64 patterns in descriptions)
@@ -80,6 +86,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content contains a long base64-encoded string that may hide an encoded injection payload.",
 			"injection",
 			"Avoid embedding encoded payloads in tool descriptions or parameter defaults. If base64 is legitimately needed, document it explicitly.",
+			"description",
 		),
 
 		// PI-008: Character substitution evasion
@@ -91,6 +98,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content uses character substitution to evade injection detection filters.",
 			"injection",
 			"Remove obfuscated injection language. Character substitution is a known evasion technique for prompt injection filters.",
+			"description",
 		),
 
 		// PI-009: Multi-turn manipulation
@@ -102,6 +110,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content attempts to manipulate the model by fabricating or referencing earlier conversation turns.",
 			"injection",
 			"Do not include fabricated conversation history in tool descriptions or prompt templates.",
+			"description",
 		),
 
 		// PI-010: Jailbreak trigger phrases
@@ -113,6 +122,7 @@ func coreInjectionPatterns() []Pattern {
 			"Content contains known jailbreak trigger phrases that attempt to disable model safety features.",
 			"injection",
 			"Remove jailbreak language entirely. These phrases signal malicious intent and will be blocked by most model providers.",
+			"description",
 		),
 	}
 }

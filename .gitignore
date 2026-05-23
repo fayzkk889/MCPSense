@@ -1,6 +1,14 @@
+# Existing (keep)
 bin/
 *.exe
 *.test
 *.out
 .mcpsenserc.json
 dist/
+
+# Add these
+diagnose_live.ps1
+test_e2e.sh
+scan_report.txt
+*.sarif
+*.tmp

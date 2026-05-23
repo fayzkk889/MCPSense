@@ -1,0 +1,35 @@
+# Example: Add MCPSense to your CI/CD pipeline
+# Copy this file to .github/workflows/mcpsense.yml in your project
+
+name: MCP Security Scan
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**mcp*.json"
+      - "**claude_desktop_config.json"
+      - ".cursor/**"
+  pull_request:
+    branches: [main]
+
+permissions:
+  security-events: write  # Required for SARIF upload to Code Scanning
+  contents: read
+
+jobs:
+  mcpsense:
+    name: MCPSense Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan MCP configuration
+        uses: fayzkk889/MCPSense@main
+        with:
+          target: "."
+          mode: "auto"
+          severity: "low"
+          format: "sarif"
+          sarif-upload: "true"
+          fail-on: "high"

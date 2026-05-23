@@ -13,7 +13,7 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/scanner"
 )
 
-var version = "0.1.0"
+var version = "dev"
 
 const configFile = ".mcpsenserc.json"
 
@@ -92,10 +92,12 @@ CLI flags override config file values.`,
 				scanMode = scanner.ModeLive
 			case "manifest":
 				scanMode = scanner.ModeManifest
+			case "config":
+				scanMode = scanner.ModeConfig
 			case "auto", "":
 				// ModeAuto is the default, nothing to do.
 			default:
-				return fmt.Errorf("unknown mode %q, use: static, live, manifest, auto", mode)
+				return fmt.Errorf("unknown mode %q, use: static, live, manifest, config, auto", mode)
 			}
 
 			// Parse check filter lists.
@@ -161,8 +163,8 @@ CLI flags override config file values.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, auto")
-	cmd.Flags().StringVarP(&format, "format", "f", "cli", "Output format: cli, json")
+	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, config, auto")
+	cmd.Flags().StringVarP(&format, "format", "f", "cli", "Output format: cli, json, sarif")
 	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: critical, high, medium, low, info")
 	cmd.Flags().StringVarP(&checkIDs, "checks", "c", "", "Comma-separated list of check IDs to run (default: all)")
 	cmd.Flags().StringVar(&excludeIDs, "exclude", "", "Comma-separated list of check IDs to skip")

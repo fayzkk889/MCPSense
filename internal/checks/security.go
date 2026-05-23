@@ -22,7 +22,7 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	}
 	var findings []models.Finding
 	for _, tool := range ctx.Manifest.Tools {
-		matches := ctx.Patterns.Scan(tool.Description)
+		matches := ctx.Patterns.ScanDescriptions(tool.Description)
 		seen := make(map[string]bool)
 		for _, m := range matches {
 			key := tool.Name + ":" + m.PatternID
@@ -46,9 +46,9 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 
 // shellExecPatterns detects shell execution patterns in source files.
 var shellExecPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`exec\.Command\s*\(\s*"(sh|bash|cmd|powershell|zsh|fish)"`),
-	regexp.MustCompile(`exec\.CommandContext\s*\([^,]+,\s*"(sh|bash|cmd|powershell|zsh|fish)"`),
-	regexp.MustCompile(`subprocess\.(run|call|Popen|check_output)\s*\([^)]*shell\s*=\s*True`),
+	regexp.MustCompile(`exec\.command\s*\(\s*"(sh|bash|cmd|powershell|zsh|fish)"`),
+	regexp.MustCompile(`exec\.commandcontext\s*\([^,]+,\s*"(sh|bash|cmd|powershell|zsh|fish)"`),
+	regexp.MustCompile(`subprocess\.(run|call|popen|check_output)\s*\([^)]*shell\s*=\s*true`),
 	regexp.MustCompile(`os\.system\s*\(`),
 	regexp.MustCompile(`child_process\.exec\s*\(`),
 }
@@ -66,7 +66,7 @@ func (c *ShellExecCheck) Run(ctx *ScanContext) []models.Finding {
 		lines := strings.Split(content, "\n")
 		for lineNum, line := range lines {
 			for _, pat := range shellExecPatterns {
-				if pat.MatchString(line) {
+				if pat.MatchString(strings.ToLower(line)) {
 					findings = append(findings, models.Finding{
 						ID:          "SEC-002",
 						Title:       "Shell command execution detected",
@@ -86,9 +86,9 @@ func (c *ShellExecCheck) Run(ctx *ScanContext) []models.Finding {
 
 // ssrfPatterns detect HTTP requests made using variable URLs.
 var ssrfPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`http\.Get\s*\(\s*[^"')\s]+`),
-	regexp.MustCompile(`http\.Post\s*\(\s*[^"')\s]+`),
-	regexp.MustCompile(`http\.NewRequest\s*\([^,]+,\s*[^"')\s]+`),
+	regexp.MustCompile(`http\.get\s*\(\s*[^"')\s]+`),
+	regexp.MustCompile(`http\.post\s*\(\s*[^"')\s]+`),
+	regexp.MustCompile(`http\.newrequest\s*\([^,]+,\s*[^"')\s]+`),
 	regexp.MustCompile(`requests\.(get|post|put|delete)\s*\(\s*[^"')\s]+`),
 	regexp.MustCompile(`fetch\s*\(\s*[^"')\s]+`),
 	regexp.MustCompile(`axios\.(get|post|put|delete)\s*\(\s*[^"')\s]+`),
@@ -107,7 +107,7 @@ func (c *SSRFCheck) Run(ctx *ScanContext) []models.Finding {
 		lines := strings.Split(content, "\n")
 		for lineNum, line := range lines {
 			for _, pat := range ssrfPatterns {
-				if pat.MatchString(line) {
+				if pat.MatchString(strings.ToLower(line)) {
 					findings = append(findings, models.Finding{
 						ID:          "SEC-003",
 						Title:       "Potential SSRF: HTTP request from variable URL",
@@ -286,13 +286,13 @@ func (c *CommandInjectionCheck) Name() string          { return "Command injecti
 func (c *CommandInjectionCheck) Category() models.Category { return models.CategorySecurity }
 
 var cmdInjectionPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`exec\.Command\s*\([^)]*fmt\.Sprintf`),
-	regexp.MustCompile(`exec\.Command\s*\([^)]*\+\s*\w+`),
+	regexp.MustCompile(`exec\.command\s*\([^)]*fmt\.sprintf`),
+	regexp.MustCompile(`exec\.command\s*\([^)]*\+\s*\w+`),
 	regexp.MustCompile(`os\.system\s*\([^)]*\+`),
 	regexp.MustCompile(`os\.system\s*\([^)]*%`),
-	regexp.MustCompile(`subprocess\.run\s*\([^)]*f["\']`),
+	regexp.MustCompile(`subprocess\.run\s*\([^)]*f["']`),
 	regexp.MustCompile(`child_process\.exec\s*\([^)]*\+`),
-	regexp.MustCompile("exec\\.Command\\s*\\([^)]*`[^`]*\\$\\{"),
+	regexp.MustCompile("exec\\.command\\s*\\([^)]*`[^`]*\\$\\{"),
 }
 
 func (c *CommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
@@ -301,7 +301,7 @@ func (c *CommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 		lines := strings.Split(content, "\n")
 		for lineNum, line := range lines {
 			for _, pat := range cmdInjectionPatterns {
-				if pat.MatchString(line) {
+				if pat.MatchString(strings.ToLower(line)) {
 					findings = append(findings, models.Finding{
 						ID:          "SEC-007",
 						Title:       "Command injection via string interpolation",
@@ -327,11 +327,11 @@ func (c *DataExfilCheck) Name() string          { return "Data exfiltration vect
 func (c *DataExfilCheck) Category() models.Category { return models.CategorySecurity }
 
 var dataExfilPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`os\.ReadFile\s*\([^)]*\w+\s*\)`),
-	regexp.MustCompile(`ioutil\.ReadFile\s*\([^)]*\w+\s*\)`),
+	regexp.MustCompile(`os\.readfile\s*\([^)]*\w+\s*\)`),
+	regexp.MustCompile(`ioutil\.readfile\s*\([^)]*\w+\s*\)`),
 	regexp.MustCompile(`open\s*\([^)]*\w+[^)]*\)\s*\.read\(\)`),
-	regexp.MustCompile(`SELECT\s+\*\s+FROM`),
-	regexp.MustCompile(`db\.Query\s*\([^)]*SELECT\s+\*`),
+	regexp.MustCompile(`select\s+\*\s+from`),
+	regexp.MustCompile(`db\.query\s*\([^)]*select\s+\*`),
 }
 
 func (c *DataExfilCheck) Run(ctx *ScanContext) []models.Finding {
@@ -373,7 +373,7 @@ func (c *DataExfilCheck) Run(ctx *ScanContext) []models.Finding {
 		lines := strings.Split(content, "\n")
 		for lineNum, line := range lines {
 			for _, pat := range dataExfilPatterns {
-				if pat.MatchString(line) {
+				if pat.MatchString(strings.ToLower(line)) {
 					findings = append(findings, models.Finding{
 						ID:          "SEC-008",
 						Title:       "Raw file or database data returned without filtering",

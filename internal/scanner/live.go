@@ -14,6 +14,8 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
+const defaultProtocolVersion = "2025-11-25"
+
 // scanLive connects to a live MCP server and interrogates it for tools and resources.
 func (s *Scanner) scanLive(target string, ctx *checks.ScanContext) error {
 	if strings.HasPrefix(target, "http://") || strings.HasPrefix(target, "https://") {
@@ -37,16 +39,25 @@ func (s *Scanner) scanLiveSSE(target string, ctx *checks.ScanContext) error {
 
 // fetchManifestViaHTTP sends initialize + tools/list + resources/list to an HTTP MCP endpoint.
 func fetchManifestViaHTTP(client *http.Client, baseURL string) (*models.MCPManifest, error) {
-	rpcURL := strings.TrimRight(baseURL, "/") + "/rpc"
+	primaryURL := strings.TrimRight(baseURL, "/")
+	manifest, err := tryFetchManifestFromURL(client, primaryURL)
+	if err == nil {
+		return manifest, nil
+	}
+	// Fallback: try with /rpc suffix
+	fallbackURL := primaryURL + "/rpc"
+	return tryFetchManifestFromURL(client, fallbackURL)
+}
 
+func tryFetchManifestFromURL(client *http.Client, rpcURL string) (*models.MCPManifest, error) {
 	initReq := models.MCPJSONRPCRequest{
 		JSONRPC: "2.0",
 		ID:      1,
 		Method:  "initialize",
 		Params: models.MCPInitializeRequest{
-			ProtocolVersion: "2024-11-05",
+			ProtocolVersion: defaultProtocolVersion,
 			Capabilities:    map[string]interface{}{},
-			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.1.0"},
+			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.1.2"},
 		},
 	}
 
@@ -74,7 +85,19 @@ func fetchManifestViaHTTP(client *http.Client, baseURL string) (*models.MCPManif
 		if err := json.Unmarshal(initResp.Result, &initResult); err == nil {
 			manifest.Name = initResult.ServerInfo.Name
 			manifest.Version = initResult.ServerInfo.Version
+			manifest.ProtocolVersion = initResult.ProtocolVersion
 		}
+	}
+
+	// Send initialized notification (required by MCP spec before further requests).
+	initNotif := models.MCPJSONRPCNotification{
+		JSONRPC: "2.0",
+		Method:  "notifications/initialized",
+	}
+	notifData, _ := json.Marshal(initNotif)
+	notifResp, err := client.Post(rpcURL, "application/json", strings.NewReader(string(notifData)))
+	if err == nil {
+		notifResp.Body.Close()
 	}
 
 	// Fetch tools list.
@@ -188,9 +211,9 @@ func interrogateStdioServer(stdin io.Writer, stdout io.Reader) (*models.MCPManif
 	initReq := models.MCPJSONRPCRequest{
 		JSONRPC: "2.0", ID: 1, Method: "initialize",
 		Params: models.MCPInitializeRequest{
-			ProtocolVersion: "2024-11-05",
+			ProtocolVersion: defaultProtocolVersion,
 			Capabilities:    map[string]interface{}{},
-			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.1.0"},
+			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.1.2"},
 		},
 	}
 	initResp, err := sendRPC(initReq)
@@ -199,8 +222,19 @@ func interrogateStdioServer(stdin io.Writer, stdout io.Reader) (*models.MCPManif
 		if json.Unmarshal(initResp.Result, &result) == nil {
 			manifest.Name = result.ServerInfo.Name
 			manifest.Version = result.ServerInfo.Version
+			manifest.ProtocolVersion = result.ProtocolVersion
 		}
 	}
+
+	// Send initialized notification (required by MCP spec).
+	initNotif := models.MCPJSONRPCNotification{
+		JSONRPC: "2.0",
+		Method:  "notifications/initialized",
+	}
+	notifData, _ := json.Marshal(initNotif)
+	fmt.Fprintf(stdin, "%s\n", notifData)
+	// No response expected for notifications — brief pause to let server process it.
+	time.Sleep(100 * time.Millisecond)
 
 	// Tools list.
 	toolsResp, err := sendRPC(models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: 2, Method: "tools/list"})
