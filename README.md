@@ -64,6 +64,17 @@ go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 
 Or download a pre-built binary from the [releases page](https://github.com/fayzkk889/MCPSense/releases).
 
+### Windows Defender Note
+
+Windows Defender may flag the binary as a false positive (`Trojan:Win32/Bearfoos.B!ml`). This is a [known issue with unsigned Go binaries](https://go.dev/doc/faq#virus) and affects many Go-based CLI tools.
+
+**To fix:** Open Windows Security > Virus & threat protection > Protection history > find the MCPSense entry > click "Allow on device". Then re-run the installer.
+
+**Alternative:** Install via Go directly (not flagged by Defender):
+```bash
+go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
+```
+
 ---
 
 ## Quick Start

@@ -29,6 +29,13 @@ try {
 Write-Host "[mcpsense] " -ForegroundColor Cyan -NoNewline
 Write-Host "Latest version: v$version"
 
+Write-Host ""
+Write-Host "[mcpsense] " -ForegroundColor Yellow -NoNewline
+Write-Host "IMPORTANT: Windows Defender may flag Go binaries as false positives."
+Write-Host "[mcpsense] " -ForegroundColor Yellow -NoNewline
+Write-Host "This is a known Go issue: https://go.dev/doc/faq#virus"
+Write-Host ""
+
 # Download
 $filename = "MCPSense_${version}_windows_${arch}.zip"
 $url = "https://github.com/$repo/releases/download/v$version/$filename"
@@ -68,6 +75,19 @@ if (-not (Test-Path $installDir)) {
     New-Item -ItemType Directory -Path $installDir | Out-Null
 }
 
+# Try to add Windows Defender exclusion (requires admin, may fail silently)
+try {
+    Add-MpPreference -ExclusionPath $installDir -ErrorAction Stop
+    Write-Host "[mcpsense] " -ForegroundColor Green -NoNewline
+    Write-Host "Added Windows Defender exclusion for $installDir"
+} catch {
+    Write-Host "[mcpsense] " -ForegroundColor Yellow -NoNewline
+    Write-Host "Could not add Defender exclusion (needs admin). If the binary disappears:"
+    Write-Host "  1. Open Windows Security > Virus & threat protection > Protection history" -ForegroundColor DarkGray
+    Write-Host "  2. Find the MCPSense quarantine entry and click 'Allow'" -ForegroundColor DarkGray
+    Write-Host "  3. Or run this script as Administrator" -ForegroundColor DarkGray
+}
+
 Copy-Item $binaryPath (Join-Path $installDir $binaryName) -Force
 
 # Add to PATH if not already there
@@ -81,9 +101,27 @@ if ($currentPath -notlike "*$installDir*") {
 # Cleanup
 Remove-Item -Recurse -Force $tmpDir
 
-# Verify
-$installedBinary = Join-Path $installDir $binaryName
-$versionOutput = & $installedBinary version 2>&1
+# Verify binary actually exists (Defender may have quarantined it)
+Start-Sleep -Seconds 2  # Give Defender a moment to act
+$finalPath = Join-Path $installDir $binaryName
+if (-not (Test-Path $finalPath)) {
+    Write-Host ""
+    Write-Host "[mcpsense] " -ForegroundColor Red -NoNewline
+    Write-Host "ERROR: Binary was deleted (likely by Windows Defender)."
+    Write-Host ""
+    Write-Host "  To fix this:" -ForegroundColor Yellow
+    Write-Host "  1. Open Windows Security" -ForegroundColor DarkGray
+    Write-Host "  2. Go to Virus & threat protection > Protection history" -ForegroundColor DarkGray
+    Write-Host "  3. Find 'mcpsense.exe' and click 'Allow on device'" -ForegroundColor DarkGray
+    Write-Host "  4. Run this installer again" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  Alternative: install via Go instead:" -ForegroundColor Yellow
+    Write-Host "  go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest" -ForegroundColor Cyan
+    Write-Host ""
+    exit 1
+}
+
+$versionOutput = & $finalPath version 2>&1
 
 Write-Host "[mcpsense] " -ForegroundColor Green -NoNewline
 Write-Host "Installed successfully: $versionOutput"
