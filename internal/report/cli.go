@@ -45,7 +45,7 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	line := strings.Repeat("=", 54)
 	fmt.Fprint(w, "\n")
 	fmt.Fprint(w, colorBold.Sprint("╔"+line+"╗\n"))
-	header := fmt.Sprintf("mcpsense %s — MCP Server Security Scanner", AppVersion)
+	header := fmt.Sprintf("mcpsense v%s — MCP Server Security Scanner", AppVersion)
 	fmt.Fprint(w, colorBold.Sprint(fmt.Sprintf("║  %-52s║\n", header)))
 	fmt.Fprint(w, colorBold.Sprint("╠"+line+"╣\n"))
 	fmt.Fprint(w, colorBold.Sprint("║  "))

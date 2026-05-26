@@ -1,159 +1,63 @@
-# MCPSense npm Wrapper — Windows Defender Fix
-
-Paste this into Gemini CLI.
-
----
+# MCPSense — Fix Double "v" in Version Display
 
 ## Context
 
-MCPSense has an npm wrapper package at `C:\Users\Dell\Desktop\MCPSense\npm\`. The `install.js` script downloads pre-built Go binaries from GitHub Releases during `npm install`. On Windows, Defender flags the downloaded binary as `Trojan:Win32/Bearfoos.B!ml` and silently deletes it. This is a false positive triggered by unsigned Go binaries with the Mark of the Web flag.
-
-The fix: on Windows, compile from source using `go install` instead of downloading binaries. Locally compiled binaries don't get flagged. Linux and macOS keep the binary download path since they don't have this issue.
-
----
+MCPSense is at `C:\Users\Dell\Desktop\MCPSense\`. When installed via `go install` or npm, `mcpsense version` shows `mcpsense vv0.2.1` (double "v"). This happens because `runtime/debug.ReadBuildInfo()` returns `v0.2.1` (with "v" prefix) and the display code prepends another "v".
 
 ## What to do
 
-Open `C:\Users\Dell\Desktop\MCPSense\npm\install.js` and make these changes:
+Open `cmd/mcpsense/main.go`. Find the `init()` function that has the `debug.ReadBuildInfo()` fallback. It looks something like this:
 
-### Change 1: Add the `installFromSource` function
-
-Add this function before the `main()` function:
-
-```javascript
-function installFromSource(binaryPath) {
-  console.log("Windows detected — building from source to avoid antivirus false positives...");
-
-  // Check if Go is available
-  try {
-    execSync("go version", { stdio: "pipe" });
-  } catch (_) {
-    console.error("");
-    console.error("mcpsense requires Go on Windows because antivirus software");
-    console.error("flags downloaded Go binaries as false positives.");
-    console.error("");
-    console.error("Install Go from https://go.dev/dl/ then retry:");
-    console.error("  npm install -g mcpsense");
-    console.error("");
-    console.error("On Linux/macOS, Go is not required.");
-    process.exit(1);
-  }
-
-  const version = getPackageVersion();
-  const goPackage = `github.com/fayzkk889/MCPSense/cmd/mcpsense@v${version}`;
-
-  console.log(`Running: go install ${goPackage}`);
-
-  try {
-    execSync(`go install ${goPackage}`, { stdio: "inherit" });
-  } catch (err) {
-    console.error(`\ngo install failed: ${err.message}`);
-    console.error(`\nTry manually:`);
-    console.error(`  go install ${goPackage}`);
-    process.exit(1);
-  }
-
-  // go install puts the binary in GOPATH/bin — copy it to our bin dir
-  const gopath = execSync("go env GOPATH", { encoding: "utf8" }).trim();
-  const goBinary = path.join(gopath, "bin", "mcpsense.exe");
-
-  if (!fs.existsSync(goBinary)) {
-    console.error(`Binary not found at ${goBinary} after go install.`);
-    console.error(`Check that GOPATH/bin is correct: ${path.join(gopath, "bin")}`);
-    process.exit(1);
-  }
-
-  const binDir = path.dirname(binaryPath);
-  if (!fs.existsSync(binDir)) {
-    fs.mkdirSync(binDir, { recursive: true });
-  }
-
-  fs.copyFileSync(goBinary, binaryPath);
-  console.log("mcpsense installed successfully (compiled from source).");
+```go
+func init() {
+    if version == "dev" {
+        if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
+            version = info.Main.Version
+        }
+    }
 }
 ```
 
-### Change 2: Update `main()` to use source install on Windows
+Change it to strip the leading "v" from the Go module version:
 
-In the `main()` function, find the part after the early return for "binary already exists". Add the Windows check right there, before the download logic. The top of `main()` should look like this after editing:
-
-```javascript
-async function main() {
-  const binaryPath = getBinaryPath();
-
-  // Skip if binary already exists
-  if (fs.existsSync(binaryPath)) {
-    console.log(`mcpsense binary already exists at ${binaryPath}`);
-    return;
-  }
-
-  // On Windows, compile from source to avoid Defender false positives
-  if (os.platform() === "win32") {
-    return installFromSource(binaryPath);
-  }
-
-  // Everything below this line stays unchanged — it handles Linux/macOS binary download
-  const version = getPackageVersion();
-  // ... rest of existing download code ...
-```
-
-Do NOT delete or modify any of the existing download logic (the `getDownloadUrl`, `downloadFile`, `extractTarGz`, `extractZip` functions and the download path in `main()`). That code still runs for Linux and macOS. You are only adding the Windows early-exit before it.
-
-### Change 3: Add cleanup step
-
-Also check if there is a cleanup step at the end of `main()` that removes extra files from the bin directory after extraction. If there is, make sure it also runs correctly for the Windows source-install path. Since `installFromSource` copies just `mcpsense.exe` directly, no cleanup is needed for that path, but verify the cleanup logic has a guard so it doesn't error when called after source install.
-
-If there is no cleanup step, add one at the end of the download/extraction block (inside the try block, after the "installed successfully" log), but only for the non-Windows path:
-
-```javascript
-// Clean up extra files from GoReleaser archive (LICENSE, README, etc.)
-const ext = os.platform() === "win32" ? ".exe" : "";
-const expectedBinary = BINARY_NAME + ext;
-const keepFiles = new Set([expectedBinary, "run.js", ".gitkeep"]);
-for (const file of fs.readdirSync(binDir)) {
-  if (!keepFiles.has(file)) {
-    try {
-      const fullPath = path.join(binDir, file);
-      const stat = fs.statSync(fullPath);
-      if (stat.isDirectory()) {
-        fs.rmSync(fullPath, { recursive: true, force: true });
-      } else {
-        fs.unlinkSync(fullPath);
-      }
-    } catch (_) {}
-  }
+```go
+func init() {
+    if version == "dev" {
+        if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
+            v := info.Main.Version
+            if len(v) > 0 && v[0] == 'v' {
+                v = v[1:]
+            }
+            version = v
+        }
+    }
 }
 ```
 
----
+Also search the entire file for any other place where version is set or formatted. Check if GoReleaser's ldflags already sets version with a "v" prefix. Search for `-ldflags` in `.goreleaser.yml` and in `Makefile`. If ldflags sets version as `v0.2.1` (with "v"), strip it there too, OR change the display code to not prepend "v". Pick one consistent approach:
+
+- Either version variable always stores WITHOUT "v" prefix (like `0.2.1`) and display code adds "v"
+- Or version variable always stores WITH "v" prefix (like `v0.2.1`) and display code does not add "v"
+
+Check how version is displayed. Search for where `version` is printed. It might be in `cmd/mcpsense/main.go` (a version command) and in `internal/report/cli.go` (the header box). Look for patterns like `fmt.Sprintf("v%s", version)` or `"mcpsense v" + version`. Make sure only one "v" appears in the final output everywhere.
 
 ## Verify
 
-After making the changes:
+After fixing, build and test:
 
-1. Delete the existing binary if present:
 ```powershell
-Remove-Item "C:\Users\Dell\Desktop\MCPSense\npm\bin\mcpsense.exe" -ErrorAction SilentlyContinue
+go build -o mcpsense.exe ./cmd/mcpsense
+.\mcpsense.exe version
 ```
 
-2. Run the install script:
+Expected: `mcpsense v0.2.1` (single "v")
+
+Also check the scan header:
+
 ```powershell
-cd C:\Users\Dell\Desktop\MCPSense\npm
-node install.js
+.\mcpsense.exe scan "$env:USERPROFILE\mcpsense-test\mcp.json"
 ```
 
-Expected output:
-- Should say "Windows detected — building from source"
-- Should run `go install` 
-- Should say "installed successfully (compiled from source)"
-- No Defender alerts
+Expected header: `mcpsense v0.2.1` (single "v")
 
-3. Test the binary:
-```powershell
-node bin/run.js version
-node bin/run.js scan "C:\Users\Dell\mcpsense-test\mcp.json"
-```
-
-4. Show me the full contents of `install.js` after your edits.
-
-Do NOT commit yet.
+Show me the diff. Do NOT commit.

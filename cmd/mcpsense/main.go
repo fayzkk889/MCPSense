@@ -19,7 +19,11 @@ var version = "dev"
 func init() {
 	if version == "dev" {
 		if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
-			version = info.Main.Version
+			v := info.Main.Version
+			if len(v) > 0 && v[0] == 'v' {
+				v = v[1:]
+			}
+			version = v
 		}
 	}
 }

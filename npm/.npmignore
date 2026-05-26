@@ -1,0 +1,4 @@
+bin/mcpsense
+bin/mcpsense.exe
+bin/download.*
+node_modules/
