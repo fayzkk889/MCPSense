@@ -74,6 +74,7 @@ CLI flags override config file values.`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			target := args[0]
+			report.AppVersion = version
 
 			// Load .mcpsenserc.json as a baseline; CLI flags override each field.
 			cfg := loadConfig()

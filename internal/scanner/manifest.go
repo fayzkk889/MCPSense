@@ -17,8 +17,12 @@ func (s *Scanner) scanManifest(target string, ctx *checks.ScanContext) error {
 	}
 
 	var manifest models.MCPManifest
+	// Strip UTF-8 BOM if present
+	if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
+		data = data[3:]
+	}
 	if err := json.Unmarshal(data, &manifest); err != nil {
-		return fmt.Errorf("parsing manifest %q: %w", target, err)
+		return fmt.Errorf("could not parse %q. If this file was created on Windows, it may have a UTF-8 BOM marker. Try re-saving in UTF-8 without BOM, or use a different text editor. Original error: %w", target, err)
 	}
 
 	ctx.Manifest = &manifest

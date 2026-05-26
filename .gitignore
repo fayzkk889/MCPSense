@@ -12,3 +12,9 @@ test_e2e.sh
 scan_report.txt
 *.sarif
 *.tmp
+
+# npm wrapper - downloaded binaries
+npm/bin/mcpsense
+npm/bin/mcpsense.exe
+npm/bin/download.*
+npm/node_modules/

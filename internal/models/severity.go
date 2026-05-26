@@ -12,19 +12,18 @@ const (
 )
 
 // Score returns the numeric weight for the severity level.
-// Critical=10, High=7, Medium=4, Low=2, Info=0.
 func (s Severity) Score() int {
 	switch s {
 	case SeverityCritical:
-		return 10
+		return 25
 	case SeverityHigh:
-		return 7
+		return 10
 	case SeverityMedium:
-		return 4
+		return 5
 	case SeverityLow:
 		return 2
 	case SeverityInfo:
-		return 0
+		return 1
 	default:
 		return 0
 	}

@@ -42,9 +42,13 @@ func (s *Scanner) scanConfig(target string, ctx *checks.ScanContext) error {
 	if err != nil {
 		return fmt.Errorf("reading config %q: %w", target, err)
 	}
+	// Strip UTF-8 BOM if present
+	if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
+		data = data[3:]
+	}
 	var config models.MCPClientConfig
 	if err := json.Unmarshal(data, &config); err != nil {
-		return fmt.Errorf("parsing config %q: %w", target, err)
+		return fmt.Errorf("could not parse %q. If this file was created on Windows, it may have a UTF-8 BOM marker. Try re-saving in UTF-8 without BOM, or use a different text editor. Original error: %w", target, err)
 	}
 	ctx.ClientConfig = &config
 	return nil
@@ -77,6 +81,10 @@ func (s *Scanner) tryLoadClientConfig(root string) *models.MCPClientConfig {
 		data, err := os.ReadFile(path)
 		if err != nil {
 			continue
+		}
+		// Strip UTF-8 BOM if present
+		if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
+			data = data[3:]
 		}
 		var config models.MCPClientConfig
 		if err := json.Unmarshal(data, &config); err == nil && len(config.MCPServers) > 0 {
@@ -113,6 +121,10 @@ func (s *Scanner) tryLoadManifest(root string) *models.MCPManifest {
 		data, err := os.ReadFile(path)
 		if err != nil {
 			continue
+		}
+		// Strip UTF-8 BOM if present
+		if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
+			data = data[3:]
 		}
 		// Try direct MCPManifest parse.
 		var manifest models.MCPManifest

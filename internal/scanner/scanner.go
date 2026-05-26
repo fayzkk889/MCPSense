@@ -104,6 +104,10 @@ func detectMode(target string) ScanMode {
 		// Client configs have a top-level "mcpServers" key.
 		data, err := os.ReadFile(target)
 		if err == nil {
+			// Strip UTF-8 BOM if present
+			if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
+				data = data[3:]
+			}
 			var raw map[string]json.RawMessage
 			if json.Unmarshal(data, &raw) == nil {
 				if _, hasServers := raw["mcpServers"]; hasServers {

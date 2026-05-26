@@ -1,0 +1,43 @@
+{
+  "name": "mcpsense",
+  "version": "0.2.1",
+  "description": "Security scanner for MCP servers. ESLint + Snyk for the Model Context Protocol.",
+  "bin": {
+    "mcpsense": "bin/run.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "scanner",
+    "cli",
+    "eslint",
+    "snyk",
+    "ai",
+    "llm",
+    "prompt-injection"
+  ],
+  "author": "Faizan (https://github.com/fayzkk889)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fayzkk889/MCPSense"
+  },
+  "homepage": "https://mcpsense.site",
+  "bugs": {
+    "url": "https://github.com/fayzkk889/MCPSense/issues"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "os": ["darwin", "linux", "win32"],
+  "cpu": ["x64", "arm64"],
+  "files": [
+    "bin/",
+    "install.js",
+    "README.md"
+  ]
+}

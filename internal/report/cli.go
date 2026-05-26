@@ -25,6 +25,9 @@ var (
 	colorCyan     = color.New(color.FgCyan)
 )
 
+// AppVersion is set by main.go at startup
+var AppVersion = "dev"
+
 // Write renders the report to the given writer.
 func (r *CLIReporter) Write(report *models.Report, w io.Writer) error {
 	if r.NoColor {
@@ -42,7 +45,8 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	line := strings.Repeat("=", 54)
 	fmt.Fprint(w, "\n")
 	fmt.Fprint(w, colorBold.Sprint("╔"+line+"╗\n"))
-	fmt.Fprint(w, colorBold.Sprint("║  mcpsense v0.1.0 — MCP Server Security Scanner       ║\n"))
+	header := fmt.Sprintf("mcpsense %s — MCP Server Security Scanner", AppVersion)
+	fmt.Fprint(w, colorBold.Sprint(fmt.Sprintf("║  %-52s║\n", header)))
 	fmt.Fprint(w, colorBold.Sprint("╠"+line+"╣\n"))
 	fmt.Fprint(w, colorBold.Sprint("║  "))
 	fmt.Fprintf(w, "Target:  %-43s", truncate(report.Target, 43))
