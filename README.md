@@ -24,16 +24,22 @@ npx mcpsense scan ./mcp.json
 <details>
 <summary>Other install methods</summary>
 
-**Go install:**
+**Go install (requires Go 1.22+):**
 
 ```
 go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
 
-**Linux/macOS binary:**
+**Linux/macOS binary download:**
 
 ```
 curl -sSL https://raw.githubusercontent.com/fayzkk889/MCPSense/main/install.sh | sh
+```
+
+**Windows PowerShell installer:**
+
+```
+irm https://raw.githubusercontent.com/fayzkk889/MCPSense/main/install.ps1 | iex
 ```
 
 **Pre-built binaries:** [GitHub Releases](https://github.com/fayzkk889/MCPSense/releases)
@@ -44,37 +50,37 @@ curl -sSL https://raw.githubusercontent.com/fayzkk889/MCPSense/main/install.sh |
 
 ## Quick Start
 
-**Scan your MCP client config:**
+Scan your MCP client config for command injection, credential leaks, and supply chain risks:
 
 ```
 mcpsense scan ./mcp.json
 ```
 
-**Scan Claude Desktop config:**
+Scan Claude Desktop config:
 
 ```
 mcpsense scan ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
 
-**Scan a source code directory:**
+Scan a source code directory:
 
 ```
 mcpsense scan ./my-mcp-server/
 ```
 
-**Scan a live MCP server:**
+Scan a live MCP server:
 
 ```
 mcpsense scan https://my-server.example.com
 ```
 
-**JSON output for CI/CD:**
+JSON output for CI/CD:
 
 ```
 mcpsense scan ./mcp.json --format json --output report.json
 ```
 
-**SARIF output for GitHub Code Scanning:**
+SARIF output for GitHub Code Scanning:
 
 ```
 mcpsense scan ./mcp.json --format sarif --output results.sarif
@@ -107,46 +113,26 @@ mcpsense scan ./mcp.json --format sarif --output results.sarif
 
 ### Spec Compliance (5 checks)
 
-| ID | Check | Severity |
-|----|-------|----------|
-| SPEC-001 | Valid manifest structure | Medium |
-| SPEC-002 | Tool input schema validity | High |
-| SPEC-003 | Tool naming conventions | Low |
-| SPEC-004 | Resource URI format | Medium |
-| SPEC-005 | Protocol version compatibility | Info |
+SPEC-001 through SPEC-005: manifest structure, input schemas, naming, resource URIs, protocol version.
 
 ### Tool Quality (7 checks)
 
-| ID | Check | Severity |
-|----|-------|----------|
-| QUAL-001 | Description clarity score | Medium/Low |
-| QUAL-002 | Ambiguous parameter names | Medium |
-| QUAL-003 | Missing parameter descriptions | Low |
-| QUAL-004 | Duplicate or overlapping tools | Low |
-| QUAL-005 | Missing examples | Info |
-| QUAL-006 | Excessive tool count | Info |
-| QUAL-007 | Missing input constraints | Low |
+QUAL-001 through QUAL-007: description clarity, parameter naming, missing descriptions, duplicate tools, examples, tool count, input constraints.
+
+**27 checks total across 3 categories.**
 
 ---
 
 ## Scan Modes
 
-MCPSense auto-detects the right mode, or you can set it manually with `--mode`:
+MCPSense auto-detects the right mode, or set it manually with `--mode`:
 
 | Mode | Target | What it does |
 |------|--------|-------------|
 | `config` | mcp.json, claude_desktop_config.json | Scans client configs for command injection, env leaks, unpinned packages |
 | `manifest` | MCP manifest JSON | Scans tool definitions for prompt injection, SSRF, path traversal |
 | `static` | Source directory | Analyzes Go, Python, TypeScript, JavaScript source code |
-| `live` | URL or command string | Connects via stdio or HTTP, performs full protocol handshake |
-
-**Auto-detection rules:**
-
-- JSON file with `mcpServers` key uses config mode
-- Other JSON files use manifest mode
-- Directory targets use static mode
-- `http://` or `https://` targets use live (SSE) mode
-- Command string targets use live (stdio) mode
+| `live` | URL or command | Connects via stdio or HTTP, performs full protocol handshake |
 
 ---
 
@@ -154,7 +140,7 @@ MCPSense auto-detects the right mode, or you can set it manually with `--mode`:
 
 **CLI** (default): Colored terminal output with severity-coded findings and remediation guidance.
 
-**JSON**: Structured output for CI/CD pipelines. MCPSense exits with code 1 on Critical or High findings.
+**JSON**: Structured output for CI/CD pipelines. Exits with code 1 on Critical or High findings.
 
 ```
 mcpsense scan ./mcp.json --format json
@@ -168,7 +154,7 @@ mcpsense scan ./mcp.json --format sarif
 
 ---
 
-## CI/CD Integration
+## CI/CD
 
 **GitHub Actions:**
 
@@ -186,17 +172,12 @@ jobs:
           target: ./mcp.json
 ```
 
-Or manually:
+Or install and run manually:
 
 ```yaml
-- name: Install mcpsense
-  run: npm install -g mcpsense
-
-- name: Scan
-  run: mcpsense scan ./mcp.json --format sarif --output results.sarif
-
-- name: Upload SARIF
-  uses: github/codeql-action/upload-sarif@v3
+- run: npm install -g mcpsense
+- run: mcpsense scan ./mcp.json --format sarif --output results.sarif
+- uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: results.sarif
 ```
@@ -229,9 +210,7 @@ We scanned 35 real MCP servers and client configs from public GitHub repos. 62% 
 
 ## Contributing
 
-Contributions welcome. Fork, branch, write tests, ensure `go test ./...` and `golangci-lint run ./...` pass, submit a PR.
-
-To add a new check, implement the `checks.Check` interface and register it in `checks.NewRegistry()`.
+Contributions welcome. Fork, branch, write tests, submit a PR. To add a new check, implement the `checks.Check` interface and register it in `checks.NewRegistry()`.
 
 ---
 
