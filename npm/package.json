@@ -1,6 +1,6 @@
 {
   "name": "mcpsense",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Security scanner for MCP servers. ESLint + Snyk for the Model Context Protocol.",
   "bin": {
     "mcpsense": "bin/run.js"

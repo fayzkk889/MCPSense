@@ -122,7 +122,15 @@ func (r *CLIReporter) writeSummary(w io.Writer, report *models.Report) {
 		parts = append(parts, severityColor(sev).Sprint(label))
 	}
 	fmt.Fprintf(w, "  Summary: %s\n", strings.Join(parts, " │ "))
-	fmt.Fprintf(w, "  %s\n\n", divider)
+	fmt.Fprintf(w, "  %s\n", divider)
+
+	fmt.Fprintln(w)
+	star := "\u2b50"
+	if r.NoColor {
+		star = "*"
+	}
+	fmt.Fprintf(w, "  %s Star MCPSense if it helped: https://github.com/fayzkk889/MCPSense\n", star)
+	fmt.Fprintln(w)
 }
 
 // sortedFindings returns findings sorted by severity weight descending.
