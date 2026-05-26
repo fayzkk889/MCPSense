@@ -31,7 +31,7 @@ inputs:
     required: false
     default: "high"
   version:
-    description: "MCPSense version to use (e.g., 0.1.2). Defaults to latest."
+    description: "MCPSense version to use (e.g., 0.2.2). Defaults to latest."
     required: false
     default: "latest"
 
@@ -55,7 +55,7 @@ runs:
       run: |
         VERSION="${{ inputs.version }}"
         if [ "$VERSION" = "latest" ]; then
-          VERSION=$(curl -s https://api.github.com/repos/fayzkk889/MCPSense/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/' || echo "0.1.2")
+          VERSION=$(curl -s https://api.github.com/repos/fayzkk889/MCPSense/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/' || echo "0.2.2")
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 

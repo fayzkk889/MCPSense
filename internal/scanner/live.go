@@ -57,7 +57,7 @@ func tryFetchManifestFromURL(client *http.Client, rpcURL string) (*models.MCPMan
 		Params: models.MCPInitializeRequest{
 			ProtocolVersion: defaultProtocolVersion,
 			Capabilities:    map[string]interface{}{},
-			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.1.2"},
+			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.2.2"},
 		},
 	}
 
@@ -213,7 +213,7 @@ func interrogateStdioServer(stdin io.Writer, stdout io.Reader) (*models.MCPManif
 		Params: models.MCPInitializeRequest{
 			ProtocolVersion: defaultProtocolVersion,
 			Capabilities:    map[string]interface{}{},
-			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.1.2"},
+			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.2.2"},
 		},
 	}
 	initResp, err := sendRPC(initReq)

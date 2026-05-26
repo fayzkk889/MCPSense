@@ -202,7 +202,7 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 				Tool: sarifTool{
 					Driver: sarifDriver{
 						Name:           "MCPSense",
-						Version:        "0.1.2",
+						Version:        "0.2.2",
 						InformationURI: "https://github.com/fayzkk889/MCPSense",
 						Rules:          rules,
 					},
