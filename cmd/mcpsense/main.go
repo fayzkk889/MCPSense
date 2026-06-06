@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/fayzkk889/MCPSense/internal/drift"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"github.com/fayzkk889/MCPSense/internal/report"
 	"github.com/fayzkk889/MCPSense/internal/scanner"
@@ -138,9 +139,54 @@ CLI flags override config file values.`,
 				ExcludeIDs:  skipIDs,
 			})
 
-			rep, err := s.Scan(target)
+			rep, ctx, err := s.Scan(target)
 			if err != nil {
 				return fmt.Errorf("scan failed: %w", err)
+			}
+
+			// --- Drift detection ---
+			noBaseline, _ := cmd.Flags().GetBool("no-baseline")
+			updateBaseline, _ := cmd.Flags().GetBool("update-baseline")
+			baselineFlag, _ := cmd.Flags().GetString("baseline")
+
+			// Drift applies to modes that have a tool/config surface (not static source scanning).
+			driftApplies := string(rep.ScanMode) == "manifest" || string(rep.ScanMode) == "config" || string(rep.ScanMode) == "live"
+
+			if driftApplies && !noBaseline {
+				current := drift.BuildSnapshot(ctx.Manifest, ctx.ClientConfig, target, string(rep.ScanMode))
+
+				baselinePath := baselineFlag
+				if baselinePath == "" {
+					p, err := drift.DefaultPath(target)
+					if err == nil {
+						baselinePath = p
+					}
+				}
+
+				if baselinePath != "" {
+					if updateBaseline {
+						if err := drift.Save(baselinePath, current); err != nil {
+							fmt.Fprintf(os.Stderr, "warning: could not update baseline: %v\n", err)
+						} else {
+							fmt.Fprintf(os.Stderr, "Baseline updated for %s\n", target)
+						}
+					} else if drift.Exists(baselinePath) {
+						prev, err := drift.Load(baselinePath)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "warning: could not load baseline: %v\n", err)
+						} else {
+							driftFindings := drift.Diff(prev, current)
+							rep.Findings = append(rep.Findings, driftFindings...)
+						}
+					} else {
+						// First scan: save baseline so future scans can detect drift.
+						if err := drift.Save(baselinePath, current); err != nil {
+							fmt.Fprintf(os.Stderr, "warning: could not save baseline: %v\n", err)
+						} else {
+							fmt.Fprintf(os.Stderr, "Baseline saved. Future scans of this target will detect drift.\n")
+						}
+					}
+				}
 			}
 
 			// Apply minimum severity filter and recompute the score so it
@@ -162,7 +208,12 @@ CLI flags override config file values.`,
 			}
 
 			// Render report.
+			showDiff, _ := cmd.Flags().GetBool("show-diff")
 			reporter := report.New(report.Format(strings.ToLower(format)), noColor)
+			if cli, ok := reporter.(*report.CLIReporter); ok {
+				cli.ShowDiff = showDiff
+			}
+
 			if err := reporter.Write(rep, out); err != nil {
 				return fmt.Errorf("writing report: %w", err)
 			}
@@ -185,6 +236,11 @@ CLI flags override config file values.`,
 	cmd.Flags().BoolVar(&probe, "probe", false, "Enable active probing in live mode")
 	cmd.Flags().StringVarP(&outputFile, "output", "o", "", "Output file path (default: stdout)")
 	cmd.Flags().BoolVar(&noColor, "no-color", false, "Disable colored output")
+
+	cmd.Flags().String("baseline", "", "Path to a baseline snapshot file for drift detection (default: ~/.mcpsense/snapshots/)")
+	cmd.Flags().Bool("update-baseline", false, "Accept the current server state as the new drift baseline")
+	cmd.Flags().Bool("no-baseline", false, "Skip drift detection for this scan")
+	cmd.Flags().Bool("show-diff", false, "Show full before/after text for drift findings")
 
 	return cmd
 }

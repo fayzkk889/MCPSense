@@ -50,6 +50,15 @@ var checkToOWASP = map[string]string{
 	"SEC-014": "MCP05:2025", // Config command injection -> Command Injection & Execution
 	"SEC-015": "MCP01:2025", // Sensitive env var leakage -> Token Mismanagement & Secret Exposure
 	"SEC-016": "MCP04:2025", // Unverified server source -> Software Supply Chain Attacks
+
+	// Drift detection checks
+	"DRIFT-001": "MCP02:2025", // New tool added -> Privilege Escalation via Scope Creep
+	"DRIFT-002": "MCP03:2025", // Tool description changed -> Tool Poisoning (rug-pull)
+	"DRIFT-003": "MCP02:2025", // Tool input schema changed -> Privilege Escalation via Scope Creep
+	"DRIFT-004": "MCP02:2025", // Tool annotation weakened -> Privilege Escalation via Scope Creep
+	"DRIFT-005": "MCP02:2025", // New resource exposed -> Privilege Escalation via Scope Creep
+	"DRIFT-006": "MCP07:2025", // Auth removed or weakened -> Insufficient Auth & Authz
+	"DRIFT-007": "MCP02:2025", // Config command/args/env changed -> Privilege Escalation via Scope Creep
 }
 
 // OWASPForCheckID returns the OWASP MCP Top 10 ID for a given check ID,

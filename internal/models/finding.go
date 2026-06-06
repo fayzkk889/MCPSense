@@ -7,6 +7,7 @@ const (
 	CategorySpec     Category = "spec-compliance"
 	CategorySecurity Category = "security"
 	CategoryQuality  Category = "tool-quality"
+	CategoryDrift    Category = "drift"
 )
 
 // Location describes where a finding was detected.
@@ -26,6 +27,8 @@ type Finding struct {
 	OWASP       string   `json:"owasp,omitempty"`
 	Location    Location `json:"location"`
 	Remediation string   `json:"remediation"`
+	DiffOld     string   `json:"diff_old,omitempty"`
+	DiffNew     string   `json:"diff_new,omitempty"`
 }
 
 // AllCategories returns all finding categories.
@@ -34,5 +37,6 @@ func AllCategories() []Category {
 		CategorySpec,
 		CategorySecurity,
 		CategoryQuality,
+		CategoryDrift,
 	}
 }

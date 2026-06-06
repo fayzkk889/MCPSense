@@ -22,7 +22,7 @@ func TestScanManifest_VulnerableServer(t *testing.T) {
 	manifestPath := filepath.Join(testdataDir(), "vulnerable_server", "manifest.json")
 
 	s := New(Options{Mode: ModeManifest})
-	report, err := s.Scan(manifestPath)
+	report, _, err := s.Scan(manifestPath)
 	require.NoError(t, err)
 	require.NotNil(t, report)
 
@@ -45,7 +45,7 @@ func TestScanManifest_CompliantServer(t *testing.T) {
 	manifestPath := filepath.Join(testdataDir(), "compliant_server", "manifest.json")
 
 	s := New(Options{Mode: ModeManifest})
-	report, err := s.Scan(manifestPath)
+	report, _, err := s.Scan(manifestPath)
 	require.NoError(t, err)
 	require.NotNil(t, report)
 
@@ -62,7 +62,7 @@ func TestScanStatic_VulnerableServer(t *testing.T) {
 	dirPath := filepath.Join(testdataDir(), "vulnerable_server")
 
 	s := New(Options{Mode: ModeStatic})
-	report, err := s.Scan(dirPath)
+	report, _, err := s.Scan(dirPath)
 	require.NoError(t, err)
 	require.NotNil(t, report)
 
@@ -84,7 +84,7 @@ func TestScanStatic_CompliantServer(t *testing.T) {
 	dirPath := filepath.Join(testdataDir(), "compliant_server")
 
 	s := New(Options{Mode: ModeStatic})
-	report, err := s.Scan(dirPath)
+	report, _, err := s.Scan(dirPath)
 	require.NoError(t, err)
 	require.NotNil(t, report)
 
@@ -145,7 +145,7 @@ func TestScanManifest_MissingAuth(t *testing.T) {
 	manifestPath := filepath.Join(testdataDir(), "manifests", "missing_auth.json")
 
 	s := New(Options{Mode: ModeManifest})
-	report, err := s.Scan(manifestPath)
+	report, _, err := s.Scan(manifestPath)
 	require.NoError(t, err)
 
 	found := false
@@ -162,7 +162,7 @@ func TestScanManifest_OverlyPermissive(t *testing.T) {
 	manifestPath := filepath.Join(testdataDir(), "manifests", "overly_permissive.json")
 
 	s := New(Options{Mode: ModeManifest})
-	report, err := s.Scan(manifestPath)
+	report, _, err := s.Scan(manifestPath)
 	require.NoError(t, err)
 
 	found := false
@@ -179,7 +179,7 @@ func TestRunChecks_WithExclude(t *testing.T) {
 	manifestPath := filepath.Join(testdataDir(), "vulnerable_server", "manifest.json")
 
 	s := New(Options{Mode: ModeManifest, ExcludeIDs: []string{"SEC-001"}})
-	report, err := s.Scan(manifestPath)
+	report, _, err := s.Scan(manifestPath)
 	require.NoError(t, err)
 
 	for _, f := range report.Findings {

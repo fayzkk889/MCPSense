@@ -48,8 +48,8 @@ func New(opts Options) *Scanner {
 	}
 }
 
-// Scan runs the appropriate scan mode against the target and returns a report.
-func (s *Scanner) Scan(target string) (*models.Report, error) {
+// Scan runs the appropriate scan mode against the target and returns a report and the scan context.
+func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, error) {
 	mode := s.opts.Mode
 	if mode == ModeAuto || mode == "" {
 		mode = detectMode(target)
@@ -70,16 +70,16 @@ func (s *Scanner) Scan(target string) (*models.Report, error) {
 	case ModeLive:
 		err = s.scanLive(target, ctx)
 	default:
-		return nil, fmt.Errorf("unknown scan mode: %s", mode)
+		return nil, nil, fmt.Errorf("unknown scan mode: %s", mode)
 	}
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	findings := s.runChecks(ctx)
 	report := models.NewReport(target, string(mode), findings)
-	return report, nil
+	return report, ctx, nil
 }
 
 func (s *Scanner) runChecks(ctx *checks.ScanContext) []models.Finding {

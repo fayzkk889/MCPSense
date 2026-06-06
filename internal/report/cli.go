@@ -12,7 +12,8 @@ import (
 
 // CLIReporter writes a human-readable colored terminal report.
 type CLIReporter struct {
-	NoColor bool
+	NoColor  bool
+	ShowDiff bool
 }
 
 var (
@@ -112,6 +113,12 @@ func (r *CLIReporter) writeFinding(w io.Writer, f models.Finding) {
 
 	fmt.Fprintf(w, "           %s %s\n", colorHiBlack("→"), f.Description)
 	fmt.Fprintf(w, "           %s %s\n", colorBold.Sprint("Fix:"), f.Remediation)
+
+	if r.ShowDiff && (f.DiffOld != "" || f.DiffNew != "") {
+		fmt.Fprintf(w, "           Before: %s\n", truncate(f.DiffOld, 300))
+		fmt.Fprintf(w, "           After:  %s\n", truncate(f.DiffNew, 300))
+	}
+
 	fmt.Fprintln(w)
 }
 
