@@ -59,6 +59,11 @@ var checkToOWASP = map[string]string{
 	"DRIFT-005": "MCP02:2025", // New resource exposed -> Privilege Escalation via Scope Creep
 	"DRIFT-006": "MCP07:2025", // Auth removed or weakened -> Insufficient Auth & Authz
 	"DRIFT-007": "MCP02:2025", // Config command/args/env changed -> Privilege Escalation via Scope Creep
+
+	// Skill scanning checks
+	"SKILL-001": "MCP06:2025", // Prompt injection in skill -> Intent Flow Subversion
+	"SKILL-002": "MCP02:2025", // Overbroad tool grant -> Privilege Escalation via Scope Creep
+	"SKILL-003": "MCP01:2025", // Sensitive file reference -> Token Mismanagement & Secret Exposure
 }
 
 // OWASPForCheckID returns the OWASP MCP Top 10 ID for a given check ID,

@@ -10,6 +10,7 @@ type ScanContext struct {
 	Manifest     *models.MCPManifest
 	ClientConfig *models.MCPClientConfig
 	SourceFiles  map[string]string
+	SkillFiles   map[string]string // path -> content, for skill scanning
 	Patterns     *detection.PatternEngine
 }
 
@@ -58,6 +59,11 @@ func NewRegistry() *Registry {
 	r.Register(&ConfigCommandInjectionCheck{})
 	r.Register(&ConfigEnvLeakageCheck{})
 	r.Register(&ConfigUnverifiedSourceCheck{})
+
+	// Skill scanning checks
+	r.Register(&SkillInjectionCheck{})
+	r.Register(&SkillToolGrantCheck{})
+	r.Register(&SkillSensitiveRefCheck{})
 
 	// Tool quality checks
 	r.Register(&DescriptionClarityCheck{})

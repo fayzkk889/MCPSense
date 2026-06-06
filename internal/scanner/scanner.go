@@ -21,6 +21,7 @@ const (
 	ModeLive     ScanMode = "live"
 	ModeManifest ScanMode = "manifest"
 	ModeConfig   ScanMode = "config"
+	ModeSkill    ScanMode = "skill"
 	ModeAuto     ScanMode = "auto"
 )
 
@@ -69,6 +70,8 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		err = s.scanStatic(target, ctx)
 	case ModeLive:
 		err = s.scanLive(target, ctx)
+	case ModeSkill:
+		err = s.scanSkill(target, ctx)
 	default:
 		return nil, nil, fmt.Errorf("unknown scan mode: %s", mode)
 	}
@@ -91,6 +94,25 @@ func (s *Scanner) runChecks(ctx *checks.ScanContext) []models.Finding {
 	default:
 		return s.registry.RunAll(ctx)
 	}
+}
+
+// hasSkillMarkers reports whether a directory contains AI agent skill files.
+func hasSkillMarkers(dir string) bool {
+	markers := []string{
+		filepath.Join(dir, ".claude", "commands"),
+		filepath.Join(dir, "SKILL.md"),
+		filepath.Join(dir, ".cursor", "rules"),
+		filepath.Join(dir, ".cursorrules"),
+		filepath.Join(dir, ".windsurfrules"),
+		filepath.Join(dir, "CLAUDE.md"),
+		filepath.Join(dir, "AGENTS.md"),
+	}
+	for _, m := range markers {
+		if _, err := os.Stat(m); err == nil {
+			return true
+		}
+	}
+	return false
 }
 
 // detectMode infers the scan mode from the target string.
@@ -122,6 +144,9 @@ func detectMode(target string) ScanMode {
 	info, err := os.Stat(target)
 	if err == nil {
 		if info.IsDir() {
+			if hasSkillMarkers(target) {
+				return ModeSkill
+			}
 			return ModeStatic
 		}
 		// Check for executable: on Unix check permission bits, on Windows check extension

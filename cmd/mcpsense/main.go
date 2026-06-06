@@ -71,6 +71,7 @@ func scanCmd() *cobra.Command {
 Target auto-detection:
   *.json file       manifest mode
   directory         static analysis mode
+  skill markers     skill scanning mode (CLAUDE.md, .cursorrules, etc.)
   http:// or https: live mode (SSE endpoint)
   command string    live mode (stdio process)
 
@@ -109,10 +110,12 @@ CLI flags override config file values.`,
 				scanMode = scanner.ModeManifest
 			case "config":
 				scanMode = scanner.ModeConfig
+			case "skill":
+				scanMode = scanner.ModeSkill
 			case "auto", "":
 				// ModeAuto is the default, nothing to do.
 			default:
-				return fmt.Errorf("unknown mode %q, use: static, live, manifest, config, auto", mode)
+				return fmt.Errorf("unknown mode %q, use: static, live, manifest, config, skill, auto", mode)
 			}
 
 			// Parse check filter lists.
@@ -228,7 +231,7 @@ CLI flags override config file values.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, config, auto")
+	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, config, skill, auto")
 	cmd.Flags().StringVarP(&format, "format", "f", "cli", "Output format: cli, json, sarif")
 	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: critical, high, medium, low, info")
 	cmd.Flags().StringVarP(&checkIDs, "checks", "c", "", "Comma-separated list of check IDs to run (default: all)")
