@@ -64,6 +64,9 @@ var checkToOWASP = map[string]string{
 	"SKILL-001": "MCP06:2025", // Prompt injection in skill -> Intent Flow Subversion
 	"SKILL-002": "MCP02:2025", // Overbroad tool grant -> Privilege Escalation via Scope Creep
 	"SKILL-003": "MCP01:2025", // Sensitive file reference -> Token Mismanagement & Secret Exposure
+
+	// CVE cross-reference
+	"CVE-001": "MCP04:2025", // Known CVE in dependency -> Software Supply Chain Attacks
 }
 
 // OWASPForCheckID returns the OWASP MCP Top 10 ID for a given check ID,

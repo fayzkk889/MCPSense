@@ -31,6 +31,7 @@ type Options struct {
 	EnableProbe bool
 	CheckIDs    []string // if non-empty, run only these checks
 	ExcludeIDs  []string // checks to skip
+	DisableCVE  bool     // set by --no-cve or --offline
 }
 
 // Scanner orchestrates the scan process.
@@ -42,11 +43,19 @@ type Scanner struct {
 
 // New creates a Scanner with the given options.
 func New(opts Options) *Scanner {
-	return &Scanner{
+	s := &Scanner{
 		registry: checks.NewRegistry(),
 		patterns: detection.NewPatternEngine(),
 		opts:     opts,
 	}
+	if opts.DisableCVE {
+		for _, c := range s.registry.AllChecks() {
+			if cveCheck, ok := c.(*checks.DependencyCVECheck); ok {
+				cveCheck.Disabled = true
+			}
+		}
+	}
+	return s
 }
 
 // Scan runs the appropriate scan mode against the target and returns a report and the scan context.

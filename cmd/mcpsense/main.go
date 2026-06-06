@@ -135,11 +135,15 @@ CLI flags override config file values.`,
 				}
 			}
 
+			noCVE, _ := cmd.Flags().GetBool("no-cve")
+			offline, _ := cmd.Flags().GetBool("offline")
+
 			s := scanner.New(scanner.Options{
 				Mode:        scanMode,
 				EnableProbe: probe,
 				CheckIDs:    onlyIDs,
 				ExcludeIDs:  skipIDs,
+				DisableCVE:  noCVE || offline,
 			})
 
 			rep, ctx, err := s.Scan(target)
@@ -244,6 +248,9 @@ CLI flags override config file values.`,
 	cmd.Flags().Bool("update-baseline", false, "Accept the current server state as the new drift baseline")
 	cmd.Flags().Bool("no-baseline", false, "Skip drift detection for this scan")
 	cmd.Flags().Bool("show-diff", false, "Show full before/after text for drift findings")
+
+	cmd.Flags().Bool("no-cve", false, "Skip CVE cross-referencing against OSV.dev")
+	cmd.Flags().Bool("offline", false, "Disable all network calls (implies --no-cve)")
 
 	return cmd
 }

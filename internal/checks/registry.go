@@ -65,6 +65,9 @@ func NewRegistry() *Registry {
 	r.Register(&SkillToolGrantCheck{})
 	r.Register(&SkillSensitiveRefCheck{})
 
+	// CVE cross-reference check
+	r.Register(&DependencyCVECheck{})
+
 	// Tool quality checks
 	r.Register(&DescriptionClarityCheck{})
 	r.Register(&AmbiguousParamCheck{})
