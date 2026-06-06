@@ -284,13 +284,18 @@ func filterBySeverity(findings []models.Finding, minSev models.Severity) []model
 func summarize(findings []models.Finding) models.Summary {
 	bySeverity := make(map[models.Severity]int)
 	byCategory := make(map[models.Category]int)
+	byOWASP := make(map[string]int)
 	for _, f := range findings {
 		bySeverity[f.Severity]++
 		byCategory[f.Category]++
+		if f.OWASP != "" {
+			byOWASP[f.OWASP]++
+		}
 	}
 	return models.Summary{
 		Total:      len(findings),
 		BySeverity: bySeverity,
 		ByCategory: byCategory,
+		ByOWASP:    byOWASP,
 	}
 }

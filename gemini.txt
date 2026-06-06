@@ -1,0 +1,176 @@
+Context
+MCPSense is at C:\Users\Dell\Desktop\MCPSense\. We're adding OWASP MCP Top 10 tagging to every finding. The OWASP MCP Top 10 is the official framework (MCP01:2025 through MCP10:2025) that security teams filter findings by. Competitors like Ramparts already tag findings this way, so this is table stakes for credibility.
+The approach is deliberately non-invasive: we do NOT edit the 27 individual check files. Instead we add one field to the Finding struct, build one mapping table keyed by check ID, and auto-populate the field when the report is built. This keeps all existing check logic untouched.
+
+Step 1: Add the OWASP field to the Finding struct
+Open internal/models/finding.go. Add an OWASP field to the Finding struct. It should look like this after editing:
+go// Finding represents a single vulnerability or issue discovered during scanning.
+type Finding struct {
+	ID          string   `json:"id"`
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	Severity    Severity `json:"severity"`
+	Category    Category `json:"category"`
+	OWASP       string   `json:"owasp,omitempty"`
+	Location    Location `json:"location"`
+	Remediation string   `json:"remediation"`
+}
+The omitempty matters: spec-compliance and tool-quality findings won't have an OWASP mapping, so the field should disappear from JSON output for those rather than showing an empty string.
+
+Step 2: Create the OWASP mapping file
+Create a new file internal/models/owasp.go with this exact content:
+gopackage models
+
+// OWASP MCP Top 10 (MCP01:2025 through MCP10:2025).
+// The official framework for Model Context Protocol security risks.
+// Reference: https://owasp.org/www-project-mcp-top-10/
+
+// OWASPCategory holds an OWASP MCP Top 10 entry.
+type OWASPCategory struct {
+	ID    string // e.g. "MCP05:2025"
+	Title string // e.g. "Command Injection & Execution"
+}
+
+// OWASPCategories maps each OWASP MCP Top 10 ID to its title.
+var OWASPCategories = map[string]string{
+	"MCP01:2025": "Token Mismanagement & Secret Exposure",
+	"MCP02:2025": "Privilege Escalation via Scope Creep",
+	"MCP03:2025": "Tool Poisoning",
+	"MCP04:2025": "Software Supply Chain Attacks & Dependency Tampering",
+	"MCP05:2025": "Command Injection & Execution",
+	"MCP06:2025": "Intent Flow Subversion",
+	"MCP07:2025": "Insufficient Authentication & Authorization",
+	"MCP08:2025": "Lack of Audit and Telemetry",
+	"MCP09:2025": "Shadow MCP Servers",
+	"MCP10:2025": "Context Injection & Over-Sharing",
+}
+
+// checkToOWASP maps each MCPSense check ID to its primary OWASP MCP Top 10 category.
+// Spec-compliance (SPEC-*) and tool-quality (QUAL-*) checks are intentionally NOT
+// mapped, because they are not OWASP security risk categories. They will have an
+// empty OWASP field, which is correct and honest.
+var checkToOWASP = map[string]string{
+	// Security checks
+	"SEC-001": "MCP03:2025", // Prompt injection in tool descriptions -> Tool Poisoning
+	"SEC-002": "MCP05:2025", // Shell command execution -> Command Injection & Execution
+	"SEC-003": "MCP05:2025", // SSRF risk -> Command Injection & Execution
+	"SEC-004": "MCP05:2025", // Path traversal -> Command Injection & Execution
+	"SEC-005": "MCP07:2025", // Missing authentication -> Insufficient Auth & Authz
+	"SEC-006": "MCP07:2025", // Overly permissive resource access -> Insufficient Auth & Authz
+	"SEC-007": "MCP05:2025", // Command injection via interpolation -> Command Injection & Execution
+	"SEC-008": "MCP10:2025", // Data exfiltration vectors -> Context Injection & Over-Sharing
+
+	// Tool poisoning checks
+	"SEC-009": "MCP03:2025", // Invisible Unicode / ASCII smuggling -> Tool Poisoning
+	"SEC-010": "MCP03:2025", // Homoglyph / mixed script -> Tool Poisoning
+	"SEC-011": "MCP06:2025", // Data exfiltration instructions -> Intent Flow Subversion
+	"SEC-012": "MCP03:2025", // Cross-tool manipulation -> Tool Poisoning
+	"SEC-013": "MCP03:2025", // Annotation integrity mismatch -> Tool Poisoning
+
+	// Client config checks
+	"SEC-014": "MCP05:2025", // Config command injection -> Command Injection & Execution
+	"SEC-015": "MCP01:2025", // Sensitive env var leakage -> Token Mismanagement & Secret Exposure
+	"SEC-016": "MCP04:2025", // Unverified server source -> Software Supply Chain Attacks
+}
+
+// OWASPForCheckID returns the OWASP MCP Top 10 ID for a given check ID,
+// or an empty string if the check does not map to an OWASP category.
+func OWASPForCheckID(checkID string) string {
+	return checkToOWASP[checkID]
+}
+
+// OWASPTitle returns the human-readable title for an OWASP MCP Top 10 ID,
+// or an empty string if the ID is unknown.
+func OWASPTitle(owaspID string) string {
+	return OWASPCategories[owaspID]
+}
+
+Step 3: Auto-populate the OWASP field when building the report
+Open internal/models/report.go. In the NewReport function, after the findings are assigned but before computeSummary() is called, add a loop that populates the OWASP field for each finding based on its check ID.
+The NewReport function should look like this after editing:
+go// NewReport creates a Report and computes the summary and score.
+func NewReport(target, scanMode string, findings []Finding) *Report {
+	// Populate the OWASP MCP Top 10 mapping for each finding based on its check ID.
+	for i := range findings {
+		if findings[i].OWASP == "" {
+			findings[i].OWASP = OWASPForCheckID(findings[i].ID)
+		}
+	}
+
+	r := &Report{
+		Target:    target,
+		ScanMode:  scanMode,
+		Timestamp: time.Now().UTC(),
+		Findings:  findings,
+	}
+	r.computeSummary()
+	r.CalculateScore()
+	return r
+}
+The if findings[i].OWASP == "" guard means if a check ever sets its own OWASP value directly, we don't overwrite it. For now all of them rely on the auto-mapping.
+
+Step 4: Add OWASP breakdown to the Summary
+Still in internal/models/report.go, add an OWASP breakdown to the Summary struct so reports can show findings grouped by OWASP category.
+Update the Summary struct:
+go// Summary provides a breakdown of findings by severity, category, and OWASP risk.
+type Summary struct {
+	Total      int              `json:"total"`
+	BySeverity map[Severity]int `json:"by_severity"`
+	ByCategory map[Category]int `json:"by_category"`
+	ByOWASP    map[string]int   `json:"by_owasp,omitempty"`
+}
+Update computeSummary() to populate it:
+gofunc (r *Report) computeSummary() {
+	bySeverity := make(map[Severity]int)
+	byCategory := make(map[Category]int)
+	byOWASP := make(map[string]int)
+
+	for _, f := range r.Findings {
+		bySeverity[f.Severity]++
+		byCategory[f.Category]++
+		if f.OWASP != "" {
+			byOWASP[f.OWASP]++
+		}
+	}
+
+	r.Summary = Summary{
+		Total:      len(r.Findings),
+		BySeverity: bySeverity,
+		ByCategory: byCategory,
+		ByOWASP:    byOWASP,
+	}
+}
+
+Step 5: Show the OWASP tag in CLI output
+Open internal/report/cli.go. Find where each finding is rendered (the part that prints the severity, ID, and title for each finding). Add the OWASP tag inline with the finding header.
+Read the existing rendering code first. The finding header currently looks something like:
+  CRITICAL   SEC-014  Shell metacharacters in config server "risky-server" args
+Change it so the OWASP ID appears after the check ID when present:
+  CRITICAL   SEC-014  [MCP05:2025]  Shell metacharacters in config server "risky-server" args
+Find the line that formats the finding header (it uses the finding's Severity, ID, and Title). Add the OWASP tag between the ID and Title. Only show the bracket when finding.OWASP != "". Match the existing color/formatting style. If the reporter uses a color helper, color the OWASP tag the same dim/secondary color as other metadata. Do NOT change the alignment of findings that have no OWASP tag (spec/quality findings should still render cleanly without an empty bracket).
+Also, in the summary block at the bottom (where it prints "Summary: X Critical | ..."), add a second line below it showing the OWASP breakdown when there are mapped findings. Something like:
+  OWASP MCP Top 10: MCP05:2025 (3) · MCP03:2025 (2) · MCP01:2025 (1)
+Sort the OWASP entries by count descending. Only print this line if report.Summary.ByOWASP is non-empty. Keep the existing star CTA below it.
+
+Step 6: Add OWASP to SARIF output
+Open internal/report/sarif.go. SARIF rules support a properties bag and tags. For each finding's rule, add the OWASP ID to the rule's properties and tags so GitHub Code Scanning and other SARIF consumers can filter by OWASP category.
+Read the existing SARIF reporter to see how rules are constructed. For each finding that has a non-empty OWASP field:
+
+Add the OWASP ID to the rule's properties.tags array (e.g. add "MCP05:2025" and "OWASP-MCP-Top-10" as tags)
+Add a properties entry like "owasp-mcp": "MCP05:2025" with the full title
+
+If the SARIF reporter builds a properties object per rule, add these fields there. If it doesn't have one yet, add a minimal properties bag with tags and the owasp-mcp key. Follow the existing SARIF 2.1.0 structure already in the file. Do not break the existing SARIF schema.
+
+Step 7: Verify
+powershellcd C:\Users\Dell\Desktop\MCPSense
+go build ./...
+go test ./...
+go vet ./...
+Then build and run a real scan:
+powershellgo build -o mcpsense.exe ./cmd/mcpsense
+.\mcpsense.exe scan "$env:USERPROFILE\mcpsense-test\mcp.json"
+Expected: each security finding shows its OWASP tag like [MCP05:2025], and the summary block shows the OWASP MCP Top 10 breakdown line.
+Test JSON output too:
+powershell.\mcpsense.exe scan "$env:USERPROFILE\mcpsense-test\mcp.json" --format json
+Expected: each security finding has an "owasp" field, the summary has a "by_owasp" object, and spec/quality findings (if any) have no owasp field.
+Show me the full diff. Do NOT commit.

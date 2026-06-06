@@ -2,11 +2,12 @@ package models
 
 import "time"
 
-// Summary provides a breakdown of findings by severity and category.
+// Summary provides a breakdown of findings by severity, category, and OWASP risk.
 type Summary struct {
 	Total      int              `json:"total"`
 	BySeverity map[Severity]int `json:"by_severity"`
 	ByCategory map[Category]int `json:"by_category"`
+	ByOWASP    map[string]int   `json:"by_owasp,omitempty"`
 }
 
 // Report aggregates all findings from a scan.
@@ -21,6 +22,13 @@ type Report struct {
 
 // NewReport creates a Report and computes the summary and score.
 func NewReport(target, scanMode string, findings []Finding) *Report {
+	// Populate the OWASP MCP Top 10 mapping for each finding based on its check ID.
+	for i := range findings {
+		if findings[i].OWASP == "" {
+			findings[i].OWASP = OWASPForCheckID(findings[i].ID)
+		}
+	}
+
 	r := &Report{
 		Target:    target,
 		ScanMode:  scanMode,
@@ -35,16 +43,21 @@ func NewReport(target, scanMode string, findings []Finding) *Report {
 func (r *Report) computeSummary() {
 	bySeverity := make(map[Severity]int)
 	byCategory := make(map[Category]int)
+	byOWASP := make(map[string]int)
 
 	for _, f := range r.Findings {
 		bySeverity[f.Severity]++
 		byCategory[f.Category]++
+		if f.OWASP != "" {
+			byOWASP[f.OWASP]++
+		}
 	}
 
 	r.Summary = Summary{
 		Total:      len(r.Findings),
 		BySeverity: bySeverity,
 		ByCategory: byCategory,
+		ByOWASP:    byOWASP,
 	}
 }
 

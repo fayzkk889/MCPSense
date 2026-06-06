@@ -3,6 +3,7 @@ package report
 import (
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 
 	"github.com/fatih/color"
@@ -86,9 +87,15 @@ func (r *CLIReporter) writeFinding(w io.Writer, f models.Finding) {
 	// Pad severity label to 10 chars.
 	paddedSev := fmt.Sprintf("%-10s", sevLabel)
 
-	fmt.Fprintf(w, "  %s %s  %s\n",
+	owaspTag := ""
+	if f.OWASP != "" {
+		owaspTag = fmt.Sprintf(" [%s] ", f.OWASP)
+	}
+
+	fmt.Fprintf(w, "  %s %s %s %s\n",
 		sevColor.Sprint(paddedSev),
 		colorBold.Sprint(f.ID),
+		colorInfo.Sprint(owaspTag),
 		f.Title,
 	)
 
@@ -122,6 +129,26 @@ func (r *CLIReporter) writeSummary(w io.Writer, report *models.Report) {
 		parts = append(parts, severityColor(sev).Sprint(label))
 	}
 	fmt.Fprintf(w, "  Summary: %s\n", strings.Join(parts, " │ "))
+
+	if len(report.Summary.ByOWASP) > 0 {
+		owaspParts := []string{}
+		type entry struct {
+			id    string
+			count int
+		}
+		entries := make([]entry, 0, len(report.Summary.ByOWASP))
+		for id, count := range report.Summary.ByOWASP {
+			entries = append(entries, entry{id, count})
+		}
+		sort.Slice(entries, func(i, j int) bool {
+			return entries[i].count > entries[j].count
+		})
+		for _, e := range entries {
+			owaspParts = append(owaspParts, fmt.Sprintf("%s (%d)", e.id, e.count))
+		}
+		fmt.Fprintf(w, "  OWASP MCP Top 10: %s\n", strings.Join(owaspParts, " \u00b7 "))
+	}
+
 	fmt.Fprintf(w, "  %s\n", divider)
 
 	fmt.Fprintln(w)

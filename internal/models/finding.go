@@ -23,6 +23,7 @@ type Finding struct {
 	Description string   `json:"description"`
 	Severity    Severity `json:"severity"`
 	Category    Category `json:"category"`
+	OWASP       string   `json:"owasp,omitempty"`
 	Location    Location `json:"location"`
 	Remediation string   `json:"remediation"`
 }

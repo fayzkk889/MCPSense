@@ -53,6 +53,7 @@ type sarifDefaultConfig struct {
 type sarifProperties struct {
 	Tags     []string `json:"tags,omitempty"`
 	Category string   `json:"category,omitempty"`
+	OWASPMCP string   `json:"owasp-mcp,omitempty"`
 }
 
 type sarifResult struct {
@@ -138,16 +139,23 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 	for _, f := range report.Findings {
 		if _, exists := ruleMap[f.ID]; !exists {
 			ruleOrder = append(ruleOrder, f.ID)
+
+			props := sarifProperties{
+				Tags:     categoryToTags(f.Category),
+				Category: string(f.Category),
+			}
+			if f.OWASP != "" {
+				props.Tags = append(props.Tags, f.OWASP, "OWASP-MCP-Top-10")
+				props.OWASPMCP = fmt.Sprintf("%s: %s", f.OWASP, models.OWASPTitle(f.OWASP))
+			}
+
 			ruleMap[f.ID] = sarifRule{
 				ID:               f.ID,
 				Name:             ruleNameFromID(f.ID),
 				ShortDescription: sarifMessage{Text: f.Title},
 				DefaultConfig:    sarifDefaultConfig{Level: severityToSARIFLevel(f.Severity)},
 				HelpURI:          fmt.Sprintf("https://github.com/fayzkk889/MCPSense#%s", strings.ToLower(f.ID)),
-				Properties: sarifProperties{
-					Tags:     categoryToTags(f.Category),
-					Category: string(f.Category),
-				},
+				Properties:       props,
 			}
 		}
 	}
