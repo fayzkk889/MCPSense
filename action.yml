@@ -1,4 +1,4 @@
-name: "MCPSense MCP Security Scanner"
+﻿name: "MCPSense MCP Security Scanner"
 description: "Scan MCP servers, configs, and agent skills for security vulnerabilities, drift, CVEs, and OWASP MCP Top 10 issues."
 author: "fayzkk889"
 
@@ -67,7 +67,6 @@ runs:
           VERSION=$(curl -fsSL https://api.github.com/repos/fayzkk889/MCPSense/releases/latest \
             | grep '"tag_name"' | head -1 | sed -E 's/.*"v?([^"]+)".*/\1/')
         fi
-        # Strip a leading v if present
         VERSION="${VERSION#v}"
         if [ -z "$VERSION" ]; then
           echo "::error::Could not determine MCPSense version"
@@ -81,10 +80,6 @@ runs:
       run: |
         set -euo pipefail
         VERSION="${{ steps.version.outputs.version }}"
-
-        # Map runner OS/arch to GoReleaser asset naming.
-        # name_template: {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
-        # .Os = linux|darwin|windows  .Arch = amd64|arm64
         OS=$(uname -s | tr '[:upper:]' '[:lower:]')
         case "$OS" in
           linux*)  GOOS="linux" ;;
@@ -92,21 +87,17 @@ runs:
           msys*|mingw*|cygwin*) GOOS="windows" ;;
           *) echo "::error::Unsupported OS: $OS"; exit 1 ;;
         esac
-
         ARCH=$(uname -m)
         case "$ARCH" in
           x86_64|amd64) GOARCH="amd64" ;;
           aarch64|arm64) GOARCH="arm64" ;;
           *) echo "::error::Unsupported arch: $ARCH"; exit 1 ;;
         esac
-
         EXT="tar.gz"
         if [ "$GOOS" = "windows" ]; then EXT="zip"; fi
-
         BASE="MCPSense_${VERSION}_${GOOS}_${GOARCH}"
         URL="https://github.com/fayzkk889/MCPSense/releases/download/v${VERSION}/${BASE}.${EXT}"
         echo "Downloading $URL"
-
         if [ "$EXT" = "zip" ]; then
           curl -fsSL "$URL" -o mcpsense.zip
           unzip -o mcpsense.zip mcpsense.exe
@@ -125,25 +116,18 @@ runs:
         set -uo pipefail
         BIN="./mcpsense"
         if [ -f "./mcpsense.exe" ]; then BIN="./mcpsense.exe"; fi
-
         EXTRA=()
         if [ "${{ inputs.no-cve }}" = "true" ]; then EXTRA+=(--no-cve); fi
         if [ "${{ inputs.offline }}" = "true" ]; then EXTRA+=(--offline); fi
         if [ -n "${{ inputs.baseline }}" ]; then EXTRA+=(--baseline "${{ inputs.baseline }}"); fi
-
-        # Single scan to JSON. We derive SARIF and console view from one run's data
-        # where possible, but SARIF needs its own format pass, so we run at most twice:
-        # once for JSON (metadata + threshold) and once for SARIF (code scanning upload).
         JSON_FILE="mcpsense-results.json"
         SARIF_FILE="mcpsense-results.sarif"
-
         "$BIN" scan "${{ inputs.target }}" \
           --mode "${{ inputs.mode }}" \
           --severity "${{ inputs.severity }}" \
           --format json \
           --output "$JSON_FILE" "${EXTRA[@]}"
         SCAN_EXIT=$?
-
         if [ -f "$JSON_FILE" ]; then
           SCORE=$(grep -o '"score":[0-9]*' "$JSON_FILE" | head -1 | cut -d: -f2 || echo "")
           COUNT=$(grep -o '"total":[0-9]*' "$JSON_FILE" | head -1 | cut -d: -f2 || echo "")
@@ -153,8 +137,6 @@ runs:
           echo "score=0" >> "$GITHUB_OUTPUT"
           echo "findings_count=0" >> "$GITHUB_OUTPUT"
         fi
-
-        # SARIF pass for code scanning upload (uses cached CVE data, so it is cheap).
         if [ "${{ inputs.sarif-upload }}" = "true" ]; then
           "$BIN" scan "${{ inputs.target }}" \
             --mode "${{ inputs.mode }}" \
@@ -162,7 +144,6 @@ runs:
             --format sarif \
             --output "$SARIF_FILE" "${EXTRA[@]}" --no-baseline || true
         fi
-
         echo "scan_exit=$SCAN_EXIT" >> "$GITHUB_OUTPUT"
 
     - name: Upload SARIF to GitHub Code Scanning
@@ -182,13 +163,11 @@ runs:
           echo "No fail threshold set, passing."
           exit 0
         fi
-
         JSON_FILE="mcpsense-results.json"
         if [ ! -f "$JSON_FILE" ]; then
           echo "No results file found, passing."
           exit 0
         fi
-
         severity_value() {
           case "$1" in
             critical) echo 4 ;;
@@ -199,24 +178,17 @@ runs:
           esac
         }
         THRESHOLD=$(severity_value "$FAIL_ON")
-
         HAS_CRITICAL=$(grep -c '"severity":"critical"' "$JSON_FILE" || true)
         HAS_HIGH=$(grep -c '"severity":"high"' "$JSON_FILE" || true)
         HAS_MEDIUM=$(grep -c '"severity":"medium"' "$JSON_FILE" || true)
         HAS_LOW=$(grep -c '"severity":"low"' "$JSON_FILE" || true)
-
         SHOULD_FAIL=0
         if [ "$THRESHOLD" -le 4 ] && [ "${HAS_CRITICAL:-0}" -gt 0 ]; then SHOULD_FAIL=1; fi
         if [ "$THRESHOLD" -le 3 ] && [ "${HAS_HIGH:-0}" -gt 0 ]; then SHOULD_FAIL=1; fi
         if [ "$THRESHOLD" -le 2 ] && [ "${HAS_MEDIUM:-0}" -gt 0 ]; then SHOULD_FAIL=1; fi
         if [ "$THRESHOLD" -le 1 ] && [ "${HAS_LOW:-0}" -gt 0 ]; then SHOULD_FAIL=1; fi
-
         if [ "$SHOULD_FAIL" -eq 1 ]; then
           echo "::error::MCPSense found findings at or above '$FAIL_ON' severity."
           exit 1
         fi
-<<<<<<< HEAD
         echo "No findings at or above '$FAIL_ON' severity. Passing."
-=======
-        echo "No findings at or above '$FAIL_ON' severity. Passing."
->>>>>>> 4fccd427ae7eabff2bba02e5bf3dced27df4b51a
