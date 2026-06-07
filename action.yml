@@ -1,5 +1,5 @@
 ﻿name: "MCPSense MCP Security Scanner"
-description: "Scan MCP servers, configs, and agent skills for security vulnerabilities, drift, CVEs, and OWASP MCP Top 10 issues."
+description: "Scan MCP servers, configs, and agent skills for injection, CVEs, drift, and OWASP MCP Top 10 issues."
 author: "fayzkk889"
 
 branding:
