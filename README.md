@@ -5,7 +5,6 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/fayzkk889/MCPSense/ci.yml?branch=main)](https://github.com/fayzkk889/MCPSense/actions)
 [![Go Version](https://img.shields.io/badge/go-1.22%2B-blue)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![MCP Security: MCPSense](https://img.shields.io/badge/MCP_Security-scanned_by_MCPSense-2ea043?logo=shield)](https://github.com/fayzkk889/MCPSense)
 
 MCPSense scans MCP servers, source code, and client configurations for security vulnerabilities, spec compliance issues, and tool quality problems. It detects tool poisoning attacks (invisible Unicode injection, cross-tool manipulation, annotation lying), client config command injection (the CVE class behind CVE-2025-6514, CVE-2026-30615), prompt injection in tool descriptions, shell execution risks, SSRF vectors, and more.
 
@@ -259,6 +258,11 @@ Creates `.mcpsenserc.json`:
 | `exclude_ids` | Check IDs to skip (suppress known false positives) |
 | `check_ids` | Run only these checks (empty = all) |
 | `format` | Default output format |
+
+---
+
+### Add this badge to your server
+[![MCP Security: MCPSense](https://img.shields.io/badge/MCP_Security-scanned_by_MCPSense-2ea043?logo=shield)](https://github.com/fayzkk889/MCPSense)
 
 ---
 
