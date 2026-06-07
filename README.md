@@ -261,8 +261,15 @@ Creates `.mcpsenserc.json`:
 
 ---
 
-### Add this badge to your server
-[![MCP Security: MCPSense](https://img.shields.io/badge/MCP_Security-scanned_by_MCPSense-2ea043?logo=shield)](https://github.com/fayzkk889/MCPSense)
+## Add the badge to your MCP server
+
+Scanned your server with MCPSense? Show it:
+
+[![MCP Security: MCPSense](https://img.shields.io/badge/MCP_Security-scanned_by_MCPSense-2ea043?logo=shield&logoColor=white)](https://github.com/fayzkk889/MCPSense)
+
+```
+[![MCP Security: MCPSense](https://img.shields.io/badge/MCP_Security-scanned_by_MCPSense-2ea043?logo=shield&logoColor=white)](https://github.com/fayzkk889/MCPSense)
+```
 
 ---
 
