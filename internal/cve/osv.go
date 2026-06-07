@@ -11,12 +11,9 @@ import (
 )
 
 const (
-	osvBatchURL  = "https://api.osv.dev/v1/querybatch"
 	osvSingleURL = "https://api.osv.dev/v1/query"
 	// Total network budget for the whole CVE phase.
 	totalBudget = 4 * time.Second
-	// Fast probe: if the first call fails this fast, assume offline and skip the rest.
-	probeBudget = 500 * time.Millisecond
 )
 
 // Package identifies a package to query.
@@ -56,8 +53,7 @@ func EcosystemForCommand(command string) string {
 
 // Client queries OSV.dev with built-in timeout and offline handling.
 type Client struct {
-	http    *http.Client
-	offline bool // set true after a fast-failing probe so we stop trying
+	http *http.Client
 }
 
 func NewClient() *Client {
@@ -74,10 +70,6 @@ type osvQuery struct {
 type osvPackage struct {
 	Name      string `json:"name"`
 	Ecosystem string `json:"ecosystem"`
-}
-
-type osvBatchRequest struct {
-	Queries []osvQuery `json:"queries"`
 }
 
 // Resolve returns vulns for a package using the cache with stale-while-revalidate.
