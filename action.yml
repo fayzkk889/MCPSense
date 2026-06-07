@@ -215,4 +215,8 @@ runs:
           echo "::error::MCPSense found findings at or above '$FAIL_ON' severity."
           exit 1
         fi
+<<<<<<< HEAD
         echo "No findings at or above '$FAIL_ON' severity. Passing."
+=======
+        echo "No findings at or above '$FAIL_ON' severity. Passing."
+>>>>>>> 4fccd427ae7eabff2bba02e5bf3dced27df4b51a
