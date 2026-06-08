@@ -55,5 +55,6 @@ release:
     owner: fayzkk889
     name: MCPSense
   draft: false
+  mode: replace
   prerelease: auto
   name_template: "mcpsense v{{.Version}}"
