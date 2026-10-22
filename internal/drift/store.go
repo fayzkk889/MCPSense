@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 	"os"
 	"path/filepath"
 )
@@ -37,7 +38,7 @@ func Exists(path string) bool {
 
 // Load reads a snapshot from disk.
 func Load(path string) (*Snapshot, error) {
-	data, err := os.ReadFile(path)
+	data, err := utils.ReadInput(path)
 	if err != nil {
 		return nil, fmt.Errorf("reading baseline %q: %w", path, err)
 	}
@@ -45,19 +46,41 @@ func Load(path string) (*Snapshot, error) {
 	if err := json.Unmarshal(data, &snap); err != nil {
 		return nil, fmt.Errorf("parsing baseline %q: %w", path, err)
 	}
+	if snap.FormatVersion != FormatVersion {
+		return nil, fmt.Errorf("unsupported baseline format; review target and recreate with --update-baseline (old baselines may retain secrets)")
+	}
 	return &snap, nil
 }
 
 // Save writes a snapshot to disk, creating the directory if needed.
 func Save(path string, snap *Snapshot) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		return fmt.Errorf("creating snapshot directory: %w", err)
 	}
 	data, err := MarshalSnapshot(snap)
 	if err != nil {
 		return fmt.Errorf("serializing snapshot: %w", err)
 	}
-	if err := os.WriteFile(path, data, 0o600); err != nil {
+	if len(data) > utils.MaxInputBytes {
+		return fmt.Errorf("baseline exceeds file size limit; use --no-baseline for this catalog")
+	}
+	if info, err := os.Lstat(path); err == nil && (!info.Mode().IsRegular() || info.Mode()&os.ModeSymlink != 0) {
+		return fmt.Errorf("baseline must be a regular file")
+	}
+	f, err := os.CreateTemp(filepath.Dir(path), ".baseline-*")
+	if err != nil {
+		return err
+	}
+	tmp := f.Name()
+	defer os.Remove(tmp)
+	if _, err := f.Write(data); err != nil {
+		f.Close()
+		return err
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	if err := os.Rename(tmp, path); err != nil {
 		return fmt.Errorf("writing snapshot %q: %w", path, err)
 	}
 	return nil

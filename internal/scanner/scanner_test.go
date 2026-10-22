@@ -14,8 +14,11 @@ import (
 
 // testdataDir returns the absolute path to the testdata directory.
 func testdataDir() string {
-	_, filename, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(filename), "..", "..", "testdata")
+	dir, err := filepath.Abs(filepath.Join("..", "..", "testdata"))
+	if err != nil {
+		panic(err)
+	}
+	return dir
 }
 
 func TestScanManifest_VulnerableServer(t *testing.T) {

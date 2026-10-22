@@ -11,7 +11,7 @@ import (
 )
 
 // knownMCPVersions lists protocol versions considered valid.
-var knownMCPVersions = []string{"2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"}
+var knownMCPVersions = []string{"2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25", "2026-07-28"}
 
 // toolNamePattern matches valid tool names: snake_case, alphanumeric and underscores only.
 var toolNamePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
@@ -33,7 +33,7 @@ func (c *SpecManifestStructureCheck) Run(ctx *ScanContext) []models.Finding {
 	var findings []models.Finding
 	m := ctx.Manifest
 
-	if strings.TrimSpace(m.Name) == "" {
+	if strings.TrimSpace(m.Name) == "" && m.ProtocolVersion!="2026-07-28" {
 		findings = append(findings, models.Finding{
 			ID:          "SPEC-001",
 			Title:       "Manifest missing required field: name",
@@ -43,7 +43,7 @@ func (c *SpecManifestStructureCheck) Run(ctx *ScanContext) []models.Finding {
 			Remediation: `Add a "name" field to your manifest with a short, descriptive identifier for the server.`,
 		})
 	}
-	if strings.TrimSpace(m.Version) == "" {
+	if strings.TrimSpace(m.Version) == "" && m.ProtocolVersion!="2026-07-28" {
 		findings = append(findings, models.Finding{
 			ID:          "SPEC-001",
 			Title:       "Manifest missing required field: version",

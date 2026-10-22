@@ -12,6 +12,7 @@ type JSONReporter struct{}
 
 // Write serializes the report to JSON and writes it to w.
 func (r *JSONReporter) Write(report *models.Report, w io.Writer) error {
+	report = report.ProtectedCopy(nil)
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
 	return enc.Encode(report)

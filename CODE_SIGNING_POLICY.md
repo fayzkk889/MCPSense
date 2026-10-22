@@ -1,15 +1,9 @@
-# Code Signing Policy
+# Code signing and privacy
 
-Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+The historical project policy names SignPath.io and the SignPath Foundation as signing providers, with Faizan as author, reviewer and approver. The checked-in release workflow does not currently contain a signing step, and this mission has not verified a signed release artifact. Do not describe candidate binaries as signed or reproducible bit-for-bit without separate evidence.
 
-## Team Roles
+GoReleaser builds from source and produces SHA-256 checksums. Checksums detect mismatches with a downloaded manifest; they are not proof of signing or independent provenance. Windows npm installation continues to compile from source.
 
-- **Author, Reviewer, and Approver:** [Faizan](https://github.com/fayzkk889) (sole maintainer)
+Static/config scans can send recognized package names and versions to OSV.dev by default. --no-cve disables advisory access. --offline prohibits scanner networking and local server execution. Explicit live scans contact the authorized target subject to destination policy. Installation and source builds may separately require network access.
 
-## Privacy Policy
-
-This program does not transfer any information to other networked systems unless specifically requested by the user (e.g., live mode scanning of a user-specified MCP server URL).
-
-## Verification
-
-All signed binaries are built automatically from source via GitHub Actions using GoReleaser. The build process is fully reproducible from the public repository.
+Format-2 snapshots minimize retained metadata; report redaction is best effort. Read the README privacy section before sharing baselines, reports or CI artifacts. MIT licensing is unchanged.

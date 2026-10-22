@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -75,19 +76,25 @@ type osvPackage struct {
 // Resolve returns vulns for a package using the cache with stale-while-revalidate.
 // Returns (vulns, ok). ok is false on network failure with no cache.
 func (c *Client) Resolve(pkg Package) (vulns []Vuln, ok bool) {
+	ctx, cancel := context.WithTimeout(context.Background(), totalBudget)
+	defer cancel()
+	return c.resolve(ctx, pkg)
+}
+func (c *Client) resolve(ctx context.Context, pkg Package) (vulns []Vuln, ok bool) {
+	if ctx.Err() != nil {
+		return nil, false
+	}
 	cached, fresh, found := loadCache(pkg)
 	if found && fresh {
 		return cached, true
 	}
 
 	// Need to fetch. Use a per-call budget.
-	ctx, cancel := context.WithTimeout(context.Background(), totalBudget)
-	defer cancel()
 	fetched, err := c.queryOne(ctx, pkg, totalBudget)
 	if err != nil {
 		// Network failed. Use stale cache if we have any (stale-while-revalidate).
 		if found {
-			return cached, true
+			return cached, false
 		}
 		return nil, false
 	}
@@ -97,12 +104,17 @@ func (c *Client) Resolve(pkg Package) (vulns []Vuln, ok bool) {
 
 // CheckAll resolves CVEs for all packages, using cache and stopping early if offline.
 func (c *Client) CheckAll(pkgs []Package) (results []Result, ok bool) {
+	if len(pkgs) > 256 {
+		return nil, false
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), totalBudget)
+	defer cancel()
 	if len(pkgs) == 0 {
 		return nil, true
 	}
-	for i, pkg := range pkgs {
-		vulns, networkOK := c.Resolve(pkg)
-		if !networkOK && i == 0 {
+	for _, pkg := range pkgs {
+		vulns, networkOK := c.resolve(ctx, pkg)
+		if !networkOK {
 			// First package failed with no cache: assume offline, stop.
 			return results, false
 		}
@@ -160,7 +172,14 @@ func (c *Client) queryOne(ctx context.Context, pkg Package, budget time.Duration
 			} `json:"affected"`
 		} `json:"vulns"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&parsed); err != nil {
+	data, err := io.ReadAll(io.LimitReader(resp.Body, 4<<20+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > 4<<20 {
+		return nil, fmt.Errorf("OSV response exceeds size limit")
+	}
+	if err := json.Unmarshal(data, &parsed); err != nil {
 		return nil, err
 	}
 

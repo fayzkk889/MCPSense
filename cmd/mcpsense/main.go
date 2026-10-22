@@ -1,11 +1,16 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
+	"os/signal"
+	"path/filepath"
 	"runtime/debug"
 	"strings"
+	"syscall"
 
 	"github.com/spf13/cobra"
 
@@ -13,9 +18,11 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"github.com/fayzkk889/MCPSense/internal/report"
 	"github.com/fayzkk889/MCPSense/internal/scanner"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 )
 
 var version = "dev"
+var errFindings = errors.New("findings at high or critical severity")
 
 func init() {
 	if version == "dev" {
@@ -32,21 +39,30 @@ func init() {
 const configFile = ".mcpsenserc.json"
 
 func main() {
-	if err := rootCmd().Execute(); err != nil {
-		os.Exit(1)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	if err := rootCmd().ExecuteContext(ctx); err != nil {
+		if errors.Is(err, errFindings) {
+			os.Exit(1)
+		}
+		fmt.Fprintln(os.Stderr, models.RedactText(err.Error()))
+		os.Exit(2)
 	}
 }
 
 func rootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:   "mcpsense",
-		Short: "Security scanner for MCP servers",
-		Long:  "mcpsense scans MCP servers for security vulnerabilities, spec compliance issues, and tool quality problems.",
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		Use:           "mcpsense",
+		Short:         "Security scanner for MCP servers",
+		Long:          "mcpsense scans MCP servers for security vulnerabilities, spec compliance issues, and tool quality problems.",
 	}
 
 	root.AddCommand(scanCmd())
 	root.AddCommand(versionCmd())
 	root.AddCommand(initConfigCmd())
+	root.AddCommand(verifyCmd())
 
 	return root
 }
@@ -70,10 +86,13 @@ func scanCmd() *cobra.Command {
 
 Target auto-detection:
   *.json file       manifest mode
-  directory         static analysis mode
-  skill markers     skill scanning mode (CLAUDE.md, .cursorrules, etc.)
-  http:// or https: live mode (SSE endpoint)
-  command string    live mode (stdio process)
+  directory         combined source, config, manifest and skill inspection
+  http:// or https: guarded live HTTP metadata discovery
+  command string    live stdio; requires --allow-exec
+
+Use --mode skill for individual instruction files.
+Offline mode prohibits scanner networking and local server execution.
+Private/loopback HTTP targets require --allow-private-network.
 
 Configuration is loaded from .mcpsenserc.json in the current directory.
 CLI flags override config file values.`,
@@ -83,7 +102,10 @@ CLI flags override config file values.`,
 			report.AppVersion = version
 
 			// Load .mcpsenserc.json as a baseline; CLI flags override each field.
-			cfg := loadConfig()
+			cfg, configErr := loadConfig()
+			if configErr != nil {
+				return configErr
+			}
 
 			// Resolve effective values: explicit CLI flag wins over config file default.
 			if !cmd.Flags().Changed("format") && cfg.Format != "" {
@@ -136,14 +158,60 @@ CLI flags override config file values.`,
 			}
 
 			noCVE, _ := cmd.Flags().GetBool("no-cve")
+			sarifOutput, _ := cmd.Flags().GetString("sarif-output")
+			baselineArg, _ := cmd.Flags().GetString("baseline")
+			if format != "cli" && format != "json" && format != "sarif" {
+				return fmt.Errorf("unknown output format")
+			}
+			if minSev != "critical" && minSev != "high" && minSev != "medium" && minSev != "low" && minSev != "info" {
+				return fmt.Errorf("unknown severity")
+			}
+			paths := []string{target, outputFile, sarifOutput, baselineArg}
+			for i := 1; i < len(paths); i++ {
+				if paths[i] == "" {
+					continue
+				}
+				for j := 0; j < i; j++ {
+					if paths[j] == "" {
+						continue
+					}
+					a, _ := filepath.Abs(paths[i])
+					b, _ := filepath.Abs(paths[j])
+					same := a == b
+					ai, ae := os.Stat(a)
+					bi, be := os.Stat(b)
+					if ae == nil && be == nil && os.SameFile(ai, bi) {
+						same = true
+					}
+					if same {
+						return fmt.Errorf("target, baseline and report paths must differ")
+					}
+				}
+			}
 			offline, _ := cmd.Flags().GetBool("offline")
+			allowExec, _ := cmd.Flags().GetBool("allow-exec")
+			serverArgs, _ := cmd.Flags().GetStringArray("server-arg")
+			protocol, _ := cmd.Flags().GetString("protocol")
+			allowPrivate, _ := cmd.Flags().GetBool("allow-private-network")
+			if probe {
+				return fmt.Errorf("active probes are not implemented; scanning enumerates metadata only")
+			}
+			if protocol != "auto" && protocol != "modern" && protocol != "legacy" {
+				return fmt.Errorf("unknown protocol policy")
+			}
 
 			s := scanner.New(scanner.Options{
-				Mode:        scanMode,
-				EnableProbe: probe,
-				CheckIDs:    onlyIDs,
-				ExcludeIDs:  skipIDs,
-				DisableCVE:  noCVE || offline,
+				Context:             cmd.Context(),
+				Mode:                scanMode,
+				EnableProbe:         probe,
+				CheckIDs:            onlyIDs,
+				ExcludeIDs:          skipIDs,
+				DisableCVE:          noCVE || offline,
+				Offline:             offline,
+				AllowExec:           allowExec,
+				ServerArgs:          serverArgs,
+				Protocol:            protocol,
+				AllowPrivateNetwork: allowPrivate,
 			})
 
 			rep, ctx, err := s.Scan(target)
@@ -157,7 +225,11 @@ CLI flags override config file values.`,
 			baselineFlag, _ := cmd.Flags().GetString("baseline")
 
 			// Drift applies to modes that have a tool/config surface (not static source scanning).
-			driftApplies := string(rep.ScanMode) == "manifest" || string(rep.ScanMode) == "config" || string(rep.ScanMode) == "live"
+			driftApplies := ctx.Manifest != nil || ctx.ClientConfig != nil
+			rep.Coverage.Baseline = "not_applicable"
+			if noBaseline {
+				rep.Coverage.Baseline = "skipped"
+			}
 
 			if driftApplies && !noBaseline {
 				current := drift.BuildSnapshot(ctx.Manifest, ctx.ClientConfig, target, string(rep.ScanMode))
@@ -167,28 +239,52 @@ CLI flags override config file values.`,
 					p, err := drift.DefaultPath(target)
 					if err == nil {
 						baselinePath = p
+					} else {
+						return fmt.Errorf("baseline path unavailable; use --no-baseline or choose --baseline")
 					}
 				}
 
 				if baselinePath != "" {
 					if updateBaseline {
+						rep.Coverage.Baseline = "updated"
 						if err := drift.Save(baselinePath, current); err != nil {
-							fmt.Fprintf(os.Stderr, "warning: could not update baseline: %v\n", err)
+							return fmt.Errorf("could not update baseline: %w", err)
 						} else {
-							fmt.Fprintf(os.Stderr, "Baseline updated for %s\n", target)
+							fmt.Fprintln(os.Stderr, "Baseline updated.")
 						}
 					} else if drift.Exists(baselinePath) {
+						rep.Coverage.Baseline = "compared"
 						prev, err := drift.Load(baselinePath)
 						if err != nil {
-							fmt.Fprintf(os.Stderr, "warning: could not load baseline: %v\n", err)
+							return fmt.Errorf("could not load baseline: %w", err)
 						} else {
+							if prev.Target != current.Target || prev.Mode != current.Mode {
+								return fmt.Errorf("baseline target or mode differs; review and explicitly update baseline")
+							}
+							baselineData, err := drift.MarshalSnapshot(prev)
+							if err != nil {
+								return err
+							}
+							rep.Coverage.BaselineHash = models.HashIdentity(string(baselineData))
 							driftFindings := drift.Diff(prev, current)
+							for i := range driftFindings {
+								if ctx.ManifestFile != "" {
+									driftFindings[i].Location.File = ctx.ManifestFile
+								} else {
+									for name, path := range ctx.ComponentFiles {
+										if models.HashIdentity(name) == driftFindings[i].Location.ToolName {
+											driftFindings[i].Location.File = path
+										}
+									}
+								}
+							}
 							rep.Findings = append(rep.Findings, driftFindings...)
 						}
 					} else {
+						rep.Coverage.Baseline = "created"
 						// First scan: save baseline so future scans can detect drift.
 						if err := drift.Save(baselinePath, current); err != nil {
-							fmt.Fprintf(os.Stderr, "warning: could not save baseline: %v\n", err)
+							return fmt.Errorf("could not save baseline: %w", err)
 						} else {
 							fmt.Fprintf(os.Stderr, "Baseline saved. Future scans of this target will detect drift.\n")
 						}
@@ -202,6 +298,8 @@ CLI flags override config file values.`,
 			rep.Findings = filterBySeverity(rep.Findings, minSeverity)
 			rep.Summary = summarize(rep.Findings)
 			rep.CalculateScore()
+			rep.MinSeverity = minSev
+			rep.FinalizeEvidence()
 
 			// Select output writer.
 			out := os.Stdout
@@ -224,11 +322,28 @@ CLI flags override config file values.`,
 			if err := reporter.Write(rep, out); err != nil {
 				return fmt.Errorf("writing report: %w", err)
 			}
+			if sarifOutput != "" {
+				if sarifOutput == outputFile || sarifOutput == target {
+					return fmt.Errorf("SARIF output must differ from target and primary output")
+				}
+				f, err := os.OpenFile(sarifOutput, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0600)
+				if err != nil {
+					return fmt.Errorf("opening SARIF output: %w", err)
+				}
+				err = (&report.SARIFReporter{}).Write(rep, f)
+				closeErr := f.Close()
+				if err != nil {
+					return err
+				}
+				if closeErr != nil {
+					return closeErr
+				}
+			}
 
 			// Exit non-zero when critical or high findings remain after filtering.
 			for _, f := range rep.Findings {
 				if f.Severity == models.SeverityCritical || f.Severity == models.SeverityHigh {
-					os.Exit(1)
+					return errFindings
 				}
 			}
 			return nil
@@ -240,17 +355,22 @@ CLI flags override config file values.`,
 	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: critical, high, medium, low, info")
 	cmd.Flags().StringVarP(&checkIDs, "checks", "c", "", "Comma-separated list of check IDs to run (default: all)")
 	cmd.Flags().StringVar(&excludeIDs, "exclude", "", "Comma-separated list of check IDs to skip")
-	cmd.Flags().BoolVar(&probe, "probe", false, "Enable active probing in live mode")
+	cmd.Flags().BoolVar(&probe, "probe", false, "Reserved; active probing is not implemented")
 	cmd.Flags().StringVarP(&outputFile, "output", "o", "", "Output file path (default: stdout)")
 	cmd.Flags().BoolVar(&noColor, "no-color", false, "Disable colored output")
 
 	cmd.Flags().String("baseline", "", "Path to a baseline snapshot file for drift detection (default: ~/.mcpsense/snapshots/)")
 	cmd.Flags().Bool("update-baseline", false, "Accept the current server state as the new drift baseline")
 	cmd.Flags().Bool("no-baseline", false, "Skip drift detection for this scan")
-	cmd.Flags().Bool("show-diff", false, "Show full before/after text for drift findings")
+	cmd.Flags().Bool("show-diff", false, "Compatibility flag; protected baselines do not retain raw before/after text")
 
 	cmd.Flags().Bool("no-cve", false, "Skip CVE cross-referencing against OSV.dev")
 	cmd.Flags().Bool("offline", false, "Disable all network calls (implies --no-cve)")
+	cmd.Flags().Bool("allow-exec", false, "Allow execution of the explicitly selected local MCP server (unavailable offline)")
+	cmd.Flags().StringArray("server-arg", nil, "Argument passed literally to the local server; repeat for each argument")
+	cmd.Flags().String("sarif-output", "", "Write SARIF from the same scan in addition to the selected output")
+	cmd.Flags().String("protocol", "auto", "Live metadata protocol: auto, modern (2026-07-28), legacy (initialize)")
+	cmd.Flags().Bool("allow-private-network", false, "Allow explicitly targeted loopback/private MCP addresses; link-local and metadata addresses remain blocked")
 
 	return cmd
 }
@@ -306,16 +426,19 @@ func defaultConfig() MCPSenseConfig {
 
 // loadConfig reads .mcpsenserc.json from the current directory.
 // Returns default config silently if the file does not exist.
-func loadConfig() MCPSenseConfig {
+func loadConfig() (MCPSenseConfig, error) {
 	cfg := defaultConfig()
-	data, err := os.ReadFile(configFile)
+	data, err := utils.ReadInput(configFile)
 	if err != nil {
-		return cfg // file absent is not an error
+		if os.IsNotExist(err) {
+			return cfg, nil
+		}
+		return cfg, fmt.Errorf("project configuration unreadable")
 	}
 	if err := json.Unmarshal(data, &cfg); err != nil {
-		fmt.Fprintf(os.Stderr, "warning: could not parse %s: %v\n", configFile, err)
+		return cfg, fmt.Errorf("invalid project configuration JSON")
 	}
-	return cfg
+	return cfg, nil
 }
 
 // parseSeverity converts a severity string to a models.Severity value.
@@ -337,7 +460,7 @@ func parseSeverity(s string) models.Severity {
 // filterBySeverity returns only findings at or above the given minimum severity.
 func filterBySeverity(findings []models.Finding, minSev models.Severity) []models.Finding {
 	minScore := minSev.Score()
-	var filtered []models.Finding
+	filtered := make([]models.Finding, 0)
 	for _, f := range findings {
 		if f.Severity.Score() >= minScore {
 			filtered = append(filtered, f)

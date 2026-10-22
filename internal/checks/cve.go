@@ -20,11 +20,13 @@ func (c *DependencyCVECheck) Category() models.Category { return models.Category
 
 func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 	if c.Disabled || ctx.ClientConfig == nil {
+		ctx.AdvisoryState = "skipped"
 		return nil
 	}
 
 	pkgs := extractPackages(ctx.ClientConfig)
 	if len(pkgs) == 0 {
+		ctx.AdvisoryState = "not_applicable"
 		return nil
 	}
 
@@ -32,9 +34,11 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 	cve.PruneCache()
 	results, ok := client.CheckAll(pkgs)
 	if !ok {
-		// Offline or OSV unreachable. Skip silently; the scanner prints one note.
+		ctx.AdvisoryState = "failed"
+		ctx.Errors = append(ctx.Errors, fmt.Errorf("advisory coverage incomplete: OSV unavailable or cached data stale; retry or explicitly use --no-cve"))
 		return nil
 	}
+	ctx.AdvisoryState = "completed"
 
 	var findings []models.Finding
 	for _, res := range results {

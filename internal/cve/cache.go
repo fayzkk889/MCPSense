@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"io"
 	"os"
 	"path/filepath"
 	"time"
@@ -39,8 +40,13 @@ func loadCache(pkg Package) (vulns []Vuln, fresh bool, found bool) {
 		return nil, false, false
 	}
 	path := filepath.Join(dir, cacheKey(pkg))
-	data, err := os.ReadFile(path)
+	f, err := os.Open(path)
 	if err != nil {
+		return nil, false, false
+	}
+	defer f.Close()
+	data, err := io.ReadAll(io.LimitReader(f, 4<<20+1))
+	if err != nil || len(data) > 4<<20 {
 		return nil, false, false
 	}
 	var entry cacheEntry

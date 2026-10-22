@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/models"
@@ -21,8 +22,9 @@ type sarifReport struct {
 }
 
 type sarifRun struct {
-	Tool    sarifTool     `json:"tool"`
-	Results []sarifResult `json:"results"`
+	Properties map[string]interface{} `json:"properties"`
+	Tool       sarifTool              `json:"tool"`
+	Results    []sarifResult          `json:"results"`
 }
 
 type sarifTool struct {
@@ -30,10 +32,10 @@ type sarifTool struct {
 }
 
 type sarifDriver struct {
-	Name            string      `json:"name"`
-	Version         string      `json:"version"`
-	InformationURI  string      `json:"informationUri"`
-	Rules           []sarifRule `json:"rules"`
+	Name           string      `json:"name"`
+	Version        string      `json:"version"`
+	InformationURI string      `json:"informationUri"`
+	Rules          []sarifRule `json:"rules"`
 }
 
 type sarifRule struct {
@@ -57,11 +59,13 @@ type sarifProperties struct {
 }
 
 type sarifResult struct {
-	RuleID    string             `json:"ruleId"`
-	Level     string             `json:"level"`
-	Message   sarifMessage       `json:"message"`
-	Locations []sarifLocation    `json:"locations,omitempty"`
-	Fixes     []sarifFix         `json:"fixes,omitempty"`
+	Properties          map[string]string `json:"properties,omitempty"`
+	PartialFingerprints map[string]string `json:"partialFingerprints,omitempty"`
+	RuleID              string            `json:"ruleId"`
+	Level               string            `json:"level"`
+	Message             sarifMessage      `json:"message"`
+	Locations           []sarifLocation   `json:"locations,omitempty"`
+	Fixes               []sarifFix        `json:"fixes,omitempty"`
 }
 
 type sarifMessage struct {
@@ -133,6 +137,7 @@ func ruleNameFromID(id string) string {
 
 // Write renders the report as SARIF 2.1.0 JSON.
 func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
+	report = report.ProtectedCopy(nil)
 	// Build rules from unique finding IDs.
 	ruleMap := make(map[string]sarifRule)
 	ruleOrder := make([]string, 0)
@@ -172,12 +177,18 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 			Level:   severityToSARIFLevel(f.Severity),
 			Message: sarifMessage{Text: f.Description},
 		}
+		if f.Fingerprint != "" {
+			result.PartialFingerprints = map[string]string{"mcpsenseRuleComponent/v1": f.Fingerprint}
+		}
+		if f.Confidence != "" {
+			result.Properties = map[string]string{"mcpsenseConfidence": f.Confidence}
+		}
 
 		// Build location based on what info is available.
 		if f.Location.File != "" {
 			loc := sarifLocation{
 				PhysicalLocation: &sarifPhysicalLocation{
-					ArtifactLocation: sarifArtifactLocation{URI: f.Location.File},
+					ArtifactLocation: sarifArtifactLocation{URI: artifactURI(f.Location.File)},
 				},
 			}
 			if f.Location.Line > 0 {
@@ -194,9 +205,7 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 
 		// Add remediation as a fix suggestion.
 		if f.Remediation != "" {
-			result.Fixes = append(result.Fixes, sarifFix{
-				Description: sarifMessage{Text: f.Remediation},
-			})
+			result.Message.Text += "\nRemediation: " + f.Remediation
 		}
 
 		results = append(results, result)
@@ -207,10 +216,11 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 		Version: "2.1.0",
 		Runs: []sarifRun{
 			{
+				Properties: map[string]interface{}{"coverage": report.Coverage, "schemaVersion": report.SchemaVersion},
 				Tool: sarifTool{
 					Driver: sarifDriver{
 						Name:           "MCPSense",
-						Version:        "0.2.2",
+						Version:        AppVersion,
 						InformationURI: "https://github.com/fayzkk889/MCPSense",
 						Rules:          rules,
 					},
@@ -223,4 +233,22 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
 	return enc.Encode(sarif)
+}
+
+func artifactURI(path string) string {
+	path = strings.ReplaceAll(path, "\\", "/")
+	drive := len(path) > 2 && path[1] == ':' && path[2] == '/'
+	if !drive {
+		if parsed, err := url.Parse(path); err == nil && parsed.Scheme != "" {
+			return parsed.String()
+		}
+	}
+	u := url.URL{Path: path}
+	if drive {
+		u.Scheme = "file"
+		u.Path = "/" + path
+	} else if strings.HasPrefix(path, "/") {
+		u.Scheme = "file"
+	}
+	return u.String()
 }

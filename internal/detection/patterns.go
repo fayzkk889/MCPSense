@@ -2,7 +2,10 @@ package detection
 
 import (
 	"regexp"
+	"sort"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/fayzkk889/MCPSense/internal/models"
 )
@@ -46,27 +49,7 @@ func NewPatternEngine() *PatternEngine {
 
 // Scan runs all patterns against the given content and returns all matches.
 func (e *PatternEngine) Scan(content string) []PatternMatch {
-	var matches []PatternMatch
-	lower := strings.ToLower(content)
-
-	for _, p := range e.patterns {
-		// Run against both original and lowercased content
-		locs := p.Regex.FindAllStringIndex(lower, -1)
-		for _, loc := range locs {
-			matched := content[loc[0]:loc[1]]
-			matches = append(matches, PatternMatch{
-				PatternID:   p.ID,
-				PatternName: p.Name,
-				Severity:    p.Severity,
-				Description: p.Description,
-				Category:    p.Category,
-				Remediation: p.Remediation,
-				MatchedText: matched,
-				Offset:      loc[0],
-			})
-		}
-	}
-	return matches
+	return e.scanWithFilter(content, "")
 }
 
 // ScanDescriptions runs only description-targeted patterns against the given content.
@@ -81,15 +64,16 @@ func (e *PatternEngine) ScanSource(content string) []PatternMatch {
 
 func (e *PatternEngine) scanWithFilter(content string, target string) []PatternMatch {
 	var matches []PatternMatch
-	lower := strings.ToLower(content)
+	lower, originalOffset := lowercaseWithOffsets(content)
 
 	for _, p := range e.patterns {
-		if p.Target != target {
+		if target != "" && p.Target != target {
 			continue
 		}
 		locs := p.Regex.FindAllStringIndex(lower, -1)
 		for _, loc := range locs {
-			matched := content[loc[0]:loc[1]]
+			start, end := originalOffset(loc[0]), originalOffset(loc[1])
+			matched := content[start:end]
 			matches = append(matches, PatternMatch{
 				PatternID:   p.ID,
 				PatternName: p.Name,
@@ -98,11 +82,34 @@ func (e *PatternEngine) scanWithFilter(content string, target string) []PatternM
 				Category:    p.Category,
 				Remediation: p.Remediation,
 				MatchedText: matched,
-				Offset:      loc[0],
+				Offset:      start,
 			})
 		}
 	}
 	return matches
+}
+
+// Preserve historical Unicode lowercasing (e.g. dotted I) while translating
+// regex boundaries back to original bytes. Only width changes need entries.
+func lowercaseWithOffsets(content string) (string, func(int) int) {
+	type boundary struct{ at, delta int }
+	changes := []boundary{}
+	out := make([]byte, 0, len(content))
+	for pos, r := range content {
+		_, width := utf8.DecodeRuneInString(content[pos:])
+		prior := len(out)
+		out = utf8.AppendRune(out, unicode.ToLower(r))
+		if len(out)-prior != width {
+			changes = append(changes, boundary{len(out), pos + width - len(out)})
+		}
+	}
+	return string(out), func(pos int) int {
+		idx := sort.Search(len(changes), func(i int) bool { return changes[i].at > pos }) - 1
+		if idx < 0 {
+			return pos
+		}
+		return pos + changes[idx].delta
+	}
 }
 
 // ScanWithLine runs all patterns and returns matches with approximate line numbers.
@@ -151,7 +158,7 @@ func compilePattern(id, name, pattern string, severity models.Severity, descript
 	return Pattern{
 		ID:          id,
 		Name:        name,
-		Regex:       regexp.MustCompile(pattern),
+		Regex:       regexp.MustCompile("(?i:" + pattern + ")"),
 		Severity:    severity,
 		Description: description,
 		Category:    category,

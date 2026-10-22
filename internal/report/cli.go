@@ -32,6 +32,7 @@ var AppVersion = "dev"
 
 // Write renders the report to the given writer.
 func (r *CLIReporter) Write(report *models.Report, w io.Writer) error {
+	report = report.ProtectedCopy(nil)
 	if r.NoColor {
 		color.NoColor = true
 	}
@@ -68,7 +69,7 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 
 func (r *CLIReporter) writeFindings(w io.Writer, report *models.Report) {
 	if len(report.Findings) == 0 {
-		colorGreen.Fprintln(w, "  No findings. Your server looks clean!")
+		colorGreen.Fprintln(w, "  No findings in the evaluated scope. This does not prove absence of vulnerabilities.")
 		fmt.Fprintln(w)
 		return
 	}
