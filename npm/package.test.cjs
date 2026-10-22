@@ -23,3 +23,35 @@ test('wrapper starts the reviewed compiled CLI', {skip:!process.env.MCPSENSE_TES
  const {runCLI}=require('./bin/run.js');
  assert.equal(runCLI(['--help'],undefined,process.env.MCPSENSE_TEST_BINARY),0);
 });
+
+test('release selection supports independent npm installs on all configured targets',()=>{
+ const {getDownloadUrl}=require('./install.js');
+ for(const [platform,architecture,filename] of [['win32','x64','windows_amd64.zip'],['linux','x64','linux_amd64.tar.gz'],['linux','arm64','linux_arm64.tar.gz'],['darwin','x64','darwin_amd64.tar.gz'],['darwin','arm64','darwin_arm64.tar.gz']])assert.ok(getDownloadUrl('0.4.0',platform,architecture).endsWith(filename));
+ assert.throws(()=>getDownloadUrl('0.4.0','win32','arm64'),/No release binary/);
+});
+
+for(const platform of ['win32','linux','darwin'])test('npm installs '+platform+' without ever invoking Go',async()=>{
+ const {installBinary,getDownloadUrl}=require('./install.js');const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mcpsense-npm-'));
+ const data=Buffer.from('synthetic reviewed archive'),filename=getDownloadUrl('0.4.0',platform,'x64').split('/').pop();
+ const digest=createHash('sha256').update(data).digest('hex');const calls=[];
+ try{
+  const existing=path.join(dir,platform==='win32'?'mcpsense.exe':'mcpsense');fs.writeFileSync(existing,'previous binary');fs.writeFileSync(path.join(dir,'run.js'),'preserve wrapper');fs.writeFileSync(path.join(dir,'user-note.txt'),'preserve unrelated file');
+  const binary=await installBinary({version:'0.4.0',binDir:dir,platform,architecture:'x64',download:async url=>url.endsWith('checksums.txt')?Buffer.from(`${digest}  ${filename}\n`):data,run:(file,args,opts)=>{
+   calls.push(file);assert.notEqual(file,'go');assert.equal(opts.shell,false);
+   if(file==='tar'){assert.equal(args[args.length-1],platform==='win32'?'mcpsense.exe':'mcpsense');fs.writeFileSync(path.join(args[3],args[4]),'new binary');return;}
+   assert.deepEqual(args,['version']);return 'mcpsense v0.4.0\n';
+  }});
+  assert.equal(fs.readFileSync(binary,'utf8'),'new binary');assert.equal(fs.readFileSync(path.join(dir,'run.js'),'utf8'),'preserve wrapper');assert.equal(fs.readFileSync(path.join(dir,'user-note.txt'),'utf8'),'preserve unrelated file');assert.equal(calls.length,2);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('npm rejects corrupt or mismatched binaries before replacing an installation',async()=>{
+ const {installBinary}=require('./install.js');
+ for(const failure of ['checksum','startup','version']){
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mcpsense-npm-'));const existing=path.join(dir,'mcpsense.exe');fs.writeFileSync(existing,'previous binary');const data=Buffer.from('synthetic');const hash=createHash('sha256').update(data).digest('hex');let calls=0;
+  try{
+   await assert.rejects(installBinary({version:'0.4.0',binDir:dir,platform:'win32',architecture:'x64',download:async url=>url.endsWith('checksums.txt')?Buffer.from(`${failure==='checksum'?'0'.repeat(64):hash}  MCPSense_0.4.0_windows_amd64.zip\n`):data,run:(file,args)=>{calls++;if(file==='tar'){fs.writeFileSync(path.join(args[3],args[4]),'new binary');return;}if(failure==='startup')throw Error('blocked by platform');return 'mcpsense v0.3.0';}}));
+   assert.equal(fs.readFileSync(existing,'utf8'),'previous binary');assert.equal(fs.readdirSync(dir).length,1);if(failure==='checksum')assert.equal(calls,0);
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+ }
+});

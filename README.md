@@ -30,11 +30,20 @@ go build -o bin/mcpsense.exe ./cmd/mcpsense
 .\bin\mcpsense.exe scan .\manifest.json --offline --no-baseline
 ```
 
-For a published release, install through `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest`, GitHub release archives, or `npm install -g mcpsense`. npm on Windows builds the selected release from source and requires Go. Linux/macOS npm installation verifies the archive against the release checksum file. Checksums detect corruption; no artifact-signing claim is made here. To select 0.4.0 explicitly, use `npm install -g mcpsense@0.4.0` or the corresponding `go install ...@v0.4.0` once that version appears in the public release list.
+Choose one independent installation route for a published release:
+
+```sh
+# Node.js/npm users: no Go compiler required
+npm install -g mcpsense
+# Go users: no Node.js/npm required
+go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
+```
+
+npm downloads the selected platform executable and verifies its release SHA-256 checksum on Windows, Linux and macOS. It checks startup and the version before replacing an existing installation. Checksums detect corruption; they are not code signatures. To select 0.4.0 explicitly, use `npm install -g mcpsense@0.4.0` or `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@v0.4.0` once that version appears in the public release list.
 
 ### Windows installation
 
-Windows uses a local Go source build. **Go 1.22 or newer is required; Node.js/NVM is optional.** The standalone PowerShell installer uses Go directly and never falls back to downloading an unsigned executable. It verifies startup, installs without administrator privileges, and adds its directory to your user PATH. It does not change Windows protection settings. Local builds can still be restricted by machine policy; no warning-free guarantee is made.
+On Windows x64, the npm route needs Node.js/npm only. The separate Go route needs Go 1.22 or newer only. The optional standalone PowerShell installer below is a convenience for Go users: it builds from source, verifies startup, installs without administrator privileges, and adds its directory to your user PATH. No installation route changes Windows protection settings. Downloaded and locally built executables can both be restricted by machine policy; no warning-free guarantee is made.
 
 From a downloaded or cloned checkout:
 
@@ -47,7 +56,7 @@ From a downloaded or cloned checkout:
 .\install.ps1 -Version <full-40-character-commit> -InstallDir C:\dev\mcpsense-preview -NoPathUpdate
 ```
 
-The npm route is optional: `npm install -g mcpsense` requires Node.js **and Go on Windows**. It compiles the version selected by the npm package. Upgrading Node does not update MCPSense; run `npm install -g mcpsense@latest` to update it. The standalone installer uses Go directly and needs no npm login. Package users do not need an npm account to install this public package.
+Update the npm installation with `npm install -g mcpsense@latest`, or update the Go installation by rerunning the Go install command. Package users do not need an npm account. Supported npm release targets are Windows x64 and Linux/macOS x64/arm64; the downloaded executable uses the operating system's archive utility during installation.
 
 On Linux/macOS, `sh install.sh` installs the latest published release into `~/.local/bin`, verifies its SHA-256 manifest before installation and checks startup. `MCPSENSE_VERSION=0.4.0` selects a published version; `MCPSENSE_INSTALL_DIR` selects a writable directory. Add that directory to PATH when instructed. No automatic sudo or Windows-binary fallback is used.
 

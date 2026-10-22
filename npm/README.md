@@ -9,9 +9,9 @@ npm install -g mcpsense
 mcpsense scan ./manifest.json --offline --no-baseline
 ```
 
-Windows installation requires Go and compiles the selected release into the package's binary directory. Linux/macOS download the platform archive, verify its release SHA-256 checksum, and extract only the CLI executable. A checksum is not a signature.
+Node.js/npm is sufficient for this route: Go is not required on Windows, Linux or macOS. The installer downloads the selected platform archive, verifies its release SHA-256 checksum, extracts only the CLI executable and checks its version/startup before replacing an existing installation. A checksum is not a signature.
 
-On Windows, install Go 1.22 or newer before running npm installation; Node.js alone is insufficient. NVM is optional. For a route requiring only Go, use the repository's `install.ps1`; it never downloads a Windows executable and supports an explicit version or full commit. Source builds do not guarantee acceptance under every Windows application-control policy.
+Supported release targets: Windows x64 and Linux/macOS x64/arm64. Modern Windows includes the archive utility used by installation; Linux/macOS use system tar. NVM is optional. Users who prefer a source installation can instead use `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest` without Node.js/npm. Windows machine policies may still restrict executable startup; neither route disables protection or guarantees zero warnings.
 
 Update with `npm install -g mcpsense@latest`. Users do not need to log in to npm to install or update this public package. Publisher login is required only for maintainers publishing a new version.
 
