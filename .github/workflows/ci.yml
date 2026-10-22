@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main, 'codex/**']
+    branches: [main]
   pull_request:
     branches: [main]
 permissions:
@@ -24,10 +24,17 @@ jobs:
       - run: go test ./... -count=1 -cover
       - run: go test -race ./...
       - run: go vet ./...
-      - run: node --test scripts/action.test.mjs
+      - run: node --test scripts/action.test.mjs npm/package.test.cjs
+      - run: npm pack ./npm --dry-run --json --ignore-scripts
       - run: go build -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
+      - run: node --test npm/package.test.cjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
   action:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - name: Validate one-scan JSON and SARIF with source binary
@@ -36,7 +43,7 @@ jobs:
           target: ./testdata/compliant_server/manifest.json
           version: source
           offline: 'true'
-          sarif-upload: 'false'
+          sarif-upload: 'true'
           fail-on: high
   lint:
     runs-on: ubuntu-latest
@@ -48,3 +55,29 @@ jobs:
       - uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84
         with:
           version: v1.64.8
+  release-dry-run:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: '1.27.3'
+      - uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a
+        with:
+          version: v2.18.3
+          args: release --snapshot --skip=publish,announce,sign,sbom --timeout=10m
+        env:
+          GORELEASER_CURRENT_TAG: v0.4.0
+      - name: Verify snapshot archives and exercise remediation evidence
+        run: |
+          (cd dist && sha256sum -c checksums.txt)
+          ./dist/mcpsense_linux_amd64_v1/mcpsense --help
+          bash docs/engineering/remediation-demo.sh "$PWD/dist/mcpsense_linux_amd64_v1/mcpsense"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mcpsense-snapshot-${{ github.sha }}
+          path: dist/
+          retention-days: 7
