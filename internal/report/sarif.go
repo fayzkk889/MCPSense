@@ -133,6 +133,7 @@ func ruleNameFromID(id string) string {
 
 // Write renders the report as SARIF 2.1.0 JSON.
 func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
+	report = report.ProtectedCopy(nil)
 	// Build rules from unique finding IDs.
 	ruleMap := make(map[string]sarifRule)
 	ruleOrder := make([]string, 0)

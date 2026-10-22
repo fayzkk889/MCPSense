@@ -45,19 +45,38 @@ func Load(path string) (*Snapshot, error) {
 	if err := json.Unmarshal(data, &snap); err != nil {
 		return nil, fmt.Errorf("parsing baseline %q: %w", path, err)
 	}
+	if snap.FormatVersion != FormatVersion {
+		return nil, fmt.Errorf("unsupported baseline format; review target and recreate with --update-baseline (old baselines may retain secrets)")
+	}
 	return &snap, nil
 }
 
 // Save writes a snapshot to disk, creating the directory if needed.
 func Save(path string, snap *Snapshot) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		return fmt.Errorf("creating snapshot directory: %w", err)
 	}
 	data, err := MarshalSnapshot(snap)
 	if err != nil {
 		return fmt.Errorf("serializing snapshot: %w", err)
 	}
-	if err := os.WriteFile(path, data, 0o600); err != nil {
+	if info, err := os.Lstat(path); err == nil && (!info.Mode().IsRegular() || info.Mode()&os.ModeSymlink != 0) {
+		return fmt.Errorf("baseline must be a regular file")
+	}
+	f, err := os.CreateTemp(filepath.Dir(path), ".baseline-*")
+	if err != nil {
+		return err
+	}
+	tmp := f.Name()
+	defer os.Remove(tmp)
+	if _, err := f.Write(data); err != nil {
+		f.Close()
+		return err
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	if err := os.Rename(tmp, path); err != nil {
 		return fmt.Errorf("writing snapshot %q: %w", path, err)
 	}
 	return nil
