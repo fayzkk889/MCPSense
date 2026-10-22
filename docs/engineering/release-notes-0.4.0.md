@@ -1,4 +1,4 @@
-# 0.4.0 — proposed release, not published
+# 0.4.0
 
 This minor release adds modern MCP metadata discovery, explicit coverage and offline report comparison alongside security hardening. It preserves MIT licensing and the existing GoReleaser distribution targets. Module minimum remains Go 1.22; release builds use Go 1.27.3.
 
