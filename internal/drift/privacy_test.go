@@ -73,3 +73,15 @@ func TestSnapshotRoundTripAndArgumentBoundaries(t *testing.T) {
 		t.Fatal("argument boundary change missed")
 	}
 }
+func TestSchemaDigestsPreserveLargeIntegerConstraints(t *testing.T) {
+	m := &models.MCPManifest{Tools: []models.MCPTool{{Name: "read", InputSchema: json.RawMessage(`{"type":"object","maximum":9007199254740992}`)}}}
+	before := BuildSnapshot(m, nil, "target", "manifest")
+	m.Tools[0].InputSchema = json.RawMessage(`{"maximum":9007199254740993,"type":"object"}`)
+	if len(Diff(before, BuildSnapshot(m, nil, "target", "manifest"))) != 1 {
+		t.Fatal("large integer constraint change lost to float rounding")
+	}
+	m.Tools[0].InputSchema = json.RawMessage(`{ "maximum": 9007199254740992, "type": "object" }`)
+	if len(Diff(before, BuildSnapshot(m, nil, "target", "manifest"))) != 0 {
+		t.Fatal("whitespace/key order created false drift")
+	}
+}

@@ -1,6 +1,7 @@
 package drift
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -39,7 +40,9 @@ func BuildSnapshot(m *models.MCPManifest, c *models.MCPClientConfig, target, mod
 		s.Tools = map[string]ToolSnap{}
 		for _, t := range m.Tools {
 			var schema interface{}
-			if json.Unmarshal(t.InputSchema, &schema) != nil {
+			decoder := json.NewDecoder(bytes.NewReader(t.InputSchema))
+			decoder.UseNumber()
+			if !json.Valid(t.InputSchema) || decoder.Decode(&schema) != nil {
 				schema = string(t.InputSchema)
 			}
 			ts := ToolSnap{DescriptionHash: hash(t.Description), SchemaHash: digest(schema)}
