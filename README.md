@@ -6,7 +6,7 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 [![Go](https://img.shields.io/badge/go-1.22%2B-blue)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-This branch prepares **0.4.0**. It has not been released. Public v0.3.0 does not include these fixes; build this reviewed branch to use the behavior below. Publication, release tags, and merging require maintainer approval.
+This checkout prepares **0.4.0**. It has not been released. Public v0.3.0 does not include these fixes; build this checkout to use the behavior below. Release tags and publication require maintainer approval.
 
 ## Start safely
 
@@ -31,6 +31,25 @@ go build -o bin/mcpsense.exe ./cmd/mcpsense
 ```
 
 After publication, installation remains available through `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest`, GitHub release archives, and the npm wrapper. npm on Windows builds the selected release from source and requires Go. Linux/macOS npm installation verifies the archive against the release checksum file. Checksums detect corruption; no artifact-signing claim is made here.
+
+### Windows installation
+
+Windows uses a local Go source build. **Go 1.22 or newer is required; Node.js/NVM is optional.** The standalone PowerShell installer uses Go directly and never falls back to downloading an unsigned executable. It verifies startup, installs without administrator privileges, and adds its directory to your user PATH. It does not change Windows protection settings. Local builds can still be restricted by machine policy; no warning-free guarantee is made.
+
+From a downloaded or cloned checkout:
+
+```powershell
+# Latest published version (currently 0.3.0 until 0.4.0 is released)
+.\install.ps1
+# Select a published release explicitly, after publication
+.\install.ps1 -Version 0.4.0
+# Preview an authorized exact commit without changing PATH
+.\install.ps1 -Version <full-40-character-commit> -InstallDir C:\dev\mcpsense-preview -NoPathUpdate
+```
+
+The npm route is optional: `npm install -g mcpsense` requires Node.js **and Go on Windows**. It compiles the version selected by the npm package. Upgrading Node or reinstalling NVM does not publish a new MCPSense version. Until release approval, an ordinary npm or Go `@latest` install still delivers 0.3.0.
+
+On Linux/macOS, `sh install.sh` installs the latest published release into `~/.local/bin`, verifies its SHA-256 manifest before installation and checks startup. `MCPSENSE_VERSION=0.4.0` selects a published version; `MCPSENSE_INSTALL_DIR` selects a writable directory. Add that directory to PATH when instructed. No automatic sudo or Windows-binary fallback is used.
 
 ## Scope and permissions
 
@@ -74,6 +93,8 @@ There are 32 registered checks: 5 manifest/spec checks, 16 security heuristics, 
 
 Checks include prompt-injection patterns, suspicious execution/URL/file-access patterns, Unicode and cross-tool poisoning signals, annotation inconsistencies, credential exposure, package references, schemas and tool quality. A shell metacharacter or changed annotation alone does not prove command execution or permission escalation. OWASP mappings are advisory classifications.
 
+Credential-name heuristics include generic API_KEY/APIKEY/ACCESS_KEY names and provider-specific names; their values are not printed. Tool descriptions that consist entirely of a narrowly recognized document-query operation treat a quoted search phrase as data. Arbitrary quotation marks or the word “example” do not exempt instructions; appended directives remain detectable. This context rule does not exempt agent instruction files. Indirect credential-disclosure and safety-policy override patterns remain heuristics, not general semantic understanding.
+
 ```sh
 # One scan, consistent JSON and SARIF including drift findings
 mcpsense scan ./manifest.json --offline --no-baseline --format json --output report.json --sarif-output report.sarif
@@ -110,7 +131,7 @@ See the [reproducible before/after demonstration](docs/engineering/remediation-d
 
 ## GitHub Action
 
-Until 0.4.0 is approved, pin a reviewed commit from the feature branch. The snippet intentionally uses the branch for development; pin its final SHA for production.
+Until 0.4.0 is approved, pin a reviewed commit. The snippet uses merged main for development; pin a reviewed full commit SHA for production.
 
 ```yaml
 permissions:
@@ -121,7 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: fayzkk889/MCPSense@codex/security-evidence-hardening
+      - uses: fayzkk889/MCPSense@main
         with:
           target: ./manifest.json
           version: source

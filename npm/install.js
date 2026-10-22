@@ -128,15 +128,15 @@ function extractZip(buffer, destDir) {
 }
 
 function installFromSource(binaryPath) {
-  console.log("Windows detected — building from source to avoid antivirus false positives...");
+  console.log("Windows detected — compiling MCPSense from its Go source...");
 
   // Check if Go is available
   try {
     execFileSync("go", ["version"], { stdio: "pipe", shell: false });
   } catch (_) {
     console.error("");
-    console.error("mcpsense requires Go on Windows because antivirus software");
-    console.error("flags downloaded Go binaries as false positives.");
+    console.error("mcpsense requires Go 1.22 or newer on Windows.");
+    console.error("Windows installation compiles from source; Node.js alone is not sufficient.");
     console.error("");
     console.error("Install Go from https://go.dev/dl/ then retry:");
     console.error("  npm install -g mcpsense");
@@ -161,7 +161,7 @@ function installFromSource(binaryPath) {
     process.exit(1);
   }
 
-  // go install puts the binary in GOPATH/bin — copy it to our bin dir
+  // Explicit GOBIN installs directly into the package's binary directory.
   const goBinary = binaryPath;
 
   if (!fs.existsSync(goBinary)) {

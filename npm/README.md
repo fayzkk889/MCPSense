@@ -11,6 +11,8 @@ mcpsense scan ./manifest.json --offline --no-baseline
 
 Windows installation requires Go and compiles the selected release into the package's binary directory. Linux/macOS download the platform archive, verify its release SHA-256 checksum, and extract only the CLI executable. A checksum is not a signature.
 
+On Windows, install Go 1.22 or newer before running npm installation; Node.js alone is insufficient. NVM is optional. For a route requiring only Go, use the repository's `install.ps1`; it never downloads a Windows executable and supports an explicit version or full commit. Source builds do not guarantee acceptance under every Windows application-control policy.
+
 The wrapper forwards argument arrays and exit status without a shell. Exit 0 means completed without high/critical findings, 1 means those findings were found, and 2 means execution/policy failure.
 
 Directory inspection does not execute MCP commands. Live local startup requires --allow-exec. Offline prohibits scanner networking and local server execution; installing/building the package itself may need network access.

@@ -49,7 +49,7 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	fmt.Fprint(w, "\n")
 	fmt.Fprint(w, colorBold.Sprint("╔"+line+"╗\n"))
 	header := fmt.Sprintf("mcpsense v%s — MCP Server Security Scanner", AppVersion)
-	fmt.Fprint(w, colorBold.Sprint(fmt.Sprintf("║  %-52s║\n", header)))
+	fmt.Fprint(w, colorBold.Sprint(fmt.Sprintf("║  %-52s║\n", truncate(header, 52))))
 	fmt.Fprint(w, colorBold.Sprint("╠"+line+"╣\n"))
 	fmt.Fprint(w, colorBold.Sprint("║  "))
 	fmt.Fprintf(w, "Target:  %-43s", truncate(report.Target, 43))
@@ -221,8 +221,9 @@ func capitalizeFirst(s string) string {
 }
 
 func truncate(s string, max int) string {
-	if len(s) <= max {
+	runes := []rune(s)
+	if len(runes) <= max {
 		return s
 	}
-	return s[:max-3] + "..."
+	return string(runes[:max-3]) + "..."
 }

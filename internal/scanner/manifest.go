@@ -22,7 +22,7 @@ func (s *Scanner) scanManifest(target string, ctx *checks.ScanContext) error {
 		data = data[3:]
 	}
 	if err := json.Unmarshal(data, &manifest); err != nil {
-		return fmt.Errorf("could not parse %q. If this file was created on Windows, it may have a UTF-8 BOM marker. Try re-saving in UTF-8 without BOM, or use a different text editor. Original error: %w", target, err)
+		return fmt.Errorf("invalid manifest JSON in %q: %w; check JSON syntax and field types", target, err)
 	}
 
 	ctx.Manifest = &manifest
