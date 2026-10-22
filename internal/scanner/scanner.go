@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
@@ -142,7 +143,18 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 	}
 	if ctx.Manifest != nil {
 		report.Coverage.Surfaces = append(report.Coverage.Surfaces, "manifest")
+		report.Coverage.Protocol = ctx.Manifest.ProtocolVersion
 	}
+	for path := range ctx.SourceFiles {
+		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(filepath.ToSlash(filepath.Clean(path))))
+	}
+	for path := range ctx.SkillFiles {
+		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(filepath.ToSlash(filepath.Clean(path))))
+	}
+	if mode != ModeDirectory && mode != ModeStatic && mode != ModeSkill {
+		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(target))
+	}
+	sort.Strings(report.Coverage.Inputs)
 	if len(report.Coverage.Surfaces) == 0 {
 		return nil, nil, fmt.Errorf("no supported readable input in requested scope")
 	}

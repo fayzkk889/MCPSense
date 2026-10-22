@@ -12,6 +12,8 @@ type Summary struct {
 
 // Report aggregates all findings from a scan.
 type Report struct {
+	TargetHash    string    `json:"target_hash"`
+	MinSeverity   string    `json:"min_severity"`
 	SchemaVersion int       `json:"schema_version"`
 	Coverage      Coverage  `json:"coverage"`
 	Target        string    `json:"target"`
@@ -24,6 +26,9 @@ type Report struct {
 
 // NewReport creates a Report and computes the summary and score.
 func NewReport(target, scanMode string, findings []Finding) *Report {
+	if findings == nil {
+		findings = []Finding{}
+	}
 	// Populate the OWASP MCP Top 10 mapping for each finding based on its check ID.
 	for i := range findings {
 		if findings[i].OWASP == "" {
@@ -41,6 +46,7 @@ func NewReport(target, scanMode string, findings []Finding) *Report {
 	}
 	r.computeSummary()
 	r.CalculateScore()
+	r.FinalizeEvidence()
 	return r
 }
 

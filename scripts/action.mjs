@@ -16,7 +16,7 @@ export function parseInputs(env){
 }
 export function validateReport(r){
  if(r?.schema_version!==2||r.coverage?.state!=='completed'||!Array.isArray(r.coverage.surfaces)||r.coverage.surfaces.length===0||!['completed','skipped','not_applicable'].includes(r.coverage.advisories)||!Number.isInteger(r.score)||r.score<0||r.score>100||!Array.isArray(r.findings)||r.summary?.total!==r.findings.length)throw Error('Missing, unsupported or incomplete scan result');
- for(const f of r.findings)if(!f||typeof f.id!=='string'||!(f.severity in ranks))throw Error('Invalid finding');
+ for(const f of r.findings)if(!f||typeof f.id!=='string'||!Object.hasOwn(ranks,f.severity))throw Error('Invalid finding');
  return r;
 }
 export function exceedsThreshold(r,threshold){return threshold!=='none'&&r.findings.some(f=>ranks[f.severity]>=ranks[threshold]);}

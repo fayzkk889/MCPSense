@@ -56,6 +56,7 @@ func rootCmd() *cobra.Command {
 	root.AddCommand(scanCmd())
 	root.AddCommand(versionCmd())
 	root.AddCommand(initConfigCmd())
+	root.AddCommand(verifyCmd())
 
 	return root
 }
@@ -206,6 +207,10 @@ CLI flags override config file values.`,
 
 			// Drift applies to modes that have a tool/config surface (not static source scanning).
 			driftApplies := ctx.Manifest != nil || ctx.ClientConfig != nil
+			rep.Coverage.Baseline = "not_applicable"
+			if noBaseline {
+				rep.Coverage.Baseline = "skipped"
+			}
 
 			if driftApplies && !noBaseline {
 				current := drift.BuildSnapshot(ctx.Manifest, ctx.ClientConfig, target, string(rep.ScanMode))
@@ -220,12 +225,14 @@ CLI flags override config file values.`,
 
 				if baselinePath != "" {
 					if updateBaseline {
+						rep.Coverage.Baseline = "updated"
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not update baseline: %w", err)
 						} else {
 							fmt.Fprintln(os.Stderr, "Baseline updated.")
 						}
 					} else if drift.Exists(baselinePath) {
+						rep.Coverage.Baseline = "compared"
 						prev, err := drift.Load(baselinePath)
 						if err != nil {
 							return fmt.Errorf("could not load baseline: %w", err)
@@ -237,6 +244,7 @@ CLI flags override config file values.`,
 							rep.Findings = append(rep.Findings, driftFindings...)
 						}
 					} else {
+						rep.Coverage.Baseline = "created"
 						// First scan: save baseline so future scans can detect drift.
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not save baseline: %w", err)
@@ -253,6 +261,8 @@ CLI flags override config file values.`,
 			rep.Findings = filterBySeverity(rep.Findings, minSeverity)
 			rep.Summary = summarize(rep.Findings)
 			rep.CalculateScore()
+			rep.MinSeverity = minSev
+			rep.FinalizeEvidence()
 
 			// Select output writer.
 			out := os.Stdout
@@ -409,7 +419,7 @@ func parseSeverity(s string) models.Severity {
 // filterBySeverity returns only findings at or above the given minimum severity.
 func filterBySeverity(findings []models.Finding, minSev models.Severity) []models.Finding {
 	minScore := minSev.Score()
-	var filtered []models.Finding
+	filtered := make([]models.Finding, 0)
 	for _, f := range findings {
 		if f.Severity.Score() >= minScore {
 			filtered = append(filtered, f)

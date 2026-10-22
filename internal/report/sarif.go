@@ -21,8 +21,9 @@ type sarifReport struct {
 }
 
 type sarifRun struct {
-	Tool    sarifTool     `json:"tool"`
-	Results []sarifResult `json:"results"`
+	Properties map[string]interface{} `json:"properties"`
+	Tool       sarifTool              `json:"tool"`
+	Results    []sarifResult          `json:"results"`
 }
 
 type sarifTool struct {
@@ -30,10 +31,10 @@ type sarifTool struct {
 }
 
 type sarifDriver struct {
-	Name            string      `json:"name"`
-	Version         string      `json:"version"`
-	InformationURI  string      `json:"informationUri"`
-	Rules           []sarifRule `json:"rules"`
+	Name           string      `json:"name"`
+	Version        string      `json:"version"`
+	InformationURI string      `json:"informationUri"`
+	Rules          []sarifRule `json:"rules"`
 }
 
 type sarifRule struct {
@@ -57,11 +58,12 @@ type sarifProperties struct {
 }
 
 type sarifResult struct {
-	RuleID    string             `json:"ruleId"`
-	Level     string             `json:"level"`
-	Message   sarifMessage       `json:"message"`
-	Locations []sarifLocation    `json:"locations,omitempty"`
-	Fixes     []sarifFix         `json:"fixes,omitempty"`
+	PartialFingerprints map[string]string `json:"partialFingerprints,omitempty"`
+	RuleID              string            `json:"ruleId"`
+	Level               string            `json:"level"`
+	Message             sarifMessage      `json:"message"`
+	Locations           []sarifLocation   `json:"locations,omitempty"`
+	Fixes               []sarifFix        `json:"fixes,omitempty"`
 }
 
 type sarifMessage struct {
@@ -173,6 +175,9 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 			Level:   severityToSARIFLevel(f.Severity),
 			Message: sarifMessage{Text: f.Description},
 		}
+		if f.Fingerprint != "" {
+			result.PartialFingerprints = map[string]string{"mcpsenseRuleComponent/v1": f.Fingerprint}
+		}
 
 		// Build location based on what info is available.
 		if f.Location.File != "" {
@@ -195,9 +200,7 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 
 		// Add remediation as a fix suggestion.
 		if f.Remediation != "" {
-			result.Fixes = append(result.Fixes, sarifFix{
-				Description: sarifMessage{Text: f.Remediation},
-			})
+			result.Message.Text += "\nRemediation: " + f.Remediation
 		}
 
 		results = append(results, result)
@@ -208,10 +211,11 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 		Version: "2.1.0",
 		Runs: []sarifRun{
 			{
+				Properties: map[string]interface{}{"coverage": report.Coverage, "schemaVersion": report.SchemaVersion},
 				Tool: sarifTool{
 					Driver: sarifDriver{
 						Name:           "MCPSense",
-						Version:        "0.2.2",
+						Version:        AppVersion,
 						InformationURI: "https://github.com/fayzkk889/MCPSense",
 						Rules:          rules,
 					},

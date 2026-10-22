@@ -19,6 +19,8 @@ type Location struct {
 
 // Finding represents a single vulnerability or issue discovered during scanning.
 type Finding struct {
+	Fingerprint string   `json:"fingerprint,omitempty"`
+	Confidence  string   `json:"confidence,omitempty"`
 	ID          string   `json:"id"`
 	Title       string   `json:"title"`
 	Description string   `json:"description"`
