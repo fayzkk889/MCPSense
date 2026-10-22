@@ -47,11 +47,10 @@ func NewPatternEngine() *PatternEngine {
 // Scan runs all patterns against the given content and returns all matches.
 func (e *PatternEngine) Scan(content string) []PatternMatch {
 	var matches []PatternMatch
-	lower := strings.ToLower(content)
 
 	for _, p := range e.patterns {
-		// Run against both original and lowercased content
-		locs := p.Regex.FindAllStringIndex(lower, -1)
+		// Match original bytes: Unicode case conversion can change byte lengths.
+		locs := p.Regex.FindAllStringIndex(content, -1)
 		for _, loc := range locs {
 			matched := content[loc[0]:loc[1]]
 			matches = append(matches, PatternMatch{
@@ -81,13 +80,12 @@ func (e *PatternEngine) ScanSource(content string) []PatternMatch {
 
 func (e *PatternEngine) scanWithFilter(content string, target string) []PatternMatch {
 	var matches []PatternMatch
-	lower := strings.ToLower(content)
 
 	for _, p := range e.patterns {
 		if p.Target != target {
 			continue
 		}
-		locs := p.Regex.FindAllStringIndex(lower, -1)
+		locs := p.Regex.FindAllStringIndex(content, -1)
 		for _, loc := range locs {
 			matched := content[loc[0]:loc[1]]
 			matches = append(matches, PatternMatch{
@@ -151,7 +149,7 @@ func compilePattern(id, name, pattern string, severity models.Severity, descript
 	return Pattern{
 		ID:          id,
 		Name:        name,
-		Regex:       regexp.MustCompile(pattern),
+		Regex:       regexp.MustCompile("(?i:" + pattern + ")"),
 		Severity:    severity,
 		Description: description,
 		Category:    category,
