@@ -6,7 +6,7 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 [![Go](https://img.shields.io/badge/go-1.22%2B-blue)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-This checkout prepares **0.4.0**. It has not been released. Public v0.3.0 does not include these fixes; build this checkout to use the behavior below. Release tags and publication require maintainer approval.
+This documentation describes **0.4.0**. Run `mcpsense version` to check your installed version: older versions do not include these controls. A development checkout can contain changes newer than the latest published release.
 
 ## Start safely
 
@@ -30,7 +30,7 @@ go build -o bin/mcpsense.exe ./cmd/mcpsense
 .\bin\mcpsense.exe scan .\manifest.json --offline --no-baseline
 ```
 
-After publication, installation remains available through `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest`, GitHub release archives, and the npm wrapper. npm on Windows builds the selected release from source and requires Go. Linux/macOS npm installation verifies the archive against the release checksum file. Checksums detect corruption; no artifact-signing claim is made here.
+For a published release, install through `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest`, GitHub release archives, or `npm install -g mcpsense`. npm on Windows builds the selected release from source and requires Go. Linux/macOS npm installation verifies the archive against the release checksum file. Checksums detect corruption; no artifact-signing claim is made here. To select 0.4.0 explicitly, use `npm install -g mcpsense@0.4.0` or the corresponding `go install ...@v0.4.0` once that version appears in the public release list.
 
 ### Windows installation
 
@@ -39,7 +39,7 @@ Windows uses a local Go source build. **Go 1.22 or newer is required; Node.js/NV
 From a downloaded or cloned checkout:
 
 ```powershell
-# Latest published version (currently 0.3.0 until 0.4.0 is released)
+# Latest published version
 .\install.ps1
 # Select a published release explicitly, after publication
 .\install.ps1 -Version 0.4.0
@@ -47,7 +47,7 @@ From a downloaded or cloned checkout:
 .\install.ps1 -Version <full-40-character-commit> -InstallDir C:\dev\mcpsense-preview -NoPathUpdate
 ```
 
-The npm route is optional: `npm install -g mcpsense` requires Node.js **and Go on Windows**. It compiles the version selected by the npm package. Upgrading Node or reinstalling NVM does not publish a new MCPSense version. Until release approval, an ordinary npm or Go `@latest` install still delivers 0.3.0.
+The npm route is optional: `npm install -g mcpsense` requires Node.js **and Go on Windows**. It compiles the version selected by the npm package. Upgrading Node does not update MCPSense; run `npm install -g mcpsense@latest` to update it. The standalone installer uses Go directly and needs no npm login. Package users do not need an npm account to install this public package.
 
 On Linux/macOS, `sh install.sh` installs the latest published release into `~/.local/bin`, verifies its SHA-256 manifest before installation and checks startup. `MCPSENSE_VERSION=0.4.0` selects a published version; `MCPSENSE_INSTALL_DIR` selects a writable directory. Add that directory to PATH when instructed. No automatic sudo or Windows-binary fallback is used.
 
@@ -131,7 +131,7 @@ See the [reproducible before/after demonstration](docs/engineering/remediation-d
 
 ## GitHub Action
 
-Until 0.4.0 is approved, pin a reviewed commit. The snippet uses merged main for development; pin a reviewed full commit SHA for production.
+The snippet uses main for development; pin a reviewed full commit SHA or release tag for production.
 
 ```yaml
 permissions:
