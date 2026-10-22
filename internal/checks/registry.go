@@ -7,11 +7,13 @@ import (
 
 // ScanContext holds all input data available to checks during a scan.
 type ScanContext struct {
-	Manifest     *models.MCPManifest
-	ClientConfig *models.MCPClientConfig
-	SourceFiles  map[string]string
-	SkillFiles   map[string]string // path -> content, for skill scanning
-	Patterns     *detection.PatternEngine
+	Errors        []error
+	AdvisoryState string
+	Manifest      *models.MCPManifest
+	ClientConfig  *models.MCPClientConfig
+	SourceFiles   map[string]string
+	SkillFiles    map[string]string // path -> content, for skill scanning
+	Patterns      *detection.PatternEngine
 }
 
 // Check defines the interface all checks must implement.

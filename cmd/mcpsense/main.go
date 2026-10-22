@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"runtime/debug"
 	"strings"
 
@@ -16,6 +18,7 @@ import (
 )
 
 var version = "dev"
+var errFindings = errors.New("findings at high or critical severity")
 
 func init() {
 	if version == "dev" {
@@ -33,15 +36,21 @@ const configFile = ".mcpsenserc.json"
 
 func main() {
 	if err := rootCmd().Execute(); err != nil {
-		os.Exit(1)
+		if errors.Is(err, errFindings) {
+			os.Exit(1)
+		}
+		fmt.Fprintln(os.Stderr, models.RedactText(err.Error()))
+		os.Exit(2)
 	}
 }
 
 func rootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:   "mcpsense",
-		Short: "Security scanner for MCP servers",
-		Long:  "mcpsense scans MCP servers for security vulnerabilities, spec compliance issues, and tool quality problems.",
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		Use:           "mcpsense",
+		Short:         "Security scanner for MCP servers",
+		Long:          "mcpsense scans MCP servers for security vulnerabilities, spec compliance issues, and tool quality problems.",
 	}
 
 	root.AddCommand(scanCmd())
@@ -136,7 +145,38 @@ CLI flags override config file values.`,
 			}
 
 			noCVE, _ := cmd.Flags().GetBool("no-cve")
+			sarifOutput, _ := cmd.Flags().GetString("sarif-output")
+			if format != "cli" && format != "json" && format != "sarif" {
+				return fmt.Errorf("unknown output format")
+			}
+			if minSev != "critical" && minSev != "high" && minSev != "medium" && minSev != "low" && minSev != "info" {
+				return fmt.Errorf("unknown severity")
+			}
+			paths := []string{target, outputFile, sarifOutput}
+			for i := 1; i < len(paths); i++ {
+				if paths[i] == "" {
+					continue
+				}
+				for j := 0; j < i; j++ {
+					if paths[j] == "" {
+						continue
+					}
+					a, _ := filepath.Abs(paths[i])
+					b, _ := filepath.Abs(paths[j])
+					same := a == b
+					ai, ae := os.Stat(a)
+					bi, be := os.Stat(b)
+					if ae == nil && be == nil && os.SameFile(ai, bi) {
+						same = true
+					}
+					if same {
+						return fmt.Errorf("report output must differ from input and other output files")
+					}
+				}
+			}
 			offline, _ := cmd.Flags().GetBool("offline")
+			allowExec, _ := cmd.Flags().GetBool("allow-exec")
+			serverArgs, _ := cmd.Flags().GetStringArray("server-arg")
 
 			s := scanner.New(scanner.Options{
 				Mode:        scanMode,
@@ -144,6 +184,9 @@ CLI flags override config file values.`,
 				CheckIDs:    onlyIDs,
 				ExcludeIDs:  skipIDs,
 				DisableCVE:  noCVE || offline,
+				Offline:     offline,
+				AllowExec:   allowExec,
+				ServerArgs:  serverArgs,
 			})
 
 			rep, ctx, err := s.Scan(target)
@@ -157,7 +200,7 @@ CLI flags override config file values.`,
 			baselineFlag, _ := cmd.Flags().GetString("baseline")
 
 			// Drift applies to modes that have a tool/config surface (not static source scanning).
-			driftApplies := string(rep.ScanMode) == "manifest" || string(rep.ScanMode) == "config" || string(rep.ScanMode) == "live"
+			driftApplies := ctx.Manifest != nil || ctx.ClientConfig != nil
 
 			if driftApplies && !noBaseline {
 				current := drift.BuildSnapshot(ctx.Manifest, ctx.ClientConfig, target, string(rep.ScanMode))
@@ -173,22 +216,25 @@ CLI flags override config file values.`,
 				if baselinePath != "" {
 					if updateBaseline {
 						if err := drift.Save(baselinePath, current); err != nil {
-							fmt.Fprintf(os.Stderr, "warning: could not update baseline: %v\n", err)
+							return fmt.Errorf("could not update baseline: %w", err)
 						} else {
-							fmt.Fprintf(os.Stderr, "Baseline updated for %s\n", target)
+							fmt.Fprintln(os.Stderr, "Baseline updated.")
 						}
 					} else if drift.Exists(baselinePath) {
 						prev, err := drift.Load(baselinePath)
 						if err != nil {
-							fmt.Fprintf(os.Stderr, "warning: could not load baseline: %v\n", err)
+							return fmt.Errorf("could not load baseline: %w", err)
 						} else {
+							if prev.Target != current.Target || prev.Mode != current.Mode {
+								return fmt.Errorf("baseline target or mode differs; review and explicitly update baseline")
+							}
 							driftFindings := drift.Diff(prev, current)
 							rep.Findings = append(rep.Findings, driftFindings...)
 						}
 					} else {
 						// First scan: save baseline so future scans can detect drift.
 						if err := drift.Save(baselinePath, current); err != nil {
-							fmt.Fprintf(os.Stderr, "warning: could not save baseline: %v\n", err)
+							return fmt.Errorf("could not save baseline: %w", err)
 						} else {
 							fmt.Fprintf(os.Stderr, "Baseline saved. Future scans of this target will detect drift.\n")
 						}
@@ -224,11 +270,28 @@ CLI flags override config file values.`,
 			if err := reporter.Write(rep, out); err != nil {
 				return fmt.Errorf("writing report: %w", err)
 			}
+			if sarifOutput != "" {
+				if sarifOutput == outputFile || sarifOutput == target {
+					return fmt.Errorf("SARIF output must differ from target and primary output")
+				}
+				f, err := os.OpenFile(sarifOutput, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0600)
+				if err != nil {
+					return fmt.Errorf("opening SARIF output: %w", err)
+				}
+				err = (&report.SARIFReporter{}).Write(rep, f)
+				closeErr := f.Close()
+				if err != nil {
+					return err
+				}
+				if closeErr != nil {
+					return closeErr
+				}
+			}
 
 			// Exit non-zero when critical or high findings remain after filtering.
 			for _, f := range rep.Findings {
 				if f.Severity == models.SeverityCritical || f.Severity == models.SeverityHigh {
-					os.Exit(1)
+					return errFindings
 				}
 			}
 			return nil
@@ -251,6 +314,9 @@ CLI flags override config file values.`,
 
 	cmd.Flags().Bool("no-cve", false, "Skip CVE cross-referencing against OSV.dev")
 	cmd.Flags().Bool("offline", false, "Disable all network calls (implies --no-cve)")
+	cmd.Flags().Bool("allow-exec", false, "Allow execution of the explicitly selected local MCP server (unavailable offline)")
+	cmd.Flags().StringArray("server-arg", nil, "Argument passed literally to the local server; repeat for each argument")
+	cmd.Flags().String("sarif-output", "", "Write SARIF from the same scan in addition to the selected output")
 
 	return cmd
 }

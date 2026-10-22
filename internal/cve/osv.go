@@ -87,7 +87,7 @@ func (c *Client) Resolve(pkg Package) (vulns []Vuln, ok bool) {
 	if err != nil {
 		// Network failed. Use stale cache if we have any (stale-while-revalidate).
 		if found {
-			return cached, true
+			return cached, false
 		}
 		return nil, false
 	}
@@ -100,9 +100,9 @@ func (c *Client) CheckAll(pkgs []Package) (results []Result, ok bool) {
 	if len(pkgs) == 0 {
 		return nil, true
 	}
-	for i, pkg := range pkgs {
+	for _, pkg := range pkgs {
 		vulns, networkOK := c.Resolve(pkg)
-		if !networkOK && i == 0 {
+		if !networkOK {
 			// First package failed with no cache: assume offline, stop.
 			return results, false
 		}

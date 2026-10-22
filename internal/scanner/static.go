@@ -68,7 +68,8 @@ func (s *Scanner) tryLoadClientConfig(root string) *models.MCPClientConfig {
 
 	// Check home directory configs if scanning the home dir
 	home, err := os.UserHomeDir()
-	if err == nil {
+	absRoot, _ := filepath.Abs(root)
+	if err == nil && filepath.Clean(absRoot) == filepath.Clean(home) {
 		candidates = append(candidates,
 			filepath.Join(home, ".claude.json"),
 			filepath.Join(home, "Library", "Application Support", "Claude", "claude_desktop_config.json"),

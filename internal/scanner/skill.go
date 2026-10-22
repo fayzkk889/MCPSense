@@ -55,7 +55,7 @@ func (s *Scanner) scanSkill(target string, ctx *checks.ScanContext) error {
 	// Directory target: walk for skill files
 	return filepath.WalkDir(target, func(path string, d os.DirEntry, walkErr error) error {
 		if walkErr != nil {
-			return nil // skip unreadable entries
+			return walkErr
 		}
 		if d.IsDir() {
 			// Skip common noise directories
@@ -67,9 +67,10 @@ func (s *Scanner) scanSkill(target string, ctx *checks.ScanContext) error {
 		}
 		if isSkillFile(path) {
 			data, readErr := os.ReadFile(path)
-			if readErr == nil {
-				ctx.SkillFiles[path] = stripBOM(string(data))
+			if readErr != nil {
+				return readErr
 			}
+			ctx.SkillFiles[path] = stripBOM(string(data))
 		}
 		return nil
 	})

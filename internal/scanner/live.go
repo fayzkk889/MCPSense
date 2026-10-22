@@ -2,257 +2,285 @@ package scanner
 
 import (
 	"bufio"
+	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/models"
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
-
-	"github.com/fayzkk889/MCPSense/internal/checks"
-	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 const defaultProtocolVersion = "2025-11-25"
+const maxRPCMessage = 2 << 20
+const maxListPages = 64
 
-// scanLive connects to a live MCP server and interrogates it for tools and resources.
+type rpcCall func(models.MCPJSONRPCRequest) (*models.MCPJSONRPCResponse, error)
+type rpcNotify func() error
+
 func (s *Scanner) scanLive(target string, ctx *checks.ScanContext) error {
+	if s.opts.Offline {
+		return fmt.Errorf("offline policy prohibits live scanning")
+	}
 	if strings.HasPrefix(target, "http://") || strings.HasPrefix(target, "https://") {
 		return s.scanLiveSSE(target, ctx)
 	}
+	if !s.opts.AllowExec {
+		return fmt.Errorf("local server execution requires --allow-exec")
+	}
 	return s.scanLiveStdio(target, ctx)
 }
-
-// scanLiveSSE connects to an MCP server over HTTP/SSE.
 func (s *Scanner) scanLiveSSE(target string, ctx *checks.ScanContext) error {
-	client := &http.Client{Timeout: 10 * time.Second}
-
-	// Try to fetch tools via the JSON-RPC endpoint.
-	manifest, err := fetchManifestViaHTTP(client, target)
+	client := &http.Client{Timeout: 10 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error {
+		return fmt.Errorf("MCP redirects are disabled; select the authorized endpoint explicitly")
+	}}
+	m, err := fetchManifestViaHTTP(client, target)
 	if err != nil {
-		return fmt.Errorf("live SSE scan failed for %q: %w", target, err)
+		return fmt.Errorf("live HTTP discovery failed: %w", err)
 	}
-	ctx.Manifest = manifest
+	ctx.Manifest = m
 	return nil
 }
-
-// fetchManifestViaHTTP sends initialize + tools/list + resources/list to an HTTP MCP endpoint.
-func fetchManifestViaHTTP(client *http.Client, baseURL string) (*models.MCPManifest, error) {
-	primaryURL := strings.TrimRight(baseURL, "/")
-	manifest, err := tryFetchManifestFromURL(client, primaryURL)
-	if err == nil {
-		return manifest, nil
-	}
-	// Fallback: try with /rpc suffix
-	fallbackURL := primaryURL + "/rpc"
-	return tryFetchManifestFromURL(client, fallbackURL)
+func fetchManifestViaHTTP(client *http.Client, target string) (*models.MCPManifest, error) {
+	return tryFetchManifestFromURL(client, target)
 }
-
-func tryFetchManifestFromURL(client *http.Client, rpcURL string) (*models.MCPManifest, error) {
-	initReq := models.MCPJSONRPCRequest{
-		JSONRPC: "2.0",
-		ID:      1,
-		Method:  "initialize",
-		Params: models.MCPInitializeRequest{
-			ProtocolVersion: defaultProtocolVersion,
-			Capabilities:    map[string]interface{}{},
-			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.2.2"},
-		},
-	}
-
-	initData, err := json.Marshal(initReq)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := client.Post(rpcURL, "application/json", strings.NewReader(string(initData)))
-	if err != nil {
-		return nil, fmt.Errorf("initialize request failed: %w", err)
-	}
-	defer resp.Body.Close()
-
-	var initResp models.MCPJSONRPCResponse
-	if err := json.NewDecoder(resp.Body).Decode(&initResp); err != nil {
-		return nil, fmt.Errorf("decoding initialize response: %w", err)
-	}
-
-	manifest := &models.MCPManifest{}
-
-	// Extract server info from initialize response.
-	if initResp.Result != nil {
-		var initResult models.MCPInitializeResponse
-		if err := json.Unmarshal(initResp.Result, &initResult); err == nil {
-			manifest.Name = initResult.ServerInfo.Name
-			manifest.Version = initResult.ServerInfo.Version
-			manifest.ProtocolVersion = initResult.ProtocolVersion
+func tryFetchManifestFromURL(client *http.Client, target string) (*models.MCPManifest, error) {
+	session := ""
+	post := func(v interface{}) (*http.Response, error) {
+		body, err := json.Marshal(v)
+		if err != nil {
+			return nil, err
 		}
-	}
-
-	// Send initialized notification (required by MCP spec before further requests).
-	initNotif := models.MCPJSONRPCNotification{
-		JSONRPC: "2.0",
-		Method:  "notifications/initialized",
-	}
-	notifData, _ := json.Marshal(initNotif)
-	notifResp, err := client.Post(rpcURL, "application/json", strings.NewReader(string(notifData)))
-	if err == nil {
-		notifResp.Body.Close()
-	}
-
-	// Fetch tools list.
-	toolsReq := models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: 2, Method: "tools/list"}
-	toolsData, _ := json.Marshal(toolsReq)
-	toolsResp, err := client.Post(rpcURL, "application/json", strings.NewReader(string(toolsData)))
-	if err == nil {
-		defer toolsResp.Body.Close()
-		var rpcResp models.MCPJSONRPCResponse
-		if json.NewDecoder(toolsResp.Body).Decode(&rpcResp) == nil && rpcResp.Result != nil {
-			var toolsList models.MCPToolsListResult
-			if json.Unmarshal(rpcResp.Result, &toolsList) == nil {
-				manifest.Tools = toolsList.Tools
-			}
+		req, err := http.NewRequest(http.MethodPost, target, bytes.NewReader(body))
+		if err != nil {
+			return nil, fmt.Errorf("invalid MCP endpoint")
 		}
-	}
-
-	// Fetch resources list.
-	resReq := models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: 3, Method: "resources/list"}
-	resData, _ := json.Marshal(resReq)
-	resResp, err := client.Post(rpcURL, "application/json", strings.NewReader(string(resData)))
-	if err == nil {
-		defer resResp.Body.Close()
-		var rpcResp models.MCPJSONRPCResponse
-		if json.NewDecoder(resResp.Body).Decode(&rpcResp) == nil && rpcResp.Result != nil {
-			var resList models.MCPResourcesListResult
-			if json.Unmarshal(rpcResp.Result, &resList) == nil {
-				manifest.Resources = resList.Resources
-			}
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Accept", "application/json, text/event-stream")
+		req.Header.Set("MCP-Protocol-Version", defaultProtocolVersion)
+		if session != "" {
+			req.Header.Set("Mcp-Session-Id", session)
 		}
+		resp, err := client.Do(req)
+		if err != nil {
+			return nil, fmt.Errorf("MCP HTTP transport failed")
+		}
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			resp.Body.Close()
+			return nil, fmt.Errorf("MCP HTTP status %d", resp.StatusCode)
+		}
+		if v, ok := v.(models.MCPJSONRPCRequest); ok && v.Method == "initialize" {
+			session = resp.Header.Get("Mcp-Session-Id")
+		}
+		return resp, nil
 	}
-
-	return manifest, nil
+	call := func(req models.MCPJSONRPCRequest) (*models.MCPJSONRPCResponse, error) {
+		resp, err := post(req)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+		data, err := io.ReadAll(io.LimitReader(resp.Body, maxRPCMessage+1))
+		if err != nil {
+			return nil, fmt.Errorf("reading MCP response failed")
+		}
+		if len(data) > maxRPCMessage {
+			return nil, fmt.Errorf("MCP response exceeds size limit")
+		}
+		return decodeRPC(data, req.ID)
+	}
+	notify := func() error {
+		resp, err := post(models.MCPJSONRPCNotification{JSONRPC: "2.0", Method: "notifications/initialized"})
+		if err != nil {
+			return err
+		}
+		resp.Body.Close()
+		return nil
+	}
+	return legacyManifest(call, notify)
 }
-
-// scanLiveStdio spawns an MCP server process and communicates over stdin/stdout.
+func decodeRPC(data []byte, id int) (*models.MCPJSONRPCResponse, error) {
+	var r models.MCPJSONRPCResponse
+	if json.Unmarshal(data, &r) != nil {
+		return nil, fmt.Errorf("invalid MCP JSON response")
+	}
+	if r.JSONRPC != "2.0" || r.ID != id {
+		return nil, fmt.Errorf("MCP response version or request ID mismatch")
+	}
+	if r.Error != nil {
+		return nil, fmt.Errorf("MCP JSON-RPC error %d", r.Error.Code)
+	}
+	if len(r.Result) == 0 || bytes.Equal(bytes.TrimSpace(r.Result), []byte("null")) {
+		return nil, fmt.Errorf("MCP response is missing a result")
+	}
+	if bytes.TrimSpace(r.Result)[0] != '{' {
+		return nil, fmt.Errorf("MCP result must be an object")
+	}
+	return &r, nil
+}
+func legacyManifest(call rpcCall, notify rpcNotify) (*models.MCPManifest, error) {
+	r, err := call(models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: 1, Method: "initialize", Params: models.MCPInitializeRequest{ProtocolVersion: defaultProtocolVersion, Capabilities: map[string]interface{}{}, ClientInfo: models.MCPInfo{Name: "mcpsense", Version: "dev"}}})
+	if err != nil {
+		return nil, fmt.Errorf("initialize: %w", err)
+	}
+	var init struct {
+		ProtocolVersion string                     `json:"protocolVersion"`
+		Capabilities    map[string]json.RawMessage `json:"capabilities"`
+		ServerInfo      models.MCPInfo             `json:"serverInfo"`
+	}
+	if json.Unmarshal(r.Result, &init) != nil || init.Capabilities == nil || init.ServerInfo.Name == "" {
+		return nil, fmt.Errorf("invalid initialize result")
+	}
+	switch init.ProtocolVersion {
+	case "2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25":
+	default:
+		return nil, fmt.Errorf("unsupported negotiated legacy protocol")
+	}
+	if err := notify(); err != nil {
+		return nil, fmt.Errorf("initialized notification: %w", err)
+	}
+	m := &models.MCPManifest{Name: init.ServerInfo.Name, Version: init.ServerInfo.Version, ProtocolVersion: init.ProtocolVersion}
+	id := 2
+	for _, kind := range []string{"tools", "resources", "prompts"} {
+		if _, ok := init.Capabilities[kind]; !ok {
+			continue
+		}
+		cursor := ""
+		seen := map[string]bool{}
+		for page := 0; ; page++ {
+			if page >= maxListPages {
+				return nil, fmt.Errorf("%s list exceeds page limit", kind)
+			}
+			var params interface{}
+			if cursor != "" {
+				params = map[string]string{"cursor": cursor}
+			}
+			r, err := call(models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: id, Method: kind + "/list", Params: params})
+			id++
+			if err != nil {
+				return nil, fmt.Errorf("%s/list: %w", kind, err)
+			}
+			var raw map[string]json.RawMessage
+			if json.Unmarshal(r.Result, &raw) != nil {
+				return nil, fmt.Errorf("invalid %s list", kind)
+			}
+			array := bytes.TrimSpace(raw[kind])
+			if len(array) == 0 || array[0] != '[' {
+				return nil, fmt.Errorf("missing %s array", kind)
+			}
+			switch kind {
+			case "tools":
+				var v []models.MCPTool
+				if json.Unmarshal(array, &v) != nil {
+					return nil, fmt.Errorf("invalid tools")
+				}
+				m.Tools = append(m.Tools, v...)
+			case "resources":
+				var v []models.MCPResource
+				if json.Unmarshal(array, &v) != nil {
+					return nil, fmt.Errorf("invalid resources")
+				}
+				m.Resources = append(m.Resources, v...)
+			case "prompts":
+				var v []models.MCPPrompt
+				if json.Unmarshal(array, &v) != nil {
+					return nil, fmt.Errorf("invalid prompts")
+				}
+				m.Prompts = append(m.Prompts, v...)
+			}
+			if len(m.Tools)+len(m.Resources)+len(m.Prompts) > 50000 {
+				return nil, fmt.Errorf("MCP catalog exceeds item limit")
+			}
+			cursor = ""
+			if v, ok := raw["nextCursor"]; ok {
+				if json.Unmarshal(v, &cursor) != nil {
+					return nil, fmt.Errorf("invalid list cursor")
+				}
+			}
+			if cursor == "" {
+				break
+			}
+			if seen[cursor] {
+				return nil, fmt.Errorf("repeated pagination cursor")
+			}
+			seen[cursor] = true
+		}
+	}
+	return m, nil
+}
 func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
-	parts := strings.Fields(target)
+	var parts []string
+	if len(s.opts.ServerArgs) > 0 {
+		parts = append([]string{target}, s.opts.ServerArgs...)
+	} else if info, err := os.Stat(target); err == nil && !info.IsDir() {
+		parts = []string{target}
+	} else {
+		parts = strings.Fields(target)
+	}
 	if len(parts) == 0 {
 		return fmt.Errorf("empty target command")
 	}
-
-	cmd := exec.Command(parts[0], parts[1:]...) //nolint:gosec // user-supplied command for live testing
+	runCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(runCtx, parts[0], parts[1:]...)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
-		return fmt.Errorf("creating stdin pipe: %w", err)
+		return err
 	}
+	defer stdin.Close()
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return fmt.Errorf("creating stdout pipe: %w", err)
+		return err
 	}
-
+	defer stdout.Close()
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("starting server process %q: %w", target, err)
+		return fmt.Errorf("could not start authorized MCP server")
 	}
-	defer func() {
-		stdin.Close()
-		cmd.Process.Kill() //nolint:errcheck // best-effort cleanup
-		cmd.Wait()         //nolint:errcheck // best-effort wait
-	}()
-
-	manifest, err := interrogateStdioServer(stdin, stdout)
-	if err != nil {
-		return fmt.Errorf("interrogating stdio server: %w", err)
+	defer func() { cancel(); stdin.Close(); stdout.Close(); _ = cmd.Process.Kill(); _ = cmd.Wait() }()
+	type result struct {
+		m   *models.MCPManifest
+		err error
 	}
-	ctx.Manifest = manifest
-	return nil
+	done := make(chan result, 1)
+	go func() { m, err := interrogateStdioServer(stdin, stdout); done <- result{m, err} }()
+	select {
+	case <-runCtx.Done():
+		return fmt.Errorf("MCP server discovery timed out or cancelled")
+	case r := <-done:
+		if r.err != nil {
+			return fmt.Errorf("stdio discovery failed: %w", r.err)
+		}
+		ctx.Manifest = r.m
+		return nil
+	}
 }
-
-// interrogateStdioServer sends MCP protocol messages and collects tool/resource info.
 func interrogateStdioServer(stdin io.Writer, stdout io.Reader) (*models.MCPManifest, error) {
-	reader := bufio.NewReader(stdout)
-
-	sendRPC := func(req models.MCPJSONRPCRequest) (*models.MCPJSONRPCResponse, error) {
+	reader := bufio.NewReaderSize(stdout, maxRPCMessage+1)
+	call := func(req models.MCPJSONRPCRequest) (*models.MCPJSONRPCResponse, error) {
 		data, err := json.Marshal(req)
 		if err != nil {
 			return nil, err
 		}
 		if _, err := fmt.Fprintf(stdin, "%s\n", data); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("MCP write failed")
 		}
-		// Read response line with timeout via a channel.
-		type result struct {
-			line string
-			err  error
+		line, err := reader.ReadSlice('\n')
+		if err != nil {
+			return nil, fmt.Errorf("incomplete or oversized MCP stdio response")
 		}
-		ch := make(chan result, 1)
-		go func() {
-			line, err := reader.ReadString('\n')
-			ch <- result{line, err}
-		}()
-
-		select {
-		case r := <-ch:
-			if r.err != nil {
-				return nil, r.err
-			}
-			var resp models.MCPJSONRPCResponse
-			if err := json.Unmarshal([]byte(strings.TrimSpace(r.line)), &resp); err != nil {
-				return nil, err
-			}
-			return &resp, nil
-		case <-time.After(5 * time.Second):
-			return nil, fmt.Errorf("timeout waiting for server response")
+		if len(line) > maxRPCMessage {
+			return nil, fmt.Errorf("MCP message exceeds size limit")
 		}
+		return decodeRPC(line, req.ID)
 	}
-
-	manifest := &models.MCPManifest{}
-
-	// Initialize.
-	initReq := models.MCPJSONRPCRequest{
-		JSONRPC: "2.0", ID: 1, Method: "initialize",
-		Params: models.MCPInitializeRequest{
-			ProtocolVersion: defaultProtocolVersion,
-			Capabilities:    map[string]interface{}{},
-			ClientInfo:      models.MCPInfo{Name: "mcpsense", Version: "0.2.2"},
-		},
+	notify := func() error {
+		_, err := io.WriteString(stdin, "{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n")
+		return err
 	}
-	initResp, err := sendRPC(initReq)
-	if err == nil && initResp.Result != nil {
-		var result models.MCPInitializeResponse
-		if json.Unmarshal(initResp.Result, &result) == nil {
-			manifest.Name = result.ServerInfo.Name
-			manifest.Version = result.ServerInfo.Version
-			manifest.ProtocolVersion = result.ProtocolVersion
-		}
-	}
-
-	// Send initialized notification (required by MCP spec).
-	initNotif := models.MCPJSONRPCNotification{
-		JSONRPC: "2.0",
-		Method:  "notifications/initialized",
-	}
-	notifData, _ := json.Marshal(initNotif)
-	fmt.Fprintf(stdin, "%s\n", notifData)
-	// No response expected for notifications — brief pause to let server process it.
-	time.Sleep(100 * time.Millisecond)
-
-	// Tools list.
-	toolsResp, err := sendRPC(models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: 2, Method: "tools/list"})
-	if err == nil && toolsResp != nil && toolsResp.Result != nil {
-		var toolsList models.MCPToolsListResult
-		if json.Unmarshal(toolsResp.Result, &toolsList) == nil {
-			manifest.Tools = toolsList.Tools
-		}
-	}
-
-	// Resources list.
-	resResp, err := sendRPC(models.MCPJSONRPCRequest{JSONRPC: "2.0", ID: 3, Method: "resources/list"})
-	if err == nil && resResp != nil && resResp.Result != nil {
-		var resList models.MCPResourcesListResult
-		if json.Unmarshal(resResp.Result, &resList) == nil {
-			manifest.Resources = resList.Resources
-		}
-	}
-
-	return manifest, nil
+	return legacyManifest(call, notify)
 }
