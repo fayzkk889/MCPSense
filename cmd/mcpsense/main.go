@@ -18,6 +18,7 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"github.com/fayzkk889/MCPSense/internal/report"
 	"github.com/fayzkk889/MCPSense/internal/scanner"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 )
 
 var version = "dev"
@@ -98,7 +99,10 @@ CLI flags override config file values.`,
 			report.AppVersion = version
 
 			// Load .mcpsenserc.json as a baseline; CLI flags override each field.
-			cfg := loadConfig()
+			cfg, configErr := loadConfig()
+			if configErr != nil {
+				return configErr
+			}
 
 			// Resolve effective values: explicit CLI flag wins over config file default.
 			if !cmd.Flags().Changed("format") && cfg.Format != "" {
@@ -152,13 +156,14 @@ CLI flags override config file values.`,
 
 			noCVE, _ := cmd.Flags().GetBool("no-cve")
 			sarifOutput, _ := cmd.Flags().GetString("sarif-output")
+			baselineArg, _ := cmd.Flags().GetString("baseline")
 			if format != "cli" && format != "json" && format != "sarif" {
 				return fmt.Errorf("unknown output format")
 			}
 			if minSev != "critical" && minSev != "high" && minSev != "medium" && minSev != "low" && minSev != "info" {
 				return fmt.Errorf("unknown severity")
 			}
-			paths := []string{target, outputFile, sarifOutput}
+			paths := []string{target, outputFile, sarifOutput, baselineArg}
 			for i := 1; i < len(paths); i++ {
 				if paths[i] == "" {
 					continue
@@ -176,7 +181,7 @@ CLI flags override config file values.`,
 						same = true
 					}
 					if same {
-						return fmt.Errorf("report output must differ from input and other output files")
+						return fmt.Errorf("target, baseline and report paths must differ")
 					}
 				}
 			}
@@ -231,6 +236,8 @@ CLI flags override config file values.`,
 					p, err := drift.DefaultPath(target)
 					if err == nil {
 						baselinePath = p
+					} else {
+						return fmt.Errorf("baseline path unavailable; use --no-baseline or choose --baseline")
 					}
 				}
 
@@ -336,7 +343,7 @@ CLI flags override config file values.`,
 	cmd.Flags().String("baseline", "", "Path to a baseline snapshot file for drift detection (default: ~/.mcpsense/snapshots/)")
 	cmd.Flags().Bool("update-baseline", false, "Accept the current server state as the new drift baseline")
 	cmd.Flags().Bool("no-baseline", false, "Skip drift detection for this scan")
-	cmd.Flags().Bool("show-diff", false, "Show full before/after text for drift findings")
+	cmd.Flags().Bool("show-diff", false, "Compatibility flag; protected baselines do not retain raw before/after text")
 
 	cmd.Flags().Bool("no-cve", false, "Skip CVE cross-referencing against OSV.dev")
 	cmd.Flags().Bool("offline", false, "Disable all network calls (implies --no-cve)")
@@ -400,16 +407,19 @@ func defaultConfig() MCPSenseConfig {
 
 // loadConfig reads .mcpsenserc.json from the current directory.
 // Returns default config silently if the file does not exist.
-func loadConfig() MCPSenseConfig {
+func loadConfig() (MCPSenseConfig, error) {
 	cfg := defaultConfig()
-	data, err := os.ReadFile(configFile)
+	data, err := utils.ReadInput(configFile)
 	if err != nil {
-		return cfg // file absent is not an error
+		if os.IsNotExist(err) {
+			return cfg, nil
+		}
+		return cfg, fmt.Errorf("project configuration unreadable")
 	}
 	if err := json.Unmarshal(data, &cfg); err != nil {
-		fmt.Fprintf(os.Stderr, "warning: could not parse %s: %v\n", configFile, err)
+		return cfg, fmt.Errorf("invalid project configuration JSON")
 	}
-	return cfg
+	return cfg, nil
 }
 
 // parseSeverity converts a severity string to a models.Severity value.

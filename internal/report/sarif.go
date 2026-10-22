@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/models"
@@ -58,6 +59,7 @@ type sarifProperties struct {
 }
 
 type sarifResult struct {
+	Properties          map[string]string `json:"properties,omitempty"`
 	PartialFingerprints map[string]string `json:"partialFingerprints,omitempty"`
 	RuleID              string            `json:"ruleId"`
 	Level               string            `json:"level"`
@@ -178,12 +180,15 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 		if f.Fingerprint != "" {
 			result.PartialFingerprints = map[string]string{"mcpsenseRuleComponent/v1": f.Fingerprint}
 		}
+		if f.Confidence != "" {
+			result.Properties = map[string]string{"mcpsenseConfidence": f.Confidence}
+		}
 
 		// Build location based on what info is available.
 		if f.Location.File != "" {
 			loc := sarifLocation{
 				PhysicalLocation: &sarifPhysicalLocation{
-					ArtifactLocation: sarifArtifactLocation{URI: f.Location.File},
+					ArtifactLocation: sarifArtifactLocation{URI: artifactURI(f.Location.File)},
 				},
 			}
 			if f.Location.Line > 0 {
@@ -228,4 +233,22 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
 	return enc.Encode(sarif)
+}
+
+func artifactURI(path string) string {
+	path = strings.ReplaceAll(path, "\\", "/")
+	drive := len(path) > 2 && path[1] == ':' && path[2] == '/'
+	if !drive {
+		if parsed, err := url.Parse(path); err == nil && parsed.Scheme != "" {
+			return parsed.String()
+		}
+	}
+	u := url.URL{Path: path}
+	if drive {
+		u.Scheme = "file"
+		u.Path = "/" + path
+	} else if strings.HasPrefix(path, "/") {
+		u.Scheme = "file"
+	}
+	return u.String()
 }

@@ -27,14 +27,14 @@ export function runScan(binary,opts,dir,launch=spawnSync){
  const args=['scan','--mode',opts.mode,'--severity',opts.severity,'--format','json','--output',jsonFile];
  if(opts.offline)args.push('--offline');if(opts.noCVE)args.push('--no-cve');
  if(opts.baseline)args.push('--baseline',opts.baseline);else args.push('--no-baseline');
- if(opts.sarif)args.push('--sarif-output',sarifFile);
+ args.push('--sarif-output',sarifFile);
  args.push('--',opts.target);
  const child=launch(binary,args,{shell:false,stdio:'inherit',timeout:120000});
  if(child.error||child.signal||![0,1].includes(child.status))throw Error('Scanner execution failed');
  const report=validateReport(JSON.parse(readFileSync(jsonFile,'utf8')));
  const expected=report.findings.some(f=>ranks[f.severity]>=ranks.high)?1:0;
  if(child.status!==expected)throw Error('Scanner exit status contradicts report');
- if(opts.sarif){
+ {
   const sarif=JSON.parse(readFileSync(sarifFile,'utf8'));
   if(sarif.version!=='2.1.0'||sarif.runs?.length!==1||!Array.isArray(sarif.runs[0].results)||sarif.runs[0].results.length!==report.findings.length)throw Error('Invalid SARIF result');
   for(let i=0;i<report.findings.length;i++)if(sarif.runs[0].results[i].ruleId!==report.findings[i].id)throw Error('JSON/SARIF finding mismatch');

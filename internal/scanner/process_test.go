@@ -19,7 +19,7 @@ func TestAuthorizedStdioTimeout(t *testing.T) {
 		t.Fatal(err)
 	}
 	start := time.Now()
-	_, _, err = New(Options{Mode: ModeLive, AllowExec: true, Protocol: "legacy", Timeout: 100 * time.Millisecond, ServerArgs: []string{"-test.run=TestSilentMCPHelper", "--", "MCPSENSE_SILENT_FIXTURE"}}).Scan(binary)
+	_, _, err = New(Options{Mode: ModeLive, AllowExec: true, Protocol: "legacy", Timeout: 500 * time.Millisecond, ServerArgs: []string{"-test.run=TestSilentMCPHelper", "--", "MCPSENSE_SILENT_FIXTURE"}}).Scan(binary)
 	if err == nil || !strings.Contains(err.Error(), "timed out") {
 		t.Fatalf("timeout not propagated: %v", err)
 	}

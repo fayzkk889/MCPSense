@@ -2,7 +2,8 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
+const { createHash } = require("crypto");
 
 const REPO = "fayzkk889/MCPSense";
 const BINARY_NAME = "mcpsense";
@@ -59,6 +60,8 @@ function getDownloadUrl(version) {
 function downloadFile(url) {
   return new Promise((resolve, reject) => {
     const follow = (url, redirects = 0) => {
+	  const parsed = new URL(url);
+	  if (parsed.protocol !== "https:" || !["github.com", "release-assets.githubusercontent.com", "objects.githubusercontent.com"].includes(parsed.hostname) || parsed.username || parsed.password) return reject(new Error("Disallowed download URL"));
       if (redirects > 5) {
         return reject(new Error("Too many redirects"));
       }
@@ -67,9 +70,8 @@ function downloadFile(url) {
         .get(url, { headers: { "User-Agent": "mcpsense-npm" } }, (res) => {
           // Follow redirects (GitHub releases redirect to S3)
           if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-            // Handle both https and http redirects
-            const redirectUrl = res.headers.location;
-            const mod = redirectUrl.startsWith("https") ? https : require("http");
+            const redirectUrl = new URL(res.headers.location, url).href;
+            res.resume();
             return follow(redirectUrl, redirects + 1);
           }
 
@@ -80,11 +82,12 @@ function downloadFile(url) {
           }
 
           const chunks = [];
-          res.on("data", (chunk) => chunks.push(chunk));
+          let size = 0;
+          res.on("data", (chunk) => { size += chunk.length; if (size > 64 * 1024 * 1024) { res.destroy(new Error("Download exceeds size limit")); return; } chunks.push(chunk); });
           res.on("end", () => resolve(Buffer.concat(chunks)));
           res.on("error", reject);
         })
-        .on("error", reject);
+        .on("error", reject).setTimeout(30000, function () { this.destroy(new Error("Download timed out")); });
     };
 
     follow(url);
@@ -97,7 +100,7 @@ function extractTarGz(buffer, destDir) {
   fs.writeFileSync(tmpFile, buffer);
 
   try {
-    execSync(`tar -xzf "${tmpFile}" -C "${destDir}"`, { stdio: "pipe" });
+    execFileSync("tar", ["-xzf", tmpFile, "-C", destDir, BINARY_NAME], { stdio: "pipe", shell: false });
   } finally {
     // Clean up the archive
     try {
@@ -113,12 +116,9 @@ function extractZip(buffer, destDir) {
 
   try {
     if (os.platform() === "win32") {
-      execSync(
-        `powershell -Command "Expand-Archive -Path '${tmpFile}' -DestinationPath '${destDir}' -Force"`,
-        { stdio: "pipe" }
-      );
+      execFileSync("tar", ["-xf", tmpFile, "-C", destDir, BINARY_NAME + ".exe"], { stdio: "pipe", shell: false });
     } else {
-      execSync(`unzip -o "${tmpFile}" -d "${destDir}"`, { stdio: "pipe" });
+      execFileSync("unzip", ["-o", tmpFile, BINARY_NAME, "-d", destDir], { stdio: "pipe", shell: false });
     }
   } finally {
     try {
@@ -132,7 +132,7 @@ function installFromSource(binaryPath) {
 
   // Check if Go is available
   try {
-    execSync("go version", { stdio: "pipe" });
+    execFileSync("go", ["version"], { stdio: "pipe", shell: false });
   } catch (_) {
     console.error("");
     console.error("mcpsense requires Go on Windows because antivirus software");
@@ -149,9 +149,11 @@ function installFromSource(binaryPath) {
   const goPackage = `github.com/fayzkk889/MCPSense/cmd/mcpsense@v${version}`;
 
   console.log(`Running: go install ${goPackage}`);
+	const binDir = path.dirname(binaryPath);
+	fs.mkdirSync(binDir, { recursive: true });
 
   try {
-    execSync(`go install ${goPackage}`, { stdio: "inherit" });
+    execFileSync("go", ["install", goPackage], { stdio: "inherit", shell: false, env: { ...process.env, GOBIN: binDir } });
   } catch (err) {
     console.error(`\ngo install failed: ${err.message}`);
     console.error(`\nTry manually:`);
@@ -160,21 +162,17 @@ function installFromSource(binaryPath) {
   }
 
   // go install puts the binary in GOPATH/bin — copy it to our bin dir
-  const gopath = execSync("go env GOPATH", { encoding: "utf8" }).trim();
-  const goBinary = path.join(gopath, "bin", "mcpsense.exe");
+  const goBinary = binaryPath;
 
   if (!fs.existsSync(goBinary)) {
     console.error(`Binary not found at ${goBinary} after go install.`);
-    console.error(`Check that GOPATH/bin is correct: ${path.join(gopath, "bin")}`);
     process.exit(1);
   }
 
-  const binDir = path.dirname(binaryPath);
   if (!fs.existsSync(binDir)) {
     fs.mkdirSync(binDir, { recursive: true });
   }
 
-  fs.copyFileSync(goBinary, binaryPath);
   console.log("mcpsense installed successfully (compiled from source).");
 }
 
@@ -200,6 +198,8 @@ async function main() {
 
   try {
     const data = await downloadFile(url);
+    const checksums = await downloadFile(url.substring(0, url.lastIndexOf("/") + 1) + "checksums.txt");
+    verifyArchive(data, checksums.toString("utf8"), url.substring(url.lastIndexOf("/") + 1));
     const binDir = path.join(__dirname, "bin");
 
     // Ensure bin directory exists
@@ -278,4 +278,10 @@ async function main() {
   }
 }
 
-main();
+function verifyArchive(data, manifest, filename) {
+  const records = manifest.split(/\r?\n/).map(line => line.trim().split(/\s+/)).filter(parts => parts.length === 2 && parts[1] === filename);
+  if (records.length !== 1 || !/^[a-fA-F0-9]{64}$/.test(records[0][0]) || createHash("sha256").update(data).digest("hex") !== records[0][0].toLowerCase()) throw new Error("Release checksum verification failed");
+}
+
+module.exports = { verifyArchive, getDownloadUrl };
+if (require.main === module) main();

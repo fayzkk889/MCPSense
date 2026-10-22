@@ -285,6 +285,9 @@ func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
 	case <-runCtx.Done():
 		return fmt.Errorf("MCP server discovery timed out or cancelled")
 	case r := <-done:
+		if runCtx.Err() != nil {
+			return fmt.Errorf("MCP server discovery timed out or cancelled")
+		}
 		if r.err != nil {
 			return fmt.Errorf("stdio discovery failed: %w", r.err)
 		}
