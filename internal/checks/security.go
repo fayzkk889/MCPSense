@@ -22,7 +22,7 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	}
 	var findings []models.Finding
 	for _, tool := range ctx.Manifest.Tools {
-		matches := ctx.Patterns.ScanDescriptions(tool.Description)
+		matches := ctx.Patterns.ScanToolDescription(tool.Description)
 		seen := make(map[string]bool)
 		for _, m := range matches {
 			key := tool.Name + ":" + m.PatternID

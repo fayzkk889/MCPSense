@@ -39,7 +39,7 @@ func FuzzPatternOffsets(f *testing.F) {
 	}
 	e := NewPatternEngine()
 	f.Fuzz(func(t *testing.T, s string) {
-		for _, scan := range []func(string) []PatternMatch{e.Scan, e.ScanDescriptions, e.ScanSource} {
+		for _, scan := range []func(string) []PatternMatch{e.Scan, e.ScanDescriptions, e.ScanToolDescription, e.ScanSource} {
 			for _, m := range scan(s) {
 				end := m.Offset + len(m.MatchedText)
 				if m.Offset < 0 || end > len(s) || s[m.Offset:end] != m.MatchedText {
