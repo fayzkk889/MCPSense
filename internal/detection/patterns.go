@@ -57,6 +57,27 @@ func (e *PatternEngine) ScanDescriptions(content string) []PatternMatch {
 	return e.scanWithFilter(content, "description")
 }
 
+// Quoted text is data only in a complete, narrowly described document-query
+// operation. Generic "example", quote marks, or trailing instructions do not
+// exempt a description. This heuristic applies to tool metadata, never skills.
+var documentQuery = regexp.MustCompile(`(?is)^\s*(?:search(?:es)?|retriev(?:e|es))\s+(?:[\p{L}\p{N}_-]+\s+){0,8}(?:documents?|reports?|logs?|examples?)\s+(?:for\s+(?:examples?\s+such\s+as|(?:the\s+)?(?:literal|quoted)\s+(?:text|phrase))|containing\s+(?:the\s+quoted\s+phrase\s+)?)\s*["“]([^"”\r\n]{1,256})["”]\s*(?:and\s+returns?\s+(?:matching\s+)?(?:document\s+)?(?:titles|records|matches|results)|for\s+security\s+analysts)?[.!]?\s*$`)
+
+func (e *PatternEngine) ScanToolDescription(content string) []PatternMatch {
+	matches := e.ScanDescriptions(content)
+	span := documentQuery.FindStringSubmatchIndex(content)
+	if span == nil {
+		return matches
+	}
+	filtered := make([]PatternMatch, 0, len(matches))
+	for _, m := range matches {
+		if m.Offset >= span[2] && m.Offset+len(m.MatchedText) <= span[3] && strings.HasPrefix(m.PatternID, "PI-") {
+			continue
+		}
+		filtered = append(filtered, m)
+	}
+	return filtered
+}
+
 // ScanSource runs only source-targeted patterns against the given content.
 func (e *PatternEngine) ScanSource(content string) []PatternMatch {
 	return e.scanWithFilter(content, "source")

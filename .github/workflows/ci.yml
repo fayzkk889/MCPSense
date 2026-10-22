@@ -30,6 +30,9 @@ jobs:
       - run: node --test npm/package.test.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+      - run: node --test scripts/installers.test.mjs scripts/product.test.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
   action:
     runs-on: ubuntu-latest
     permissions:

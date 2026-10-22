@@ -41,15 +41,15 @@
             "description": "The title of the note, displayed in the notes list.",
             "maxLength": 128
           },
-          "body": {
+          "note_text": {
             "type": "string",
             "description": "The full text content of the note.",
             "maxLength": 10000
           }
         },
-        "required": ["title", "body"],
+        "required": ["title", "note_text"],
         "examples": [
-          { "title": "Meeting notes", "body": "Discussed Q3 roadmap items." }
+          { "title": "Meeting notes", "note_text": "Discussed Q3 roadmap items." }
         ]
       }
     },

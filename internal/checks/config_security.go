@@ -99,7 +99,7 @@ var sensitiveEnvPrefixes = []string{
 
 // sensitiveEnvExact lists exact env var names that are secrets.
 var sensitiveEnvExact = []string{
-	"PASSWORD", "PASSWD", "SECRET", "TOKEN", "PRIVATE_KEY",
+	"PASSWORD", "PASSWD", "SECRET", "TOKEN", "PRIVATE_KEY", "API_KEY", "APIKEY", "ACCESS_KEY",
 }
 
 func (c *ConfigEnvLeakageCheck) Run(ctx *ScanContext) []models.Finding {

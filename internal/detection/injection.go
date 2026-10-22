@@ -13,7 +13,7 @@ func coreInjectionPatterns() []Pattern {
 		compilePattern(
 			"PI-001",
 			"System Prompt Override",
-			`ignore\s+(all\s+)?(previous|prior|above|earlier)\s+(instructions?|prompts?|rules?|directives?)`,
+			`ignore\s+((all\s+)?(previous|prior|above|earlier)\s+(instructions?|prompts?|rules?|directives?)|the\s+user['’]s\s+request)`,
 			models.SeverityCritical,
 			"Content attempts to override system instructions by telling the model to ignore previous directives.",
 			"injection",
@@ -93,12 +93,27 @@ func coreInjectionPatterns() []Pattern {
 		compilePattern(
 			"PI-008",
 			"Character Substitution Evasion",
-			`(1gnore|1gn0re|ign0re|pr3tend|forg3t|[i!][gq][mn][o0][r][e3])`,
+			`(1gnore|1gn0re|ign0re|pr3tend|forg3t|![gq][mn][o0]r[e3]|iq[mn][o0]r[e3]|igm[o0]r[e3]|ign0r[e3]|ignor3)`,
 			models.SeverityHigh,
 			"Content uses character substitution to evade injection detection filters.",
 			"injection",
 			"Remove obfuscated injection language. Character substitution is a known evasion technique for prompt injection filters.",
 			"description",
+		),
+
+		compilePattern(
+			"PI-011", "Credential Disclosure Directive",
+			`\b(include|reveal|print|send|upload|expose|disclose)\b[^\n.!?]{0,160}\b(complete|full|raw|actual|contents?\s+of)\b[^\n.!?]{0,100}\b(ssh\s+private\s+keys?|private\s+keys?|access\s+tokens?|api[_ -]?keys?|credentials?)\b`,
+			models.SeverityCritical,
+			"Content directs disclosure of complete credential or private-key material.", "injection",
+			"Remove instructions to disclose credentials. Return only the data explicitly requested and authorized by the user.", "description",
+		),
+		compilePattern(
+			"PI-012", "Safety Policy Override",
+			`\b(disregard|ignore|bypass|disable|override)\s+((any|all|the|your|earlier|previous|prior)\s+){0,4}(safety|security)\s+(restrictions?|rules?|checks?|safeguards?|polic(y|ies))\b`,
+			models.SeverityCritical,
+			"Content directs the model to disregard safety or security policy, including under a claimed authorization.", "injection",
+			"Remove instructions to override safety policy. Claimed approval in tool metadata does not authorize bypassing user controls.", "description",
 		),
 
 		// PI-009: Multi-turn manipulation
