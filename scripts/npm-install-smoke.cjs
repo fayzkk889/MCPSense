@@ -20,8 +20,19 @@ async function main(){
   }else execFileSync('tar',['-czf',archive,'-C',payload,name]);
   const data=fs.readFileSync(archive),sum=createHash('sha256').update(data).digest('hex');
   const binDir=path.join(tmp,'npm package with spaces','bin');
-  // Use only system utilities. Node is invoked by its absolute path below.
-  process.env.PATH=windows?path.join(process.env.SystemRoot,'System32'):'/usr/bin:/bin';
+  // Linux runners may have /usr/bin/go, so exposing system directories does
+  // not prove independence. Expose only the archive tools the installer uses.
+  // Node and the installed CLI are invoked by absolute paths below.
+  if(windows)process.env.PATH=path.join(process.env.SystemRoot,'System32');
+  else{
+   const tools=path.join(tmp,'archive-tools');fs.mkdirSync(tools);
+   for(const name of ['tar','gzip']){
+    const source=execFileSync('/bin/sh',['-c','command -v "$1"','lookup',name],{encoding:'utf8'}).trim();
+    assert.ok(path.isAbsolute(source),'Archive utility must resolve to an absolute path');
+    fs.symlinkSync(source,path.join(tools,name));
+   }
+   process.env.PATH=tools;
+  }
   const go=spawnSync('go',['version'],{encoding:'utf8'});
   assert.ok(go.error&&go.error.code==='ENOENT','Go must actually be unavailable for this check');
   const binary=await installBinary({version,binDir,download:async url=>{
