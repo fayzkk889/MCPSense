@@ -13,7 +13,7 @@ func coreInjectionPatterns() []Pattern {
 		compilePattern(
 			"PI-001",
 			"System Prompt Override",
-			`ignore\s+(all\s+)?(previous|prior|above|earlier)\s+(instructions?|prompts?|rules?|directives?)`,
+			`ignore\s+((all\s+)?(previous|prior|above|earlier)\s+(instructions?|prompts?|rules?|directives?)|the\s+user['’]s\s+request)`,
 			models.SeverityCritical,
 			"Content attempts to override system instructions by telling the model to ignore previous directives.",
 			"injection",
