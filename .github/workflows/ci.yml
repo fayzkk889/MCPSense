@@ -1,74 +1,50 @@
 name: CI
-
 on:
   push:
-    branches: [main]
+    branches: [main, 'codex/**']
   pull_request:
     branches: [main]
-
+permissions:
+  contents: read
 jobs:
   test:
-    name: Test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        go: ['1.22.x', '1.27.x']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: ${{ matrix.go }}
+          cache: true
+      - run: go mod verify
+      - run: go test ./... -count=1 -cover
+      - run: go test -race ./...
+      - run: go vet ./...
+      - run: node --test scripts/action.test.mjs
+      - run: go build -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
+  action:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate one-scan JSON and SARIF with source binary
+        uses: ./
         with:
-          go-version: "1.22"
-          cache: true
-
-      - name: Download dependencies
-        run: go mod download
-
-      - name: Run tests
-        run: go test ./... -v -cover -coverprofile=coverage.out
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage.out
-
+          target: ./testdata/compliant_server/manifest.json
+          version: source
+          offline: 'true'
+          sarif-upload: 'false'
+          fail-on: high
   lint:
-    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
         with:
-          go-version: "1.22"
-          cache: true
-
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
+          go-version: '1.22.x'
+      - uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84
         with:
-          version: latest
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [test]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.22"
-          cache: true
-
-      - name: Build binary
-        run: go build -ldflags "-X main.version=$(git describe --tags --always --dirty)" -o bin/mcpsense ./cmd/mcpsense/
-
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: mcpsense-linux-amd64
-          path: bin/mcpsense
+          version: v1.64.8
