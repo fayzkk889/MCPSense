@@ -10,6 +10,23 @@ This documentation describes **0.4.0**. Run `mcpsense version` to check your ins
 
 ## Start safely
 
+Choose one installation route for a published release:
+
+```sh
+# Node.js/npm users: no Go compiler required
+npm install -g mcpsense
+# Go users: no Node.js/npm required
+go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
+```
+
+Then scan your MCP manifest or configuration:
+
+```sh
+mcpsense scan ./mcp.json --offline --no-baseline
+```
+
+### From a source checkout
+
 From this checkout, with Go 1.22 or newer:
 
 ```sh
@@ -28,15 +45,6 @@ go build -o bin/mcpsense ./cmd/mcpsense
 # Windows
 go build -o bin/mcpsense.exe ./cmd/mcpsense
 .\bin\mcpsense.exe scan .\manifest.json --offline --no-baseline
-```
-
-Choose one independent installation route for a published release:
-
-```sh
-# Node.js/npm users: no Go compiler required
-npm install -g mcpsense
-# Go users: no Node.js/npm required
-go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
 
 npm downloads the selected platform executable and verifies its release SHA-256 checksum on Windows, Linux and macOS. It checks startup and the version before replacing an existing installation. Checksums detect corruption; they are not code signatures. To select 0.4.0 explicitly, use `npm install -g mcpsense@0.4.0` or `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@v0.4.0` once that version appears in the public release list.
