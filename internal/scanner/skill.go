@@ -14,7 +14,7 @@ import (
 func isSkillFile(path string) bool {
 	base := filepath.Base(path)
 	lowerBase := strings.ToLower(base)
-	lowerPath := strings.ToLower(filepath.ToSlash(path))
+	lowerPath := "/" + strings.TrimPrefix(strings.ToLower(filepath.ToSlash(path)), "/")
 
 	// Named instruction files
 	switch lowerBase {
