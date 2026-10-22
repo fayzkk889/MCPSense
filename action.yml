@@ -79,7 +79,7 @@ runs:
       run: node "$GITHUB_ACTION_PATH/scripts/action.mjs"
     - name: Upload SARIF
       if: inputs.sarif-upload == 'true'
-      uses: github/codeql-action/upload-sarif@5c8ea125689a2c5ae2672d1d914ac4bcd95d1b4b
+      uses: github/codeql-action/upload-sarif@793b778da9c9275a0f276522b27cb5fc14bba279
       with:
         sarif_file: ${{ steps.scan.outputs.sarif_file }}
         category: mcpsense

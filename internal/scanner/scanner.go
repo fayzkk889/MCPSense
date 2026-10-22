@@ -139,6 +139,17 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 	}
 
 	findings := s.runChecks(ctx)
+	for i := range findings {
+		f := &findings[i]
+		if ctx.ManifestFile != "" && (f.Location.File == "" || f.Location.ToolName != "" || f.ID == "SPEC-004" || f.ID == "SEC-006") {
+			f.Location.File = ctx.ManifestFile
+		}
+		if f.ID == "SEC-014" || f.ID == "SEC-015" || f.ID == "SEC-016" || f.ID == "CVE-001" {
+			if path, ok := ctx.ComponentFiles[f.Location.File]; ok {
+				f.Location.File = path
+			}
+		}
+	}
 	if len(ctx.Errors) > 0 {
 		return nil, nil, ctx.Errors[0]
 	}

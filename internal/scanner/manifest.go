@@ -26,5 +26,6 @@ func (s *Scanner) scanManifest(target string, ctx *checks.ScanContext) error {
 	}
 
 	ctx.Manifest = &manifest
+	ctx.ManifestFile = target
 	return nil
 }

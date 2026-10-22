@@ -77,6 +77,7 @@ func (s *Scanner) scanStatic(target string, ctx *checks.ScanContext) error {
 			return fmt.Errorf("invalid discovered manifest")
 		}
 		ctx.Manifest = &m
+		ctx.ManifestFile = path
 		ctx.InputPaths = append(ctx.InputPaths, path)
 		return nil
 	})
@@ -112,6 +113,10 @@ func mergeConfig(b []byte, path string, ctx *checks.ScanContext) error {
 			return fmt.Errorf("duplicate server names across configurations; scan configs separately")
 		}
 		ctx.ClientConfig.MCPServers[name] = e
+		if ctx.ComponentFiles == nil {
+			ctx.ComponentFiles = map[string]string{}
+		}
+		ctx.ComponentFiles[name] = path
 	}
 	ctx.InputPaths = append(ctx.InputPaths, path)
 	return nil
@@ -126,5 +131,9 @@ func (s *Scanner) scanConfig(target string, ctx *checks.ScanContext) error {
 		return err
 	}
 	ctx.ClientConfig = c
+	ctx.ComponentFiles = map[string]string{}
+	for name := range c.MCPServers {
+		ctx.ComponentFiles[name] = target
+	}
 	return nil
 }

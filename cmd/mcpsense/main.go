@@ -267,6 +267,17 @@ CLI flags override config file values.`,
 							}
 							rep.Coverage.BaselineHash = models.HashIdentity(string(baselineData))
 							driftFindings := drift.Diff(prev, current)
+							for i := range driftFindings {
+								if ctx.ManifestFile != "" {
+									driftFindings[i].Location.File = ctx.ManifestFile
+								} else {
+									for name, path := range ctx.ComponentFiles {
+										if models.HashIdentity(name) == driftFindings[i].Location.ToolName {
+											driftFindings[i].Location.File = path
+										}
+									}
+								}
+							}
 							rep.Findings = append(rep.Findings, driftFindings...)
 						}
 					} else {

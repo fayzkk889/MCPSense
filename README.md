@@ -82,7 +82,7 @@ mcpsense scan ./manifest.json --offline --no-baseline --format json --output rep
 mcpsense scan ./manifest.json --offline --no-baseline --checks SEC-001,SPEC-002
 ```
 
-JSON schema 2 includes coverage, selected/skipped checks, advisory state, input identities, target identity, severity filter, confidence and stable rule/component fingerprints. Multiple occurrences of one rule in one component share an identity. SARIF carries the same fingerprints and coverage. `needs_review` describes heuristics; `advisory_match` describes database matches. Neither means exploitation was verified.
+JSON schema 2 includes coverage, selected/skipped checks, advisory state, input identities, target identity, severity filter, confidence and stable rule/component fingerprints. Multiple occurrences of one rule in one component share an identity. SARIF carries the same fingerprints and coverage. Local metadata findings retain their actual input file; no line number is invented. GitHub Code Scanning requires physical source locations, so purely live logical findings may require sarif-upload: false and separate JSON/SARIF review. `needs_review` describes heuristics; `advisory_match` describes database matches. Neither means exploitation was verified.
 
 A score starts at 100 and subtracts severity weights for reported findings. Filtering affects the score. A zero finding count or score 100 does not establish overall security. Advisory lookup failure or stale-only fallback fails the requested scan; `--no-cve` explicitly records that this phase was skipped. Package extraction is heuristic, not a resolved dependency inventory.
 
