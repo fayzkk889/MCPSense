@@ -11,7 +11,7 @@ This minor release adds modern MCP metadata discovery, explicit coverage and off
 - Reject unknown rule IDs and omitted/ambiguous directory coverage.
 - Pass GitHub Action inputs as data; validate JSON, status and SARIF from one scan; verify downloaded archives.
 - Restore the missing npm executable wrapper, avoid shell interpolation in the installer, and verify archive checksums.
-- Make the standalone Windows installer source-only, version-selectable and noninteractive; require Go explicitly. Linux/macOS installation verifies checksums before replacing the executable and uses a writable user directory by default.
+- Preserve two independent install choices: npm downloads verified binaries without Go on Windows/Linux/macOS; Go installation needs no Node.js/npm. The optional standalone PowerShell installer is version-selectable and noninteractive for Go users. Shell installation verifies checksums before replacement and uses a writable user directory by default.
 - Detect generic API-key credential names, indirect private-key disclosure and safety-policy overrides. Limit quoted document-query exceptions to tool metadata; preserve agent-instruction scanning and reject appended-directive exemptions.
 - Stop treating ordinary “ignore” as character-substitution evasion, preserve explicit user-request override detection, and improve manifest syntax errors and the clean-start example.
 

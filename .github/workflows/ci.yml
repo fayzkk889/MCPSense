@@ -26,11 +26,14 @@ jobs:
       - run: go vet ./...
       - run: node --test scripts/action.test.mjs npm/package.test.cjs
       - run: npm pack ./npm --dry-run --json --ignore-scripts
-      - run: go build -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
+      - run: go build -ldflags="-X main.version=0.4.0" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
       - run: node --test npm/package.test.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
       - run: node --test scripts/installers.test.mjs scripts/product.test.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+      - run: node scripts/npm-install-smoke.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
   action:
