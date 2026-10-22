@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime/debug"
 	"strings"
+	"syscall"
 
 	"github.com/spf13/cobra"
 
@@ -35,7 +38,9 @@ func init() {
 const configFile = ".mcpsenserc.json"
 
 func main() {
-	if err := rootCmd().Execute(); err != nil {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	if err := rootCmd().ExecuteContext(ctx); err != nil {
 		if errors.Is(err, errFindings) {
 			os.Exit(1)
 		}
@@ -179,20 +184,26 @@ CLI flags override config file values.`,
 			allowExec, _ := cmd.Flags().GetBool("allow-exec")
 			serverArgs, _ := cmd.Flags().GetStringArray("server-arg")
 			protocol, _ := cmd.Flags().GetString("protocol")
+			allowPrivate, _ := cmd.Flags().GetBool("allow-private-network")
+			if probe {
+				return fmt.Errorf("active probes are not implemented; scanning enumerates metadata only")
+			}
 			if protocol != "auto" && protocol != "modern" && protocol != "legacy" {
 				return fmt.Errorf("unknown protocol policy")
 			}
 
 			s := scanner.New(scanner.Options{
-				Mode:        scanMode,
-				EnableProbe: probe,
-				CheckIDs:    onlyIDs,
-				ExcludeIDs:  skipIDs,
-				DisableCVE:  noCVE || offline,
-				Offline:     offline,
-				AllowExec:   allowExec,
-				ServerArgs:  serverArgs,
-				Protocol:    protocol,
+				Context:             cmd.Context(),
+				Mode:                scanMode,
+				EnableProbe:         probe,
+				CheckIDs:            onlyIDs,
+				ExcludeIDs:          skipIDs,
+				DisableCVE:          noCVE || offline,
+				Offline:             offline,
+				AllowExec:           allowExec,
+				ServerArgs:          serverArgs,
+				Protocol:            protocol,
+				AllowPrivateNetwork: allowPrivate,
 			})
 
 			rep, ctx, err := s.Scan(target)
@@ -333,6 +344,7 @@ CLI flags override config file values.`,
 	cmd.Flags().StringArray("server-arg", nil, "Argument passed literally to the local server; repeat for each argument")
 	cmd.Flags().String("sarif-output", "", "Write SARIF from the same scan in addition to the selected output")
 	cmd.Flags().String("protocol", "auto", "Live metadata protocol: auto, modern (2026-07-28), legacy (initialize)")
+	cmd.Flags().Bool("allow-private-network", false, "Allow explicitly targeted loopback/private MCP addresses; link-local and metadata addresses remain blocked")
 
 	return cmd
 }

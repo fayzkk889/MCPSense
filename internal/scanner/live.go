@@ -14,7 +14,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	"time"
 )
 
 const defaultProtocolVersion = "2025-11-25"
@@ -38,10 +37,13 @@ func (s *Scanner) scanLive(target string, ctx *checks.ScanContext) error {
 	return s.scanLiveStdio(target, ctx)
 }
 func (s *Scanner) scanLiveSSE(target string, ctx *checks.ScanContext) error {
-	client := &http.Client{Timeout: 10 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error {
-		return fmt.Errorf("MCP redirects are disabled; select the authorized endpoint explicitly")
-	}}
-	m, err := fetchHTTPProtocol(client, target, s.opts.Protocol)
+	client, err := liveClient(target, s.opts.AllowPrivateNetwork)
+	if err != nil {
+		return err
+	}
+	runCtx, cancel := context.WithTimeout(s.opts.Context, s.opts.Timeout)
+	defer cancel()
+	m, err := fetchHTTPProtocolContext(client, target, s.opts.Protocol, runCtx)
 	if err != nil {
 		return fmt.Errorf("live HTTP discovery failed: %w", err)
 	}
@@ -55,6 +57,9 @@ func tryFetchManifestFromURL(client *http.Client, target string) (*models.MCPMan
 	return fetchHTTPProtocol(client, target, "auto")
 }
 func fetchHTTPProtocol(client *http.Client, target, policy string) (*models.MCPManifest, error) {
+	return fetchHTTPProtocolContext(client, target, policy, context.Background())
+}
+func fetchHTTPProtocolContext(client *http.Client, target, policy string, runCtx context.Context) (*models.MCPManifest, error) {
 	session := ""
 	protocol := modernProtocolVersion
 	if policy == "legacy" {
@@ -65,7 +70,7 @@ func fetchHTTPProtocol(client *http.Client, target, policy string) (*models.MCPM
 		if err != nil {
 			return nil, err
 		}
-		req, err := http.NewRequest(http.MethodPost, target, bytes.NewReader(body))
+		req, err := http.NewRequestWithContext(runCtx, http.MethodPost, target, bytes.NewReader(body))
 		if err != nil {
 			return nil, fmt.Errorf("invalid MCP endpoint")
 		}
@@ -101,6 +106,14 @@ func fetchHTTPProtocol(client *http.Client, target, policy string) (*models.MCPM
 				return nil, failure
 			}
 			return nil, fmt.Errorf("MCP HTTP status %d", resp.StatusCode)
+		}
+		if err == nil && req.Method == "initialize" {
+			var init struct {
+				ProtocolVersion string `json:"protocolVersion"`
+			}
+			if json.Unmarshal(r.Result, &init) == nil {
+				protocol = init.ProtocolVersion
+			}
 		}
 		return r, err
 	}
@@ -244,9 +257,10 @@ func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
 	if len(parts) == 0 {
 		return fmt.Errorf("empty target command")
 	}
-	runCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	runCtx, cancel := context.WithTimeout(s.opts.Context, s.opts.Timeout)
 	defer cancel()
 	cmd := exec.CommandContext(runCtx, parts[0], parts[1:]...)
+	configureProcess(cmd)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return err
@@ -260,7 +274,7 @@ func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("could not start authorized MCP server")
 	}
-	defer func() { cancel(); stdin.Close(); stdout.Close(); _ = cmd.Process.Kill(); _ = cmd.Wait() }()
+	defer func() { cancel(); stdin.Close(); stdout.Close(); _ = cmd.Cancel(); _ = cmd.Wait() }()
 	type result struct {
 		m   *models.MCPManifest
 		err error
@@ -291,14 +305,27 @@ func interrogateStdioProtocol(stdin io.Writer, stdout io.Reader, policy string) 
 		if _, err := fmt.Fprintf(stdin, "%s\n", data); err != nil {
 			return nil, fmt.Errorf("MCP write failed")
 		}
-		line, err := reader.ReadSlice('\n')
-		if err != nil {
-			return nil, fmt.Errorf("incomplete or oversized MCP stdio response")
+		for count := 0; count < 64; count++ {
+			line, err := reader.ReadSlice('\n')
+			if err != nil {
+				return nil, fmt.Errorf("incomplete or oversized MCP stdio response")
+			}
+			if len(line) > maxRPCMessage {
+				return nil, fmt.Errorf("MCP message exceeds size limit")
+			}
+			var envelope map[string]json.RawMessage
+			if json.Unmarshal(line, &envelope) != nil {
+				return nil, fmt.Errorf("invalid MCP stdio JSON")
+			}
+			if _, ok := envelope["method"]; ok {
+				if _, hasID := envelope["id"]; hasID {
+					return nil, fmt.Errorf("server requests unsupported during metadata discovery")
+				}
+				continue
+			}
+			return decodeRPC(line, req.ID)
 		}
-		if len(line) > maxRPCMessage {
-			return nil, fmt.Errorf("MCP message exceeds size limit")
-		}
-		return decodeRPC(line, req.ID)
+		return nil, fmt.Errorf("too many stdio notifications before response")
 	}
 	notify := func() error {
 		_, err := io.WriteString(stdin, "{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n")

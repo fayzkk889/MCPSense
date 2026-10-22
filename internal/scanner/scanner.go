@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -8,10 +9,12 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
 	"github.com/fayzkk889/MCPSense/internal/detection"
 	"github.com/fayzkk889/MCPSense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 )
 
 // ScanMode describes how a scan is performed.
@@ -29,15 +32,18 @@ const (
 
 // Options configures the scanner behavior.
 type Options struct {
-	Mode        ScanMode
-	EnableProbe bool
-	CheckIDs    []string // if non-empty, run only these checks
-	ExcludeIDs  []string // checks to skip
-	DisableCVE  bool     // set by --no-cve or --offline
-	Offline     bool     // disallow live networking and subprocesses as well as advisories
-	AllowExec   bool     // explicit permission to start a local server
-	ServerArgs  []string // explicit argv; target is the executable path
-	Protocol    string   // auto, modern or legacy
+	Context             context.Context
+	Timeout             time.Duration
+	Mode                ScanMode
+	EnableProbe         bool
+	CheckIDs            []string // if non-empty, run only these checks
+	ExcludeIDs          []string // checks to skip
+	DisableCVE          bool     // set by --no-cve or --offline
+	Offline             bool     // disallow live networking and subprocesses as well as advisories
+	AllowExec           bool     // explicit permission to start a local server
+	ServerArgs          []string // explicit argv; target is the executable path
+	Protocol            string   // auto, modern or legacy
+	AllowPrivateNetwork bool
 }
 
 // Scanner orchestrates the scan process.
@@ -49,6 +55,12 @@ type Scanner struct {
 
 // New creates a Scanner with the given options.
 func New(opts Options) *Scanner {
+	if opts.Context == nil {
+		opts.Context = context.Background()
+	}
+	if opts.Timeout <= 0 {
+		opts.Timeout = 20 * time.Second
+	}
 	s := &Scanner{
 		registry: checks.NewRegistry(),
 		patterns: detection.NewPatternEngine(),
@@ -66,6 +78,9 @@ func New(opts Options) *Scanner {
 
 // Scan runs the appropriate scan mode against the target and returns a report and the scan context.
 func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, error) {
+	if err := s.opts.Context.Err(); err != nil {
+		return nil, nil, err
+	}
 	known := make(map[string]bool)
 	for _, check := range s.registry.AllChecks() {
 		known[check.ID()] = true
@@ -151,6 +166,9 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 	for path := range ctx.SkillFiles {
 		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(filepath.ToSlash(filepath.Clean(path))))
 	}
+	for _, path := range ctx.InputPaths {
+		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(filepath.ToSlash(filepath.Clean(path))))
+	}
 	if mode != ModeDirectory && mode != ModeStatic && mode != ModeSkill {
 		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(target))
 	}
@@ -228,7 +246,7 @@ func detectMode(target string) ScanMode {
 	if strings.HasSuffix(target, ".json") {
 		// Try to detect whether this is a client config or a manifest.
 		// Client configs have a top-level "mcpServers" key.
-		data, err := os.ReadFile(target)
+		data, err := utils.ReadInput(target)
 		if err == nil {
 			// Strip UTF-8 BOM if present
 			if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
@@ -237,6 +255,9 @@ func detectMode(target string) ScanMode {
 			var raw map[string]json.RawMessage
 			if json.Unmarshal(data, &raw) == nil {
 				if _, hasServers := raw["mcpServers"]; hasServers {
+					return ModeConfig
+				}
+				if _, hasServers := raw["servers"]; hasServers {
 					return ModeConfig
 				}
 			}

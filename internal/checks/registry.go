@@ -7,6 +7,7 @@ import (
 
 // ScanContext holds all input data available to checks during a scan.
 type ScanContext struct {
+	InputPaths    []string
 	Errors        []error
 	AdvisoryState string
 	Manifest      *models.MCPManifest
