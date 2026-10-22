@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/fayzkk889/MCPSense/internal/checks"
 	"github.com/fayzkk889/MCPSense/internal/models"
@@ -17,6 +18,7 @@ import (
 )
 
 const defaultProtocolVersion = "2025-11-25"
+const modernProtocolVersion = "2026-07-28"
 const maxRPCMessage = 2 << 20
 const maxListPages = 64
 
@@ -39,7 +41,7 @@ func (s *Scanner) scanLiveSSE(target string, ctx *checks.ScanContext) error {
 	client := &http.Client{Timeout: 10 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error {
 		return fmt.Errorf("MCP redirects are disabled; select the authorized endpoint explicitly")
 	}}
-	m, err := fetchManifestViaHTTP(client, target)
+	m, err := fetchHTTPProtocol(client, target, s.opts.Protocol)
 	if err != nil {
 		return fmt.Errorf("live HTTP discovery failed: %w", err)
 	}
@@ -50,7 +52,14 @@ func fetchManifestViaHTTP(client *http.Client, target string) (*models.MCPManife
 	return tryFetchManifestFromURL(client, target)
 }
 func tryFetchManifestFromURL(client *http.Client, target string) (*models.MCPManifest, error) {
+	return fetchHTTPProtocol(client, target, "auto")
+}
+func fetchHTTPProtocol(client *http.Client, target, policy string) (*models.MCPManifest, error) {
 	session := ""
+	protocol := modernProtocolVersion
+	if policy == "legacy" {
+		protocol = defaultProtocolVersion
+	}
 	post := func(v interface{}) (*http.Response, error) {
 		body, err := json.Marshal(v)
 		if err != nil {
@@ -62,17 +71,16 @@ func tryFetchManifestFromURL(client *http.Client, target string) (*models.MCPMan
 		}
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept", "application/json, text/event-stream")
-		req.Header.Set("MCP-Protocol-Version", defaultProtocolVersion)
+		req.Header.Set("MCP-Protocol-Version", protocol)
+		if q, ok := v.(models.MCPJSONRPCRequest); ok {
+			req.Header.Set("Mcp-Method", q.Method)
+		}
 		if session != "" {
 			req.Header.Set("Mcp-Session-Id", session)
 		}
 		resp, err := client.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("MCP HTTP transport failed")
-		}
-		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-			resp.Body.Close()
-			return nil, fmt.Errorf("MCP HTTP status %d", resp.StatusCode)
 		}
 		if v, ok := v.(models.MCPJSONRPCRequest); ok && v.Method == "initialize" {
 			session = resp.Header.Get("Mcp-Session-Id")
@@ -85,14 +93,16 @@ func tryFetchManifestFromURL(client *http.Client, target string) (*models.MCPMan
 			return nil, err
 		}
 		defer resp.Body.Close()
-		data, err := io.ReadAll(io.LimitReader(resp.Body, maxRPCMessage+1))
-		if err != nil {
-			return nil, fmt.Errorf("reading MCP response failed")
+		r, err := readHTTPRPC(resp, req.ID)
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			var failure *rpcFailure
+			if errors.As(err, &failure) {
+				failure.Status = resp.StatusCode
+				return nil, failure
+			}
+			return nil, fmt.Errorf("MCP HTTP status %d", resp.StatusCode)
 		}
-		if len(data) > maxRPCMessage {
-			return nil, fmt.Errorf("MCP response exceeds size limit")
-		}
-		return decodeRPC(data, req.ID)
+		return r, err
 	}
 	notify := func() error {
 		resp, err := post(models.MCPJSONRPCNotification{JSONRPC: "2.0", Method: "notifications/initialized"})
@@ -100,9 +110,12 @@ func tryFetchManifestFromURL(client *http.Client, target string) (*models.MCPMan
 			return err
 		}
 		resp.Body.Close()
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			return fmt.Errorf("initialized notification HTTP status %d", resp.StatusCode)
+		}
 		return nil
 	}
-	return legacyManifest(call, notify)
+	return negotiateManifest(call, notify, policy, func() { protocol = defaultProtocolVersion; session = "" })
 }
 func decodeRPC(data []byte, id int) (*models.MCPJSONRPCResponse, error) {
 	var r models.MCPJSONRPCResponse
@@ -113,7 +126,10 @@ func decodeRPC(data []byte, id int) (*models.MCPJSONRPCResponse, error) {
 		return nil, fmt.Errorf("MCP response version or request ID mismatch")
 	}
 	if r.Error != nil {
-		return nil, fmt.Errorf("MCP JSON-RPC error %d", r.Error.Code)
+		if len(r.Result) > 0 {
+			return nil, fmt.Errorf("ambiguous JSON-RPC result and error")
+		}
+		return nil, &rpcFailure{Code: r.Error.Code, Data: r.Error.Data}
 	}
 	if len(r.Result) == 0 || bytes.Equal(bytes.TrimSpace(r.Result), []byte("null")) {
 		return nil, fmt.Errorf("MCP response is missing a result")
@@ -145,9 +161,12 @@ func legacyManifest(call rpcCall, notify rpcNotify) (*models.MCPManifest, error)
 		return nil, fmt.Errorf("initialized notification: %w", err)
 	}
 	m := &models.MCPManifest{Name: init.ServerInfo.Name, Version: init.ServerInfo.Version, ProtocolVersion: init.ProtocolVersion}
+	return listManifest(call, m, init.Capabilities)
+}
+func listManifest(call rpcCall, m *models.MCPManifest, capabilities map[string]json.RawMessage) (*models.MCPManifest, error) {
 	id := 2
 	for _, kind := range []string{"tools", "resources", "prompts"} {
-		if _, ok := init.Capabilities[kind]; !ok {
+		if _, ok := capabilities[kind]; !ok {
 			continue
 		}
 		cursor := ""
@@ -247,7 +266,7 @@ func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
 		err error
 	}
 	done := make(chan result, 1)
-	go func() { m, err := interrogateStdioServer(stdin, stdout); done <- result{m, err} }()
+	go func() { m, err := interrogateStdioProtocol(stdin, stdout, s.opts.Protocol); done <- result{m, err} }()
 	select {
 	case <-runCtx.Done():
 		return fmt.Errorf("MCP server discovery timed out or cancelled")
@@ -260,6 +279,9 @@ func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
 	}
 }
 func interrogateStdioServer(stdin io.Writer, stdout io.Reader) (*models.MCPManifest, error) {
+	return interrogateStdioProtocol(stdin, stdout, "auto")
+}
+func interrogateStdioProtocol(stdin io.Writer, stdout io.Reader, policy string) (*models.MCPManifest, error) {
 	reader := bufio.NewReaderSize(stdout, maxRPCMessage+1)
 	call := func(req models.MCPJSONRPCRequest) (*models.MCPJSONRPCResponse, error) {
 		data, err := json.Marshal(req)
@@ -282,5 +304,5 @@ func interrogateStdioServer(stdin io.Writer, stdout io.Reader) (*models.MCPManif
 		_, err := io.WriteString(stdin, "{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n")
 		return err
 	}
-	return legacyManifest(call, notify)
+	return negotiateManifest(call, notify, policy, func() {})
 }

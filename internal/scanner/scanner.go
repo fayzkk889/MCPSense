@@ -36,6 +36,7 @@ type Options struct {
 	Offline     bool     // disallow live networking and subprocesses as well as advisories
 	AllowExec   bool     // explicit permission to start a local server
 	ServerArgs  []string // explicit argv; target is the executable path
+	Protocol    string   // auto, modern or legacy
 }
 
 // Scanner orchestrates the scan process.

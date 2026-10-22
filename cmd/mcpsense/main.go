@@ -177,6 +177,10 @@ CLI flags override config file values.`,
 			offline, _ := cmd.Flags().GetBool("offline")
 			allowExec, _ := cmd.Flags().GetBool("allow-exec")
 			serverArgs, _ := cmd.Flags().GetStringArray("server-arg")
+			protocol, _ := cmd.Flags().GetString("protocol")
+			if protocol != "auto" && protocol != "modern" && protocol != "legacy" {
+				return fmt.Errorf("unknown protocol policy")
+			}
 
 			s := scanner.New(scanner.Options{
 				Mode:        scanMode,
@@ -187,6 +191,7 @@ CLI flags override config file values.`,
 				Offline:     offline,
 				AllowExec:   allowExec,
 				ServerArgs:  serverArgs,
+				Protocol:    protocol,
 			})
 
 			rep, ctx, err := s.Scan(target)
@@ -317,6 +322,7 @@ CLI flags override config file values.`,
 	cmd.Flags().Bool("allow-exec", false, "Allow execution of the explicitly selected local MCP server (unavailable offline)")
 	cmd.Flags().StringArray("server-arg", nil, "Argument passed literally to the local server; repeat for each argument")
 	cmd.Flags().String("sarif-output", "", "Write SARIF from the same scan in addition to the selected output")
+	cmd.Flags().String("protocol", "auto", "Live metadata protocol: auto, modern (2026-07-28), legacy (initialize)")
 
 	return cmd
 }

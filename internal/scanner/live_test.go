@@ -18,6 +18,8 @@ func TestLegacyHTTPPaginationAndFailure(t *testing.T) {
 			_ = json.NewDecoder(req.Body).Decode(&q)
 			result := `{}`
 			switch q.Method {
+			case "server/discover":
+				return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(`{"jsonrpc":"2.0","id":1,"error":{"code":-32601,"message":"not found"}}`)), Header: make(http.Header)}, nil
 			case "initialize":
 				result = `{"protocolVersion":"2025-11-25","capabilities":{"tools":{}},"serverInfo":{"name":"test","version":"1"}}`
 			case "tools/list":
@@ -38,7 +40,7 @@ func TestLegacyHTTPPaginationAndFailure(t *testing.T) {
 			if err == nil {
 				t.Fatal("list failure accepted")
 			}
-		} else if err != nil || len(m.Tools) != 1 || requests != 4 {
+		} else if err != nil || len(m.Tools) != 1 || requests != 5 {
 			t.Fatalf("legacy pagination: m=%+v err=%v requests=%d", m, err, requests)
 		}
 	}
