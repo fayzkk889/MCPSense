@@ -85,3 +85,13 @@ func TestSchemaDigestsPreserveLargeIntegerConstraints(t *testing.T) {
 		t.Fatal("whitespace/key order created false drift")
 	}
 }
+func TestLoadBaselineBudget(t *testing.T) {
+	p := filepath.Join(t.TempDir(), "oversized.json")
+	data := `{"format_version":2,"ignored_padding":"` + strings.Repeat("x", 4<<20) + `"}`
+	if err := os.WriteFile(p, []byte(data), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(p); err == nil || !strings.Contains(err.Error(), "limit") {
+		t.Fatalf("baseline budget not enforced: %v", err)
+	}
+}

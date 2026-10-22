@@ -4,18 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/fayzkk889/MCPSense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 	"github.com/spf13/cobra"
-	"io"
-	"os"
 )
 
 func readEvidence(path string) (*models.Report, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, fmt.Errorf("could not open verification report")
-	}
-	defer f.Close()
-	b, err := io.ReadAll(io.LimitReader(f, 16<<20+1))
+	b, err := utils.ReadBounded(path, 16<<20)
 	if err != nil || len(b) > 16<<20 {
 		return nil, fmt.Errorf("verification report unreadable or oversized")
 	}

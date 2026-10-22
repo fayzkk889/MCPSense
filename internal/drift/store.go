@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/utils"
 	"os"
 	"path/filepath"
 )
@@ -37,7 +38,7 @@ func Exists(path string) bool {
 
 // Load reads a snapshot from disk.
 func Load(path string) (*Snapshot, error) {
-	data, err := os.ReadFile(path)
+	data, err := utils.ReadInput(path)
 	if err != nil {
 		return nil, fmt.Errorf("reading baseline %q: %w", path, err)
 	}
@@ -59,6 +60,9 @@ func Save(path string, snap *Snapshot) error {
 	data, err := MarshalSnapshot(snap)
 	if err != nil {
 		return fmt.Errorf("serializing snapshot: %w", err)
+	}
+	if len(data) > utils.MaxInputBytes {
+		return fmt.Errorf("baseline exceeds file size limit; use --no-baseline for this catalog")
 	}
 	if info, err := os.Lstat(path); err == nil && (!info.Mode().IsRegular() || info.Mode()&os.ModeSymlink != 0) {
 		return fmt.Errorf("baseline must be a regular file")

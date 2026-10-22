@@ -92,7 +92,7 @@ Exit codes: **0** completed without reported high/critical findings, **1** compl
 
 Manifest/config/live scans and directory scans with metadata save a baseline by default under `~/.mcpsense/snapshots/`. `--baseline` selects a file; `--no-baseline` disables this behavior; `--update-baseline` explicitly accepts reviewed changes.
 
-Format 2 stores digests and minimal booleans instead of raw tool descriptions, commands, arguments, target URLs, resource names or environment values. Environment values are excluded even from the config digest. Raw before/after text is not exported; `--show-diff` is a compatibility flag. Digests support change comparison, not encryption: low-entropy values may still be guessable. Do not commit private baselines without review.
+Snapshots are capped at 4 MiB; oversized saves fail, and verification accepts regular report files up to 16 MiB. Format 2 stores digests and minimal booleans instead of raw tool descriptions, commands, arguments, target URLs, resource names or environment values. Environment values are excluded even from the config digest. Raw before/after text is not exported; `--show-diff` is a compatibility flag. Digests support change comparison, not encryption: low-entropy values may still be guessable. Do not commit private baselines without review.
 
 Old plaintext baselines and unknown future formats fail with a recreation instruction. Review the target, recreate with `--update-baseline`, and separately review/remove old sensitive copies under your own retention policy. They are not silently rewritten or deleted. Writes use a temporary file with restrictive requested permissions before replacement; Windows ACLs depend on the containing directory.
 

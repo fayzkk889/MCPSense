@@ -21,6 +21,9 @@ func SkipDirectory(name string) bool {
 // ReadInput rejects special files and symlinks and bounds even a growing file.
 // It is not filesystem isolation against concurrent local path replacement.
 func ReadInput(path string) ([]byte, error) {
+	return ReadBounded(path, MaxInputBytes)
+}
+func ReadBounded(path string, limit int64) ([]byte, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return nil, err
@@ -33,12 +36,12 @@ func ReadInput(path string) ([]byte, error) {
 		return nil, err
 	}
 	defer f.Close()
-	b, err := io.ReadAll(io.LimitReader(f, MaxInputBytes+1))
+	b, err := io.ReadAll(io.LimitReader(f, limit+1))
 	if err != nil {
 		return nil, err
 	}
-	if len(b) > MaxInputBytes {
-		return nil, fmt.Errorf("input exceeds 4 MiB file limit")
+	if int64(len(b)) > limit {
+		return nil, fmt.Errorf("input exceeds %d byte file limit", limit)
 	}
 	return b, nil
 }
