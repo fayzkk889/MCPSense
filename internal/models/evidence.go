@@ -62,6 +62,9 @@ func VerifyReports(before, after *Report) (*Verification, error) {
 		if r.Summary.Total != len(r.Findings) {
 			return nil, fmt.Errorf("inconsistent report summary")
 		}
+		if r.Coverage.Baseline == "compared" && r.Coverage.BaselineHash == "" {
+			return nil, fmt.Errorf("verification requires baseline provenance")
+		}
 		for _, f := range r.Findings {
 			if len(f.Fingerprint) != 64 {
 				return nil, fmt.Errorf("report missing stable identities")

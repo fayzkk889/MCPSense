@@ -86,10 +86,13 @@ func scanCmd() *cobra.Command {
 
 Target auto-detection:
   *.json file       manifest mode
-  directory         static analysis mode
-  skill markers     skill scanning mode (CLAUDE.md, .cursorrules, etc.)
-  http:// or https: live mode (SSE endpoint)
-  command string    live mode (stdio process)
+  directory         combined source, config, manifest and skill inspection
+  http:// or https: guarded live HTTP metadata discovery
+  command string    live stdio; requires --allow-exec
+
+Use --mode skill for individual instruction files.
+Offline mode prohibits scanner networking and local server execution.
+Private/loopback HTTP targets require --allow-private-network.
 
 Configuration is loaded from .mcpsenserc.json in the current directory.
 CLI flags override config file values.`,
@@ -258,6 +261,11 @@ CLI flags override config file values.`,
 							if prev.Target != current.Target || prev.Mode != current.Mode {
 								return fmt.Errorf("baseline target or mode differs; review and explicitly update baseline")
 							}
+							baselineData, err := drift.MarshalSnapshot(prev)
+							if err != nil {
+								return err
+							}
+							rep.Coverage.BaselineHash = models.HashIdentity(string(baselineData))
 							driftFindings := drift.Diff(prev, current)
 							rep.Findings = append(rep.Findings, driftFindings...)
 						}
@@ -336,7 +344,7 @@ CLI flags override config file values.`,
 	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: critical, high, medium, low, info")
 	cmd.Flags().StringVarP(&checkIDs, "checks", "c", "", "Comma-separated list of check IDs to run (default: all)")
 	cmd.Flags().StringVar(&excludeIDs, "exclude", "", "Comma-separated list of check IDs to skip")
-	cmd.Flags().BoolVar(&probe, "probe", false, "Enable active probing in live mode")
+	cmd.Flags().BoolVar(&probe, "probe", false, "Reserved; active probing is not implemented")
 	cmd.Flags().StringVarP(&outputFile, "output", "o", "", "Output file path (default: stdout)")
 	cmd.Flags().BoolVar(&noColor, "no-color", false, "Disable colored output")
 

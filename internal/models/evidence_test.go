@@ -35,3 +35,14 @@ func TestStableRuleComponentIdentity(t *testing.T) {
 		t.Fatalf("wrong persistence: %+v %v", v, err)
 	}
 }
+func TestAcceptingNewBaselineIsNotRemediation(t *testing.T) {
+	before := evidenceReport([]Finding{{ID: "DRIFT-002", Location: Location{ToolName: "synthetic"}}})
+	after := evidenceReport(nil)
+	before.Coverage.Baseline = "compared"
+	after.Coverage.Baseline = "compared"
+	before.Coverage.BaselineHash = "old-approved-snapshot"
+	after.Coverage.BaselineHash = "new-approved-snapshot"
+	if _, err := VerifyReports(before, after); err == nil {
+		t.Fatal("baseline reapproval was mistaken for remediation")
+	}
+}
