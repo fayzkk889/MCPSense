@@ -35,11 +35,11 @@ func directivePatterns() []Pattern {
 var clauseBreak = regexp.MustCompile(`[.!?;](?:\s+|$)|\r?\n|,\s*(?:then|but|instead|however)\s+`)
 var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read)\b`)
 var continuation = regexp.MustCompile(`(?i)\b(then|instead|now|however|but|obey|follow that|execute it)\b`)
-var quotedData = regexp.MustCompile(`"[^"\r\n]*"|'[^'\r\n]*'`)
+var quotedData = regexp.MustCompile(`"[^"\r\n]*"|(?:^|[\s(])'[^'\r\n]*'(?:$|[\s).,!?:;])`)
 var reportedThreat = regexp.MustCompile(`(?i)\battackers?(?:\s+who)?\s+(steal|send|upload|copy)\b`)
 var unsafeContextTail = regexp.MustCompile(`(?i)\b(send|upload|forward|transmit|disclose|reveal|print|execute|disable|bypass|steal|copy|append|modify|trust|follow)\b`)
 var negativeEscape = regexp.MustCompile(`(?i)([:,;—–-]|\band\b)\s*(send|upload|forward|transmit|disclose|reveal|print|execute|disable|bypass|copy|append|modify|trust|follow)\b`)
-var directiveVerb = regexp.MustCompile(`(?i)\b(send|upload|forward|transmit|disclose|reveal|print|execute|disable|bypass|copy|append|modify|trust|follow|include|read|access|hide|conceal|ignore)\b`)
+var negationSignals = append(append(coreInjectionPatterns(), directivePatterns()...), mcpSpecificPatterns()...)
 var benignMetadata = []*regexp.Regexp{
 	regexp.MustCompile(`(?is)^\s*(this|the)\s+(security\s+)?(tutorial|article|lesson)\s+quotes?\s+the\s+phrase\s+'[^'\r\n]{1,256}'\s+as\s+an?\s+attack\s+example[.!]?\s*$`),
 	regexp.MustCompile(`(?is)^\s*search\s+for\s+(jailbreak|prompt injection)\s+research\s+papers\s+in\s+(the\s+)?documentation\s+index[.!]?\s*$`),
@@ -59,10 +59,23 @@ func benignToolClause(text string) bool {
 		// A second action is exempt only under explicit "or" negation. A
 		// defensive prefix must never grant immunity to an unrelated action.
 		safe := true
-		for _, verb := range directiveVerb.FindAllStringIndex(text[negated[1]:], -1) {
-			prefix := strings.TrimSpace(text[:negated[1]+verb[0]])
-			if !strings.HasSuffix(strings.ToLower(prefix), " or") {
-				safe = false
+		lower, original := lowercaseWithOffsets(text)
+		for _, pattern := range negationSignals {
+			if pattern.Target != "description" {
+				continue
+			}
+			for _, match := range pattern.Regex.FindAllStringIndex(lower, -1) {
+				start := original(match[0])
+				if start < negated[1] {
+					continue
+				}
+				prefix := strings.TrimSpace(text[:start])
+				if !strings.HasSuffix(strings.ToLower(prefix), " or") {
+					safe = false
+					break
+				}
+			}
+			if !safe {
 				break
 			}
 		}
