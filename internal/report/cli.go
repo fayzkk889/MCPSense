@@ -73,6 +73,9 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	if len(report.Coverage.Unassessed) > 0 {
 		fmt.Fprintln(w, "  Not assessed: runtime behavior, tool results, fetched content and unknown extensions.")
 	}
+	if report.Coverage.BaselineWarning != "" {
+		fmt.Fprintln(w, "  Baseline coverage: "+report.Coverage.BaselineWarning)
+	}
 	fmt.Fprint(w, "\n")
 }
 

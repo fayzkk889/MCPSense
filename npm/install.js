@@ -49,7 +49,18 @@ function verifyArchive(data,manifest,filename) {
   if (records.length!==1 || !/^[a-fA-F0-9]{64}$/.test(records[0][0]) || createHash('sha256').update(data).digest('hex')!==records[0][0].toLowerCase()) throw Error('Release checksum verification failed');
 }
 
-async function installBinary({version,binDir,platform=os.platform(),architecture=os.arch(),download=downloadFile,run=execFileSync}) {
+// Antivirus/indexing can briefly hold a verified executable after startup on
+// Windows. Retry the same atomic rename; never delete the previous executable.
+async function retryFileOperation(operation,{sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms)),maxRetries=8}={}) {
+  for(let attempt=0;;attempt++) {
+    try { return operation(); } catch(err) {
+      if(!['EBUSY','EPERM','EACCES'].includes(err.code) || attempt>=maxRetries) throw err;
+      await sleep(100*(attempt+1));
+    }
+  }
+}
+
+async function installBinary({version,binDir,platform=os.platform(),architecture=os.arch(),download=downloadFile,run=execFileSync,rename=fs.renameSync,remove=fs.rmSync}) {
   const url=getDownloadUrl(version,platform,architecture);
   const filename=url.slice(url.lastIndexOf('/')+1);
   const base=url.slice(0,url.lastIndexOf('/')+1);
@@ -60,6 +71,7 @@ async function installBinary({version,binDir,platform=os.platform(),architecture
   const stage=fs.mkdtempSync(path.join(binDir,'.install-'));
   const name='mcpsense'+(platform==='win32'?'.exe':'');
   const binary=path.join(stage,name);
+  let installError;
   try {
     const archive=path.join(stage,filename);fs.writeFileSync(archive,data);
     run('tar',['-xf',archive,'-C',stage,name],{shell:false,stdio:'pipe',timeout:30000,windowsHide:true});
@@ -68,10 +80,20 @@ async function installBinary({version,binDir,platform=os.platform(),architecture
     // Check startup before replacing an existing installation. No Go invocation.
     const actual=run(binary,['version'],{shell:false,encoding:'utf8',stdio:'pipe',timeout:15000,windowsHide:true});
     if (String(actual).trim()!==`mcpsense v${version}`) throw Error('Downloaded CLI version does not match the npm package');
-    const destination=path.join(binDir,name);fs.renameSync(binary,destination);
+    const destination=path.join(binDir,name);
+    await retryFileOperation(()=>rename(binary,destination));
     return destination;
+  } catch(err) {
+    installError=err;
+    throw err;
   } finally {
-    fs.rmSync(stage,{recursive:true,force:true});
+    try {
+      remove(stage,{recursive:true,force:true,maxRetries:10,retryDelay:100});
+    } catch(cleanupError) {
+      // Preserve the actual startup/integrity/replacement failure for support.
+      if(!installError) throw cleanupError;
+      installError.message+=` (temporary installation cleanup failed: ${cleanupError.message})`;
+    }
   }
 }
 
@@ -82,7 +104,7 @@ async function main() {
   console.log(`mcpsense v${version} installed successfully: ${binary}`);
 }
 
-module.exports={verifyArchive,getDownloadUrl,installBinary};
+module.exports={verifyArchive,getDownloadUrl,installBinary,retryFileOperation};
 if (require.main===module) main().catch(err=>{
   console.error(`Failed to install mcpsense: ${err.message}`);
   console.error('No Go compiler is required by this installer. Check release availability, network access, and operating-system protection history.');

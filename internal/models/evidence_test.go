@@ -32,7 +32,7 @@ func TestVerificationRequiresEquivalentCompleteCoverage(t *testing.T) {
 	if err != nil || len(v.Resolved) != 1 {
 		t.Fatalf("failed comparison: %+v %v", v, err)
 	}
-	for _, change := range []func(*Report){func(r *Report) { r.Coverage.State = "failed" }, func(r *Report) { r.Coverage.Inputs = []string{"changed"} }, func(r *Report) { r.MinSeverity = "high" }, func(r *Report) { r.TargetHash = "different" }, func(r *Report) { r.Coverage.Advisories = "completed" }} {
+	for _, change := range []func(*Report){func(r *Report) { r.Coverage.State = "failed" }, func(r *Report) { r.Coverage.Inputs = []string{"changed"} }, func(r *Report) { r.MinSeverity = "high" }, func(r *Report) { r.TargetHash = "different" }, func(r *Report) { r.Coverage.Advisories = "completed" }, func(r *Report) { r.Coverage.BaselineFields = []string{"server.instructions"} }, func(r *Report) { r.Coverage.BaselineWarning = "Older baseline has limited coverage." }} {
 		r := evidenceReport(nil)
 		change(r)
 		if _, err := VerifyReports(old, r); err == nil {

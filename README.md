@@ -117,7 +117,7 @@ Redirects and URL userinfo/fragments are rejected. DNS addresses are validated a
 
 ## Findings and reports
 
-There are 32 registered checks: 5 manifest/spec checks, 16 security heuristics, 3 skill checks, 1 advisory check, and 7 quality checks. Seven additional drift IDs are emitted during baseline comparison. Registry counts are not security-coverage guarantees.
+There are 32 registered checks: 5 manifest/spec checks, 16 security heuristics, 3 skill checks, 1 advisory check, and 7 quality checks. Thirteen additional drift IDs are emitted during baseline comparison. Registry counts are not security-coverage guarantees.
 
 Checks include prompt-injection patterns, suspicious execution/URL/file-access patterns, Unicode and cross-tool poisoning signals, annotation inconsistencies, credential exposure, package references, schemas and tool quality. A shell metacharacter or changed annotation alone does not prove command execution or permission escalation. OWASP mappings are advisory classifications.
 
@@ -142,6 +142,10 @@ Exit codes: **0** completed without reported high/critical findings, **1** compl
 ## Baselines and privacy
 
 Manifest/config/live scans and directory scans with metadata save a baseline by default under `~/.mcpsense/snapshots/`. `--baseline` selects a file; `--no-baseline` disables this behavior; `--update-baseline` explicitly accepts reviewed changes.
+
+Baseline comparisons flag new tools/resources/prompts, changed tool descriptions, input/output schemas, titles and annotations, changed resource/prompt metadata, changed server descriptions/instructions, removed authentication declarations and changes to existing client server configurations. A change requests review; it does not establish malicious intent. Removed tools/resources/prompts, new or removed client server entries, environment values, runtime responses, resource contents, prompt bodies and unknown extensions are not compared.
+
+New format-2 baselines include a versioned metadata extension. Existing format-2 files remain usable for their captured fields; terminal, JSON and SARIF reports explicitly warn that server text, tool titles/output schemas and prompts were not compared. After reviewing the actual target, use `--update-baseline` to capture these fields. Comparisons never silently upgrade a baseline. JSON/SARIF `coverage.baseline_fields` lists the evaluated comparisons, and remediation verification refuses differing baseline scope. Unsupported future extensions fail visibly.
 
 Snapshots are capped at 4 MiB; oversized saves fail, and verification accepts regular report files up to 16 MiB. Format 2 stores digests and minimal booleans instead of raw tool descriptions, commands, arguments, target URLs, resource names or environment values. Environment values are excluded even from the config digest. Raw before/after text is not exported; `--show-diff` is a compatibility flag. Digests support change comparison, not encryption: low-entropy values may still be guessable. Do not commit private baselines without review.
 

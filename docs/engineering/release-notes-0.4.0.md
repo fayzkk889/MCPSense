@@ -28,6 +28,8 @@ This minor release adds modern MCP metadata discovery, explicit coverage and off
 - Recurring compiled-CLI product journeys and installer failure/integrity tests on Linux/Windows.
 - A non-overwriting `init --example` offline walkthrough, conventional `--version`, and explicit `version --check` comparison of public GitHub/npm versions.
 - Detector fingerprints that reject before/after comparisons across changed or missing scanner identities. This is an equivalence guard, not a report signature.
+- Baseline comparisons for server text, tool titles/output schemas/annotations, existing resource metadata and prompt additions/edits. Existing format-2 baselines retain their captured comparisons with an explicit missing-field warning; expanding scope requires a reviewed `--update-baseline`. Drift implementation is included in detector identity.
+- Bounded retries for transient executable replacement/cleanup locks during npm installation, preserving prior installations and original failure messages. Node 14.14+ is required for the filesystem API already used by the installer.
 - Enforced beginner/experienced-user scenarios, four labelled description sets, and live poisoned-instruction checks over legacy and modern discovery.
 
 ## Compatibility changes

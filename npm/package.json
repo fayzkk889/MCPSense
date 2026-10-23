@@ -31,7 +31,7 @@
     "url": "https://github.com/fayzkk889/MCPSense/issues"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.14"
   },
   "os": [
     "darwin",
