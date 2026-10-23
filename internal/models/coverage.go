@@ -9,6 +9,8 @@ type Coverage struct {
 	Protocol        string   `json:"protocol,omitempty"`
 	Baseline        string   `json:"baseline"`
 	BaselineHash    string   `json:"baseline_hash,omitempty"`
+	BaselineFields  []string `json:"baseline_fields,omitempty"`
+	BaselineWarning string   `json:"baseline_warning,omitempty"`
 	State           string   `json:"state"`
 	Surfaces        []string `json:"surfaces"`
 	SelectedChecks  []string `json:"selected_checks"`

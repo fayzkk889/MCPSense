@@ -59,6 +59,12 @@ var checkToOWASP = map[string]string{
 	"DRIFT-005": "MCP02:2025", // New resource exposed -> Privilege Escalation via Scope Creep
 	"DRIFT-006": "MCP07:2025", // Auth removed or weakened -> Insufficient Auth & Authz
 	"DRIFT-007": "MCP02:2025", // Config command/args/env changed -> Privilege Escalation via Scope Creep
+	"DRIFT-008": "MCP03:2025", // Tool annotations changed
+	"DRIFT-009": "MCP03:2025", // Existing resource metadata changed
+	"DRIFT-010": "MCP03:2025", // Tool title or output schema changed
+	"DRIFT-011": "MCP03:2025", // Server description or instructions changed
+	"DRIFT-012": "MCP02:2025", // New prompt metadata
+	"DRIFT-013": "MCP03:2025", // Prompt description or arguments changed
 
 	// Skill scanning checks
 	"SKILL-001": "MCP06:2025", // Prompt injection in skill -> Intent Flow Subversion

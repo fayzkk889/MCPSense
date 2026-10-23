@@ -268,6 +268,7 @@ CLI flags override config file values.`,
 								return err
 							}
 							rep.Coverage.BaselineHash = models.HashIdentity(string(baselineData))
+							rep.Coverage.BaselineFields, rep.Coverage.BaselineWarning = drift.ComparisonCoverage(prev, current)
 							driftFindings := drift.Diff(prev, current)
 							for i := range driftFindings {
 								if ctx.ManifestFile != "" {

@@ -46,7 +46,7 @@ func Load(path string) (*Snapshot, error) {
 	if err := json.Unmarshal(data, &snap); err != nil {
 		return nil, fmt.Errorf("parsing baseline %q: %w", path, err)
 	}
-	if snap.FormatVersion != FormatVersion {
+	if snap.FormatVersion != FormatVersion || !supportedMetadata(&snap) {
 		return nil, fmt.Errorf("unsupported baseline format; review target and recreate with --update-baseline (old baselines may retain secrets)")
 	}
 	return &snap, nil
