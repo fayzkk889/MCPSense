@@ -1,0 +1,1698 @@
+{
+  "date": "2026-10-23",
+  "sourceCommit": "dfdefd7c289a1b8fdc6522e40c21bbf107ec8c1c",
+  "ciRun": 39831488309,
+  "method": "Agent-executed synthetic product walkthrough, not external-user or representative field evaluation. Production rules unchanged. Accuracy fixtures omit optional behavioral annotations.",
+  "windows": {
+    "binary": "C:\\dev\\MCPSense\\bin\\product-acceptance-2026-10-23\\artifacts\\mcpsense_windows_amd64_v1\\mcpsense.exe",
+    "runtime": "win32",
+    "version": "mcpsense v0.4.0-SNAPSHOT-dfdefd7",
+    "candidateSHA256": "43b6beeee795e8afb996bcc3c0588fb93d8ad83abf4748da3e3339cc12e5e967",
+    "results": [
+      {
+        "name": "Installed CLI starts",
+        "status": "PASS",
+        "detail": "mcpsense v0.4.0-SNAPSHOT-dfdefd7"
+      },
+      {
+        "name": "Discover commands",
+        "status": "PASS",
+        "detail": "Help lists the main workflows"
+      },
+      {
+        "name": "Ordinary manifest stays quiet",
+        "status": "PASS",
+        "detail": "findings=0, score=100"
+      },
+      {
+        "name": "Scope and uncertainty are visible",
+        "status": "PASS",
+        "detail": "{\"inputs\":[\"c63b2a0a5147f495c49044cdeefad49e28b8f75f713bc7346e30d4bc48e72b2a\"],\"protocol\":\"2025-11-25\",\"baseline\":\"skipped\",\"state\":\"completed\",\"surfaces\":[\"manifest\"],\"selected_checks\":[\"SPEC-001\",\"SPEC-002\",\"SPEC-003\",\"SPEC-004\",\"SPEC-005\",\"SEC-001\",\"SEC-002\",\"SEC-003\",\"SEC-004\",\"SEC-005\",\"SEC-006\",\"SEC-007\",\"SEC-008\",\"SEC-009\",\"SEC-010\",\"SEC-011\",\"SEC-012\",\"SEC-013\",\"SEC-014\",\"SEC-015\",\"SEC-016\",\"SKILL-001\",\"SKILL-002\",\"SKILL-003\",\"CVE-001\",\"QUAL-001\",\"QUAL-002\",\"QUAL-003\",\"QUAL-004\",\"QUAL-005\",\"QUAL-006\",\"QUAL-007\"],\"skipped_checks\":[],\"advisories\":\"skipped\"}"
+      },
+      {
+        "name": "Unknown rule fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, scan failed: unknown check ID \"SEC-999\""
+      },
+      {
+        "name": "Conflicting filters fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, scan failed: checks and exclude cannot be combined"
+      },
+      {
+        "name": "Invalid severity fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, unknown severity"
+      },
+      {
+        "name": "Invalid mode fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, unknown mode \"banana\", use: static, live, manifest, config, skill, auto"
+      },
+      {
+        "name": "Invalid report format fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, unknown output format"
+      },
+      {
+        "name": "Unimplemented active probing fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, active probes are not implemented; scanning enumerates metadata only"
+      },
+      {
+        "name": "broken-json does not look clean",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "empty-json does not look clean",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "wrong-shape does not look clean",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Empty directory is not falsely completed",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Configuration scan never starts server",
+        "status": "PASS",
+        "detail": "Marker absent"
+      },
+      {
+        "name": "Credential value stays private",
+        "status": "PASS",
+        "detail": "Generic API_KEY detected; synthetic value absent"
+      },
+      {
+        "name": "Credential names and ordinary names distinguished",
+        "status": "PASS",
+        "detail": "[{\"key\":\"API_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"APIKEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"ACCESS_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"OPENAI_API_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"GITHUB_TOKEN\",\"flagged\":true,\"leaked\":false},{\"key\":\"DATABASE_PASSWORD\",\"flagged\":true,\"leaked\":false},{\"key\":\"KEYBOARD_LAYOUT\",\"flagged\":false,\"leaked\":false},{\"key\":\"PUBLIC_KEY\",\"flagged\":false,\"leaked\":false},{\"key\":\"MONKEY\",\"flagged\":false,\"leaked\":false}]"
+      },
+      {
+        "name": "Literal arguments are not asserted to be executable injection",
+        "status": "FAIL",
+        "detail": "MCP server entry \"records\" has args containing shell metacharacters: [[REDACTED] [REDACTED] [REDACTED] [REDACTED] [REDACTED]]. Arguments are passed to shell execution by most MCP clients, enabling command injection."
+      },
+      {
+        "name": "Broken discovered config fails the whole scan",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Real before-after remediation verifies",
+        "status": "PASS",
+        "detail": "{\"state\":\"completed\",\"resolved\":[\"8534d0374036058f5d684081ac4a13cf57366507c824114fe3e2f991ac441a1e\",\"f7f4fb181bfcc7c304be570746e4bfd65ddba7e1fb0749a5c7b95a21338cd8c7\"],\"persistent\":[],\"new\":[],\"limitation\":\"Resolved means the selected checks no longer detected this rule/component group in equivalent completed coverage. This is not proof of exploit prevention, absence of compromise, or authenticity of unsigned reports.\"}"
+      },
+      {
+        "name": "Different target cannot claim remediation",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Baseline minimizes private metadata",
+        "status": "PASS",
+        "detail": "Raw unique description absent from saved baseline"
+      },
+      {
+        "name": "Unsupported baseline fails visibly",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Oversized input fails visibly",
+        "status": "PASS",
+        "detail": "exit=2"
+      }
+    ],
+    "credentialResults": [
+      {
+        "key": "API_KEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "APIKEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "ACCESS_KEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "OPENAI_API_KEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "GITHUB_TOKEN",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "DATABASE_PASSWORD",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "KEYBOARD_LAYOUT",
+        "flagged": false,
+        "leaked": false
+      },
+      {
+        "key": "PUBLIC_KEY",
+        "flagged": false,
+        "leaked": false
+      },
+      {
+        "key": "MONKEY",
+        "flagged": false,
+        "leaked": false
+      }
+    ],
+    "benchmarks": [
+      {
+        "name": "historical",
+        "sha256": "ca0fb5fcb3ade072d2566ba14ae1287105f0de7848f75da84271ecaf6daca015",
+        "size": 40,
+        "TP": 17,
+        "FP": 5,
+        "TN": 15,
+        "FN": 3,
+        "precision": 0.7727272727272727,
+        "recall": 0.85,
+        "specificity": 0.75,
+        "accuracy": 0.8,
+        "anySecuritySignal": {
+          "TP": 18,
+          "FP": 5,
+          "TN": 15,
+          "FN": 2,
+          "precision": 0.782608695652174,
+          "recall": 0.9,
+          "accuracy": 0.825
+        },
+        "highCriticalExit": {
+          "TP": 18,
+          "FP": 5,
+          "TN": 15,
+          "FN": 2,
+          "precision": 0.782608695652174,
+          "recall": 0.9,
+          "accuracy": 0.825
+        },
+        "hostileWithNoFindings": []
+      },
+      {
+        "name": "holdout",
+        "sha256": "74926b2b02144feb8ce8a7a7745072d025fc5ddea94dcf35378cae61d6dbf45e",
+        "size": 60,
+        "TP": 8,
+        "FP": 7,
+        "TN": 23,
+        "FN": 22,
+        "precision": 0.5333333333333333,
+        "recall": 0.26666666666666666,
+        "specificity": 0.7666666666666667,
+        "accuracy": 0.5166666666666667,
+        "anySecuritySignal": {
+          "TP": 16,
+          "FP": 9,
+          "TN": 21,
+          "FN": 14,
+          "precision": 0.64,
+          "recall": 0.5333333333333333,
+          "accuracy": 0.6166666666666667
+        },
+        "highCriticalExit": {
+          "TP": 16,
+          "FP": 9,
+          "TN": 21,
+          "FN": 14,
+          "precision": 0.64,
+          "recall": 0.5333333333333333,
+          "accuracy": 0.6166666666666667
+        },
+        "hostileWithNoFindings": [
+          "h01",
+          "h10"
+        ]
+      }
+    ],
+    "invocationCount": 133
+  },
+  "linux": {
+    "binary": "C:\\dev\\MCPSense\\bin\\product-acceptance-2026-10-23\\artifacts\\mcpsense_linux_amd64_v1\\mcpsense",
+    "runtime": "WSL Ubuntu",
+    "version": "mcpsense v0.4.0-SNAPSHOT-dfdefd7",
+    "candidateSHA256": "38da05b5bb470540d81015f92e8b4e6749474fa48e5299fbb8190661b43187ea",
+    "results": [
+      {
+        "name": "Installed CLI starts",
+        "status": "PASS",
+        "detail": "mcpsense v0.4.0-SNAPSHOT-dfdefd7"
+      },
+      {
+        "name": "Discover commands",
+        "status": "PASS",
+        "detail": "Help lists the main workflows"
+      },
+      {
+        "name": "Ordinary manifest stays quiet",
+        "status": "PASS",
+        "detail": "findings=0, score=100"
+      },
+      {
+        "name": "Scope and uncertainty are visible",
+        "status": "PASS",
+        "detail": "{\"inputs\":[\"2cba0da838faf344501cc464b0a6bb633464ab7dc0aeaa294225e736f1b5018a\"],\"protocol\":\"2025-11-25\",\"baseline\":\"skipped\",\"state\":\"completed\",\"surfaces\":[\"manifest\"],\"selected_checks\":[\"SPEC-001\",\"SPEC-002\",\"SPEC-003\",\"SPEC-004\",\"SPEC-005\",\"SEC-001\",\"SEC-002\",\"SEC-003\",\"SEC-004\",\"SEC-005\",\"SEC-006\",\"SEC-007\",\"SEC-008\",\"SEC-009\",\"SEC-010\",\"SEC-011\",\"SEC-012\",\"SEC-013\",\"SEC-014\",\"SEC-015\",\"SEC-016\",\"SKILL-001\",\"SKILL-002\",\"SKILL-003\",\"CVE-001\",\"QUAL-001\",\"QUAL-002\",\"QUAL-003\",\"QUAL-004\",\"QUAL-005\",\"QUAL-006\",\"QUAL-007\"],\"skipped_checks\":[],\"advisories\":\"skipped\"}"
+      },
+      {
+        "name": "Unknown rule fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, scan failed: unknown check ID \"SEC-999\""
+      },
+      {
+        "name": "Conflicting filters fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, scan failed: checks and exclude cannot be combined"
+      },
+      {
+        "name": "Invalid severity fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, unknown severity"
+      },
+      {
+        "name": "Invalid mode fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, unknown mode \"banana\", use: static, live, manifest, config, skill, auto"
+      },
+      {
+        "name": "Invalid report format fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, unknown output format"
+      },
+      {
+        "name": "Unimplemented active probing fails visibly",
+        "status": "PASS",
+        "detail": "exit=2, active probes are not implemented; scanning enumerates metadata only"
+      },
+      {
+        "name": "broken-json does not look clean",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "empty-json does not look clean",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "wrong-shape does not look clean",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Empty directory is not falsely completed",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Configuration scan never starts server",
+        "status": "PASS",
+        "detail": "Marker absent"
+      },
+      {
+        "name": "Credential value stays private",
+        "status": "PASS",
+        "detail": "Generic API_KEY detected; synthetic value absent"
+      },
+      {
+        "name": "Credential names and ordinary names distinguished",
+        "status": "PASS",
+        "detail": "[{\"key\":\"API_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"APIKEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"ACCESS_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"OPENAI_API_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"GITHUB_TOKEN\",\"flagged\":true,\"leaked\":false},{\"key\":\"DATABASE_PASSWORD\",\"flagged\":true,\"leaked\":false},{\"key\":\"KEYBOARD_LAYOUT\",\"flagged\":false,\"leaked\":false},{\"key\":\"PUBLIC_KEY\",\"flagged\":false,\"leaked\":false},{\"key\":\"MONKEY\",\"flagged\":false,\"leaked\":false}]"
+      },
+      {
+        "name": "Literal arguments are not asserted to be executable injection",
+        "status": "FAIL",
+        "detail": "MCP server entry \"records\" has args containing shell metacharacters: [[REDACTED] [REDACTED] [REDACTED] [REDACTED] [REDACTED]]. Arguments are passed to shell execution by most MCP clients, enabling command injection."
+      },
+      {
+        "name": "Broken discovered config fails the whole scan",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Real before-after remediation verifies",
+        "status": "PASS",
+        "detail": "{\"state\":\"completed\",\"resolved\":[\"3a015a746e2d0e01e0be216426da856ddf958306e6c452ce5ae38c540b1389f7\",\"e2f7e789706ea68d0de77da6eadc7262f5b064d503482b0b9ca42859a3b66fbe\"],\"persistent\":[],\"new\":[],\"limitation\":\"Resolved means the selected checks no longer detected this rule/component group in equivalent completed coverage. This is not proof of exploit prevention, absence of compromise, or authenticity of unsigned reports.\"}"
+      },
+      {
+        "name": "Different target cannot claim remediation",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Baseline minimizes private metadata",
+        "status": "PASS",
+        "detail": "Raw unique description absent from saved baseline"
+      },
+      {
+        "name": "Unsupported baseline fails visibly",
+        "status": "PASS",
+        "detail": "exit=2"
+      },
+      {
+        "name": "Oversized input fails visibly",
+        "status": "PASS",
+        "detail": "exit=2"
+      }
+    ],
+    "credentialResults": [
+      {
+        "key": "API_KEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "APIKEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "ACCESS_KEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "OPENAI_API_KEY",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "GITHUB_TOKEN",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "DATABASE_PASSWORD",
+        "flagged": true,
+        "leaked": false
+      },
+      {
+        "key": "KEYBOARD_LAYOUT",
+        "flagged": false,
+        "leaked": false
+      },
+      {
+        "key": "PUBLIC_KEY",
+        "flagged": false,
+        "leaked": false
+      },
+      {
+        "key": "MONKEY",
+        "flagged": false,
+        "leaked": false
+      }
+    ],
+    "benchmarks": [
+      {
+        "name": "historical",
+        "sha256": "ca0fb5fcb3ade072d2566ba14ae1287105f0de7848f75da84271ecaf6daca015",
+        "size": 40,
+        "TP": 17,
+        "FP": 5,
+        "TN": 15,
+        "FN": 3,
+        "precision": 0.7727272727272727,
+        "recall": 0.85,
+        "specificity": 0.75,
+        "accuracy": 0.8,
+        "anySecuritySignal": {
+          "TP": 18,
+          "FP": 5,
+          "TN": 15,
+          "FN": 2,
+          "precision": 0.782608695652174,
+          "recall": 0.9,
+          "accuracy": 0.825
+        },
+        "highCriticalExit": {
+          "TP": 18,
+          "FP": 5,
+          "TN": 15,
+          "FN": 2,
+          "precision": 0.782608695652174,
+          "recall": 0.9,
+          "accuracy": 0.825
+        },
+        "hostileWithNoFindings": []
+      },
+      {
+        "name": "holdout",
+        "sha256": "74926b2b02144feb8ce8a7a7745072d025fc5ddea94dcf35378cae61d6dbf45e",
+        "size": 60,
+        "TP": 8,
+        "FP": 7,
+        "TN": 23,
+        "FN": 22,
+        "precision": 0.5333333333333333,
+        "recall": 0.26666666666666666,
+        "specificity": 0.7666666666666667,
+        "accuracy": 0.5166666666666667,
+        "anySecuritySignal": {
+          "TP": 16,
+          "FP": 9,
+          "TN": 21,
+          "FN": 14,
+          "precision": 0.64,
+          "recall": 0.5333333333333333,
+          "accuracy": 0.6166666666666667
+        },
+        "highCriticalExit": {
+          "TP": 16,
+          "FP": 9,
+          "TN": 21,
+          "FN": 14,
+          "precision": 0.64,
+          "recall": 0.5333333333333333,
+          "accuracy": 0.6166666666666667
+        },
+        "hostileWithNoFindings": [
+          "h01",
+          "h10"
+        ]
+      }
+    ],
+    "invocationCount": 133
+  },
+  "live": [
+    {
+      "name": "modern",
+      "status": "PASS",
+      "exit": 1,
+      "methods": [
+        "server/discover",
+        "tools/list"
+      ],
+      "stderr": ""
+    },
+    {
+      "name": "legacy",
+      "status": "PASS",
+      "exit": 1,
+      "methods": [
+        "server/discover",
+        "initialize",
+        "notifications/initialized",
+        "tools/list"
+      ],
+      "stderr": ""
+    },
+    {
+      "name": "sse",
+      "status": "PASS",
+      "exit": 1,
+      "methods": [
+        "server/discover",
+        "tools/list"
+      ],
+      "stderr": ""
+    },
+    {
+      "name": "pagination",
+      "status": "PASS",
+      "exit": 1,
+      "methods": [
+        "server/discover",
+        "tools/list",
+        "tools/list"
+      ],
+      "stderr": ""
+    },
+    {
+      "name": "auth",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: modern discovery failed (use --protocol legacy only for an authorized legacy peer): MCP HTTP status 401\n"
+    },
+    {
+      "name": "redirect",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: modern discovery failed (use --protocol legacy only for an authorized legacy peer): MCP HTTP transport failed\n"
+    },
+    {
+      "name": "invalid-json",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: modern discovery failed (use --protocol legacy only for an authorized legacy peer): invalid MCP JSON response\n"
+    },
+    {
+      "name": "wrong-id",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: modern discovery failed (use --protocol legacy only for an authorized legacy peer): invalid MCP JSON response\n"
+    },
+    {
+      "name": "wrong-shape",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover",
+        "tools/list"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: missing tools array\n"
+    },
+    {
+      "name": "list-error",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover",
+        "tools/list"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: tools/list: MCP JSON-RPC error -32603\n"
+    },
+    {
+      "name": "repeated-cursor",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover",
+        "tools/list",
+        "tools/list"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: repeated pagination cursor\n"
+    },
+    {
+      "name": "oversized",
+      "status": "PASS",
+      "exit": 2,
+      "methods": [
+        "server/discover"
+      ],
+      "stderr": "scan failed: live HTTP discovery failed: modern discovery failed (use --protocol legacy only for an authorized legacy peer): MCP response exceeds size limit\n"
+    },
+    {
+      "name": "No tools called in any session",
+      "status": "PASS"
+    }
+  ],
+  "installation": {
+    "version": "0.4.0-SNAPSHOT-dfdefd7",
+    "archiveSHA256": "1b69e6e111d21619ee4bd04ed4922fe860e4c45236b9e49fcc3c10bb6176c2f9",
+    "binarySHA256": "43b6beeee795e8afb996bcc3c0588fb93d8ad83abf4748da3e3339cc12e5e967",
+    "goAbsent": true,
+    "installedVersion": "mcpsense v0.4.0-SNAPSHOT-dfdefd7",
+    "productJourneys": "14 PASS",
+    "corruptUpgradeRejected": true,
+    "previousInstallationPreserved": true,
+    "downloadSource": "Exact merged CI artifact, not public release URL"
+  },
+  "historicalCases": [
+    {
+      "id": "p01",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p02",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p03",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p04",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p05",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p06",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p07",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 50
+    },
+    {
+      "id": "p08",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001",
+        "SEC-011"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "p09",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001",
+        "SEC-011"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "p10",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-012",
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "p11",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001",
+        "SEC-011"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "p12",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p13",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p14",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "p15",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p16",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "p17",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p18",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "p19",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "p20",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "n01",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n02",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n03",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n04",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n05",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n06",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "n07",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "n08",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "n09",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "n10",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "n11",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n12",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n13",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "n14",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "n15",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "n16",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n17",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "n18",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "n19",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "n20",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    }
+  ],
+  "holdoutCases": [
+    {
+      "id": "h01",
+      "family": "override",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "h02",
+      "family": "override",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h03",
+      "family": "authority",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h04",
+      "family": "exfiltration",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h05",
+      "family": "exfiltration",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h06",
+      "family": "answer manipulation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h07",
+      "family": "cross-tool",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h08",
+      "family": "authority",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "h09",
+      "family": "override",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "h10",
+      "family": "concealment",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "h11",
+      "family": "persistence",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h12",
+      "family": "exfiltration",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "h13",
+      "family": "answer manipulation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h14",
+      "family": "social engineering",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h15",
+      "family": "obfuscation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h16",
+      "family": "obfuscation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-010"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 88
+    },
+    {
+      "id": "h17",
+      "family": "obfuscation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-009"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h18",
+      "family": "multilingual",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h19",
+      "family": "multilingual",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h20",
+      "family": "multilingual",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h21",
+      "family": "context escape",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "h22",
+      "family": "context escape",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h23",
+      "family": "tool priority",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-012",
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "h24",
+      "family": "role replacement",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "h25",
+      "family": "exfiltration",
+      "hostile": true,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "TP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h26",
+      "family": "fabricated authorization",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "FN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "h27",
+      "family": "permission escalation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h28",
+      "family": "answer manipulation",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h29",
+      "family": "concealment",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "h30",
+      "family": "prompt extraction",
+      "hostile": true,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "FN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b01",
+      "family": "ordinary read",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b02",
+      "family": "ordinary write",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b03",
+      "family": "security documentation",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "b04",
+      "family": "security documentation",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b05",
+      "family": "security documentation",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "b06",
+      "family": "defensive restriction",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001",
+        "SEC-011"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 48
+    },
+    {
+      "id": "b07",
+      "family": "defensive restriction",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "b08",
+      "family": "authorized administration",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b09",
+      "family": "authorized administration",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b10",
+      "family": "security analysis",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b11",
+      "family": "ordinary search",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "b12",
+      "family": "device administration",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "b13",
+      "family": "literal markup",
+      "hostile": false,
+      "predicted": true,
+      "securityRules": [
+        "SEC-001"
+      ],
+      "outcome": "FP",
+      "exit": 1,
+      "score": 75
+    },
+    {
+      "id": "b14",
+      "family": "privacy",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b15",
+      "family": "privacy",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "TN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "b16",
+      "family": "ordinary communication",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b17",
+      "family": "ordinary read",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b18",
+      "family": "ordinary query",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b19",
+      "family": "ordinary cryptography",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b20",
+      "family": "ordinary maintenance",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b21",
+      "family": "ordinary navigation",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b22",
+      "family": "security documentation",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [
+        "SEC-011"
+      ],
+      "outcome": "TN",
+      "exit": 1,
+      "score": 73
+    },
+    {
+      "id": "b23",
+      "family": "ordinary comparison",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b24",
+      "family": "ordinary read",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b25",
+      "family": "ordinary data",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    },
+    {
+      "id": "b26",
+      "family": "multilingual",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b27",
+      "family": "multilingual",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b28",
+      "family": "multilingual",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b29",
+      "family": "defensive restriction",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 98
+    },
+    {
+      "id": "b30",
+      "family": "ordinary update",
+      "hostile": false,
+      "predicted": false,
+      "securityRules": [],
+      "outcome": "TN",
+      "exit": 0,
+      "score": 100
+    }
+  ]
+}
