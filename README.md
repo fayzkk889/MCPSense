@@ -10,6 +10,8 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 
 This checkout describes the **0.4.0 candidate**. The linked npm/GitHub badges show the published versions; changes on main are delivered by package commands only after a release is published. Run `mcpsense version` after installing. The candidate also supports `mcpsense version --check` to compare both public channels explicitly; older versions may not have that flag.
 
+**Release readiness:** a subsequent [beginner/expert retest](docs/engineering/persona-retest-2026-10-23.md) found first-run gaps, missed attack paraphrases, unexamined metadata fields and source-analysis false alarms. Earlier corpus scores do not establish general detection reliability; broad release promotion remains on hold.
+
 ## Start safely
 
 Choose one installation route for a published release:

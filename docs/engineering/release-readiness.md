@@ -1,5 +1,9 @@
 # Release readiness — proposed 0.4.0
 
+## Superseding persona retest
+
+The [beginner/expert retest](persona-retest-2026-10-23.md) on main5f94d78 found eight new hostile paraphrases missed, four benign false alarms in16 stress descriptions, five unexamined metadata-field probes, safe argv source called critical injection, and public npm-only Windows installation still failing on0.3.0. These are corroborated Windows/Linux observations, not a field-accuracy estimate. **Broad-release acceptance remains blocked despite green engineering CI and the earlier140-case results.** Read that report before interpreting the historical checkpoints below.
+
 ## Current product acceptance — 23 October 2026
 
 The follow-up [PR7](https://github.com/fayzkk889/MCPSense/pull/7) contains the pushed detection, config evidence, detector-identity verification and onboarding fixes. See its current checks for the authoritative final matrix. The [improvement report](product-improvements-2026-10-23.md) supersedes the pre-fix verdict: the final local evaluation caught all70 hostile descriptions across140 labelled cases, with two benign false alarms confined to the separate40-case validation set. All24 expanded product assertions passed. These are small authored examples, not field accuracy or universal protection. Public channel/package availability remains a separate gate.
