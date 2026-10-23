@@ -75,6 +75,6 @@ for(const [name,file] of corpora){
 const summary={binary,runtime:wsl?'WSL '+wsl:process.platform,version:version.stdout.trim(),candidateSHA256:createHash('sha256').update(fs.readFileSync(binary)).digest('hex'),results,credentialResults,benchmarks:benchmarks.map(b=>({...b,records:undefined})),invocationCount:invocations.length};
 fs.writeFileSync(path.join(root,'acceptance-summary.json'),JSON.stringify(summary,null,2));
 console.log('Evidence: '+root);console.log('Product assertions: '+results.filter(r=>r.status==='PASS').length+' passed, '+results.filter(r=>r.status==='FAIL').length+' failed');
-const detectionFailures=process.env.MCPSENSE_ENFORCE_PRODUCT?benchmarks.filter(b=>b.anySecuritySignal.FN>0||b.anySecuritySignal.FP>(b.name==='validation'?2:0)):[];
+const detectionFailures=process.env.MCPSENSE_ENFORCE_PRODUCT?benchmarks.filter(b=>b.FN>0||b.FP>(b.name==='validation'?2:0)||b.anySecuritySignal.FN>0||b.anySecuritySignal.FP>(b.name==='validation'?2:0)):[];
 if(detectionFailures.length)console.error('Detection regression gate failed: '+detectionFailures.map(b=>b.name).join(', '));
 process.exitCode=results.some(r=>r.status==='FAIL')||detectionFailures.length?1:0;

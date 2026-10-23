@@ -1,0 +1,289 @@
+{
+  "evaluatedCommit": "eda1d703eb38eeaaa190b7c2de210be50632d14e",
+  "runtime": "WSL Ubuntu",
+  "version": "mcpsense v0.4.0",
+  "binarySHA256": "9b3fc211a15f4853e22a9a0a97352ea78610b0dd2ab9fe7a0a0cdcadab61f4d9",
+  "invocations": 197,
+  "results": [
+    {
+      "name": "Installed CLI starts",
+      "status": "PASS",
+      "detail": "mcpsense v0.4.0"
+    },
+    {
+      "name": "Discover commands",
+      "status": "PASS",
+      "detail": "Help lists the main workflows"
+    },
+    {
+      "name": "Ordinary manifest stays quiet",
+      "status": "PASS",
+      "detail": "findings=0, score=100"
+    },
+    {
+      "name": "Scope and uncertainty are visible",
+      "status": "PASS",
+      "detail": "{\"detector_profile\":\"254e1f4fbbda9eb02fae6c2feca75c167a3ac818beddb8656ebd8d7a86d7c0fe\",\"metadata_fields\":[\"server.description\",\"server.instructions\",\"tools.names_titles_descriptions\",\"tools.inputSchema_strings_keys\",\"tools.outputSchema_strings_keys\",\"tools.annotation_titles\",\"resources.names_uris_descriptions\",\"prompts.names_descriptions_arguments\"],\"unassessed\":[\"runtime_behavior_and_tool_results\",\"resource_contents_and_prompt_bodies\",\"unrecognized_metadata_extensions\",\"general_semantic_understanding\"],\"inputs\":[\"022f3dccb1a0dd04787fff7d7d36e93cd36d12c0b76c7b52aa9482472fed1d2d\"],\"protocol\":\"2025-11-25\",\"baseline\":\"skipped\",\"state\":\"completed\",\"surfaces\":[\"manifest\"],\"selected_checks\":[\"SPEC-001\",\"SPEC-002\",\"SPEC-003\",\"SPEC-004\",\"SPEC-005\",\"SEC-001\",\"SEC-002\",\"SEC-003\",\"SEC-004\",\"SEC-005\",\"SEC-006\",\"SEC-007\",\"SEC-008\",\"SEC-009\",\"SEC-010\",\"SEC-011\",\"SEC-012\",\"SEC-013\",\"SEC-014\",\"SEC-015\",\"SEC-016\",\"SKILL-001\",\"SKILL-002\",\"SKILL-003\",\"CVE-001\",\"QUAL-001\",\"QUAL-002\",\"QUAL-003\",\"QUAL-004\",\"QUAL-005\",\"QUAL-006\",\"QUAL-007\"],\"skipped_checks\":[],\"advisories\":\"skipped\"}"
+    },
+    {
+      "name": "Unknown rule fails visibly",
+      "status": "PASS",
+      "detail": "exit=2, scan failed: unknown check ID \"SEC-999\""
+    },
+    {
+      "name": "Conflicting filters fails visibly",
+      "status": "PASS",
+      "detail": "exit=2, scan failed: checks and exclude cannot be combined"
+    },
+    {
+      "name": "Invalid severity fails visibly",
+      "status": "PASS",
+      "detail": "exit=2, unknown severity"
+    },
+    {
+      "name": "Invalid mode fails visibly",
+      "status": "PASS",
+      "detail": "exit=2, unknown mode \"banana\", use: static, live, manifest, config, skill, auto"
+    },
+    {
+      "name": "Invalid report format fails visibly",
+      "status": "PASS",
+      "detail": "exit=2, unknown output format"
+    },
+    {
+      "name": "Unimplemented active probing fails visibly",
+      "status": "PASS",
+      "detail": "exit=2, active probes are not implemented; scanning enumerates metadata only"
+    },
+    {
+      "name": "broken-json does not look clean",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "empty-json does not look clean",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "wrong-shape does not look clean",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "Empty directory is not falsely completed",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "Configuration scan never starts server",
+      "status": "PASS",
+      "detail": "Marker absent"
+    },
+    {
+      "name": "Credential value stays private",
+      "status": "PASS",
+      "detail": "Generic API_KEY detected; synthetic value absent"
+    },
+    {
+      "name": "Credential names and ordinary names distinguished",
+      "status": "PASS",
+      "detail": "[{\"key\":\"API_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"APIKEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"ACCESS_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"OPENAI_API_KEY\",\"flagged\":true,\"leaked\":false},{\"key\":\"GITHUB_TOKEN\",\"flagged\":true,\"leaked\":false},{\"key\":\"DATABASE_PASSWORD\",\"flagged\":true,\"leaked\":false},{\"key\":\"KEYBOARD_LAYOUT\",\"flagged\":false,\"leaked\":false},{\"key\":\"PUBLIC_KEY\",\"flagged\":false,\"leaked\":false},{\"key\":\"MONKEY\",\"flagged\":false,\"leaked\":false}]"
+    },
+    {
+      "name": "Literal arguments are not asserted to be executable injection",
+      "status": "PASS",
+      "detail": "No injection assertion"
+    },
+    {
+      "name": "Broken discovered config fails the whole scan",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "Real before-after remediation verifies",
+      "status": "PASS",
+      "detail": "{\"state\":\"completed\",\"resolved\":[\"76da443b732fb0b29649b9ea15167aeb6bb6b6f729fcf651aaed327c5c89d32e\",\"f382e213ee9c360f902ef0839479d64c6affe225b938d5d07e8020327a770a3c\"],\"persistent\":[],\"new\":[],\"limitation\":\"Resolved means the selected checks no longer detected this rule/component group in equivalent completed coverage. This is not proof of exploit prevention, absence of compromise, or authenticity of unsigned reports.\"}"
+    },
+    {
+      "name": "Different target cannot claim remediation",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "Baseline minimizes private metadata",
+      "status": "PASS",
+      "detail": "Raw unique description absent from saved baseline"
+    },
+    {
+      "name": "Unsupported baseline fails visibly",
+      "status": "PASS",
+      "detail": "exit=2"
+    },
+    {
+      "name": "Oversized input fails visibly",
+      "status": "PASS",
+      "detail": "exit=2"
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "historical",
+      "sha256": "ca0fb5fcb3ade072d2566ba14ae1287105f0de7848f75da84271ecaf6daca015",
+      "size": 40,
+      "TP": 20,
+      "FP": 0,
+      "TN": 20,
+      "FN": 0,
+      "precision": 1,
+      "recall": 1,
+      "specificity": 1,
+      "accuracy": 1,
+      "anySecuritySignal": {
+        "TP": 20,
+        "FP": 0,
+        "TN": 20,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "highCriticalExit": {
+        "TP": 20,
+        "FP": 0,
+        "TN": 20,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "hostileWithNoFindings": []
+    },
+    {
+      "name": "holdout",
+      "sha256": "74926b2b02144feb8ce8a7a7745072d025fc5ddea94dcf35378cae61d6dbf45e",
+      "size": 60,
+      "TP": 30,
+      "FP": 0,
+      "TN": 30,
+      "FN": 0,
+      "precision": 1,
+      "recall": 1,
+      "specificity": 1,
+      "accuracy": 1,
+      "anySecuritySignal": {
+        "TP": 30,
+        "FP": 0,
+        "TN": 30,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "highCriticalExit": {
+        "TP": 30,
+        "FP": 0,
+        "TN": 30,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "hostileWithNoFindings": []
+    },
+    {
+      "name": "validation",
+      "sha256": "fdf170779e42d559242e2bb2fa620251b2ddea4649def5c7254b5195def78609",
+      "size": 40,
+      "TP": 20,
+      "FP": 0,
+      "TN": 20,
+      "FN": 0,
+      "precision": 1,
+      "recall": 1,
+      "specificity": 1,
+      "accuracy": 1,
+      "anySecuritySignal": {
+        "TP": 20,
+        "FP": 0,
+        "TN": 20,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "highCriticalExit": {
+        "TP": 20,
+        "FP": 0,
+        "TN": 20,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "hostileWithNoFindings": []
+    },
+    {
+      "name": "intent-validation",
+      "sha256": "705f15e676b215df2d9d44ec5923f9b41484401c974143d0f053dada6b05679c",
+      "size": 24,
+      "TP": 12,
+      "FP": 0,
+      "TN": 12,
+      "FN": 0,
+      "precision": 1,
+      "recall": 1,
+      "specificity": 1,
+      "accuracy": 1,
+      "anySecuritySignal": {
+        "TP": 12,
+        "FP": 0,
+        "TN": 12,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "highCriticalExit": {
+        "TP": 12,
+        "FP": 0,
+        "TN": 12,
+        "FN": 0,
+        "precision": 1,
+        "recall": 1,
+        "accuracy": 1
+      },
+      "hostileWithNoFindings": []
+    }
+  ],
+  "corpora": [
+    {
+      "path": "testdata/description_benchmark.json",
+      "canonicalCasesSHA256": "cd92099b86fc94c4d6b3c5d68966ec9fe068703ee6431dbcb3368e1c82a7711d"
+    },
+    {
+      "path": "testdata/product-description-holdout-2026-10-23.json",
+      "canonicalCasesSHA256": "e4e3cc797e87a0f9057a3244b486ab9a2d91eff4caea1602a46ec53e98d7f696"
+    },
+    {
+      "path": "testdata/product-validation-2026-10-23.json",
+      "canonicalCasesSHA256": "eecc5125c3e490f0aa283aa33d63ceb8a5ce8ea555e7e640cd48fb58624603bb"
+    },
+    {
+      "path": "testdata/intent-validation-2026-10-23.json",
+      "canonicalCasesSHA256": "27b16f4e8937d8da0d1a28e18fe50c4dbaaca0eccab25ea7d9c640881ca20264"
+    }
+  ],
+  "persona": {
+    "invocations": 44,
+    "counts": {
+      "TP": 8,
+      "FN": 0,
+      "FP": 0,
+      "TN": 8
+    }
+  },
+  "hostedCI": "https://github.com/fayzkk889/MCPSense/actions/runs/39953216696",
+  "hostedResult": "All seven jobs passed, including Windows/Linux Go1.22/1.27 and release snapshot.",
+  "limitations": "Authored regression examples with related concepts, not field accuracy or proof of universal detection. Raw corpus byte hashes can vary with checkout line endings; canonical case hashes compare parsed unchanged text and labels."
+}
