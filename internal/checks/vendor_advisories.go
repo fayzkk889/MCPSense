@@ -93,7 +93,6 @@ func mergeAdvisoryResults(results, supplemental []cve.Result) []cve.Result {
 		}
 	}
 	for _, result := range supplemental {
-		var vulns []cve.Vuln
 		for _, vuln := range result.Vulns {
 			key := identity(result.Package, vuln.ID)
 			if at, ok := seen[key]; ok {
@@ -101,13 +100,9 @@ func mergeAdvisoryResults(results, supplemental []cve.Result) []cve.Result {
 				// starts indexing this same advisory (under either known ID).
 				results[at.result].Vulns[at.vuln] = vuln
 			} else {
-				vulns = append(vulns, vuln)
-				seen[key] = position{len(results), len(vulns) - 1}
+				results = append(results, cve.Result{Package: result.Package, Vulns: []cve.Vuln{vuln}})
+				seen[key] = position{len(results) - 1, 0}
 			}
-		}
-		if len(vulns) > 0 {
-			result.Vulns = vulns
-			results = append(results, result)
 		}
 	}
 	return results

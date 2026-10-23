@@ -90,4 +90,9 @@ func TestSupplementPreservesOtherServersAndAvoidsDuplicateAdvisories(t *testing.
 			t.Fatalf("wrong merge or lost provenance: %+v", merged)
 		}
 	}
+	repeated := reviewedVendorResults([]cve.Package{a})
+	repeated[0].Vulns = append(repeated[0].Vulns, repeated[0].Vulns[0])
+	if merged := mergeAdvisoryResults(nil, repeated); len(merged) != 1 || len(merged[0].Vulns) != 1 {
+		t.Fatalf("repeated supplemental record was counted twice: %+v", merged)
+	}
 }
