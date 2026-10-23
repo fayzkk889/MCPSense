@@ -44,6 +44,6 @@ async function main(){
   assert.equal(execFileSync(process.execPath,[path.join(binDir,'run.js'),'version'],{encoding:'utf8'}).trim(),'mcpsense v'+version);
   execFileSync(process.execPath,['--test','scripts/product.test.mjs'],{env:{...process.env,MCPSENSE_TEST_BINARY:binary},stdio:'inherit'});
   console.log('PASS: real archive installation, npm wrapper and all user journeys with Go absent from PATH');
- }finally{process.env.PATH=priorPath;fs.rmSync(tmp,{recursive:true,force:true});}
+ }finally{process.env.PATH=priorPath;fs.rmSync(tmp,{recursive:true,force:true,maxRetries:10,retryDelay:100});}
 }
 main().catch(err=>{console.error(err);process.exitCode=1;});

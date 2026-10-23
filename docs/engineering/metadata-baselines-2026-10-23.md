@@ -25,6 +25,12 @@ The nine regression cases failed before the fix and pass after it. Local Linux G
 
 The existing local product rerun passes all 24 assertions and all 164 labelled description cases (82 TP, 82 TN, no observed misses or false alarms); the beginner/experienced-user rerun passes with 8 TP and 8 TN across its 16 descriptions. These related authored data sets are regression checks, not field-accuracy estimates. Packaging/Action checks pass (12 tests, one native-binary test deferred to CI). Local race testing cannot start because this Linux environment lacks a C compiler; the full race suite remains required in hosted CI.
 
+## Windows installer failure found by CI
+
+The first CI run, [39994734006](https://github.com/fayzkk889/MCPSense/actions/runs/39994734006), passed both Linux matrices, Windows Go 1.22, lint and the Action. Windows Go 1.27 failed in the real npm installer with `EBUSY` removing the staged executable. The immediate cleanup exception masked any preceding failure, so the log alone does not identify the lock owner or prove which installation operation failed first.
+
+The installer now retries the same atomic rename for bounded transient file-access errors and uses bounded cleanup retries documented by [Node's filesystem API](https://nodejs.org/api/fs.html#fsrmsyncpath-options). It never deletes the previous executable to force replacement. Persistent failures still fail installation, and a cleanup failure preserves the original installation error. The declared Node minimum is corrected to 14.14, when the already-used `rmSync` API became available. The smoke harness also retries cleanup of its own temporary directory. Simulated transient/permanent locks, prior-installation preservation, and primary-error preservation are tested. All 14 local packaging/Action tests pass, with one native wrapper test deferred to hosted CI. This is separate from the Smart App Control signing blocker; no protection settings or trust requirements are changed.
+
 ## Remaining scope and release gate
 
 Removed tools/resources/prompts, added/removed client server entries, environment values, runtime outputs, resource contents, prompt bodies and unknown fields remain outside these comparisons. Input/baseline size limits remain enforced. This change does not solve executable trust: SignPath has acknowledged the application but has not approved signing access. Windows protected-device installation still requires trusted signing and a fresh retest. No public release, tag or npm publication is authorized or performed here.
