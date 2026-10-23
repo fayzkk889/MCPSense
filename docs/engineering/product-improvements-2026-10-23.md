@@ -27,6 +27,8 @@ First evaluation after the main detection implementation, before final negation/
 
 The validation result is100% recall,90.9% precision and95% accuracy **on these40 synthetic examples only**. No general accuracy or “catches everything” guarantee follows. The two benign false alarms remain an explicitly allowed validation limitation; examples are not relabelled. First-run evidence is retained in `bin/product-improvement-validation-2026-10-23/`. The final CI/product rerun is authoritative for the final committed source.
 
+After conservative context hardening, the final local rerun retained20/20 hostile detections and2/20 benign false alarms on validation, and correctly classified all100 development examples across all security rules. All24 product assertions passed. A further final-source10-second fuzz run made7,255 executions without an evidence-span failure. Hosted CI additionally reruns the same corpus gate, full Go tests/race/vet, real npm archive installation without Go, user/live journeys, real Action/SARIF and release snapshots. A real `version --check` correctly reported installed0.4.0 against public0.3.0 on both channels.
+
 The read-only public release gate correctly failed because public latest was0.3.0 while the candidate package is0.4.0. This is not cleared by a code push. Publication and a real public install/update walkthrough remain separate from source availability and require the user's previously specified publication approval.
 
 ## Remaining limits

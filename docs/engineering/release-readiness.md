@@ -2,6 +2,10 @@
 
 ## Current product acceptance — 23 October 2026
 
+The follow-up [PR7](https://github.com/fayzkk889/MCPSense/pull/7) contains the pushed detection, config evidence, detector-identity verification and onboarding fixes. See its current checks for the authoritative final matrix. The [improvement report](product-improvements-2026-10-23.md) supersedes the pre-fix verdict: the final local evaluation caught all70 hostile descriptions across140 labelled cases, with two benign false alarms confined to the separate40-case validation set. All24 expanded product assertions passed. These are small authored examples, not field accuracy or universal protection. Public channel/package availability remains a separate gate.
+
+The paragraphs below preserve the earlier pre-fix and PR3 checkpoints; their branch/merge statements are historical rather than current delivery status.
+
 PRs3–6 are merged; main `dfdefd7c289a1b8fdc6522e40c21bbf107ec8c1c` passed all seven jobs in [CI39831488309](https://github.com/fayzkk889/MCPSense/actions/runs/39831488309). npm and Go candidate installation routes work independently. Public latest is still0.3.0; no0.4 publication is approved.
 
 **Engineering CI is green; broad product-security acceptance is not.** A [fresh user-level evaluation](product-acceptance-2026-10-23.md) passed the core workflow but found substantial misses/false alarms on new descriptions and reproduced an unsupported critical injection finding for literal argv. Across all security rules, the new60-case set caught16/30 hostile descriptions and falsely flagged9/30 benign ones. Two hostile cases scored100. Address these findings and re-evaluate before broad security promotion. The detailed sections below preserve the earlier PR3 engineering checkpoint and must not be read as current merge status or full product approval.
