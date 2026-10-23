@@ -376,13 +376,7 @@ CLI flags override config file values.`,
 }
 
 func versionCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "version",
-		Short: "Print version information",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("mcpsense v%s\n", version)
-		},
-	}
+	return newVersionCmd()
 }
 
 func initConfigCmd() *cobra.Command {

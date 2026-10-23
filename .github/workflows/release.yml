@@ -24,6 +24,13 @@ jobs:
           go-version: "1.27.3"
           cache: true
 
+      - name: Validate approved tag and source before publishing
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          node scripts/release-verify.mjs
+          go test ./... -count=1
+          node --test scripts/action.test.mjs npm/package.test.cjs
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a
         with:
