@@ -83,9 +83,11 @@ func TestSupplementPreservesOtherServersAndAvoidsDuplicateAdvisories(t *testing.
 	a := cve.Package{Name: "awslabs.postgres-mcp-server", Version: "1.1.6", Ecosystem: "PyPI", Server: "first"}
 	b := a
 	b.Server = "second"
-	remote := []cve.Result{{Package: a, Vulns: []cve.Vuln{{ID: "GHSA-fph8-pg5w-78fv"}}}}
-	merged := mergeAdvisoryResults(remote, reviewedVendorResults([]cve.Package{a, b}))
-	if len(merged) != 2 || len(merged[0].Vulns) != 1 || merged[1].Package.Server != "second" {
-		t.Fatalf("wrong merged results: %+v", merged)
+	for _, id := range []string{"GHSA-fph8-pg5w-78fv", "CVE-2026-87911"} {
+		remote := []cve.Result{{Package: a, Vulns: []cve.Vuln{{ID: id}}}}
+		merged := mergeAdvisoryResults(remote, reviewedVendorResults([]cve.Package{a, b}))
+		if len(merged) != 2 || len(merged[0].Vulns) != 1 || merged[1].Package.Server != "second" || merged[0].Vulns[0].Source != postgresAdvisory || !strings.Contains(merged[0].Vulns[0].Summary, "Deployment prerequisites") {
+			t.Fatalf("wrong merge or lost provenance: %+v", merged)
+		}
 	}
 }

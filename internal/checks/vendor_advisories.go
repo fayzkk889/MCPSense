@@ -79,22 +79,30 @@ func stableVersionBefore(version, fixed string) (bool, bool) {
 }
 
 func mergeAdvisoryResults(results, supplemental []cve.Result) []cve.Result {
-	seen := map[string]bool{}
+	type position struct{ result, vuln int }
+	seen := map[string]position{}
 	identity := func(pkg cve.Package, id string) string {
+		if id == "CVE-2026-87911" {
+			id = "GHSA-fph8-pg5w-78fv"
+		}
 		return pkg.Server + "\x00" + pkg.Ecosystem + "\x00" + pkg.Name + "\x00" + pkg.Version + "\x00" + id
 	}
-	for _, result := range results {
-		for _, vuln := range result.Vulns {
-			seen[identity(result.Package, vuln.ID)] = true
+	for i, result := range results {
+		for j, vuln := range result.Vulns {
+			seen[identity(result.Package, vuln.ID)] = position{i, j}
 		}
 	}
 	for _, result := range supplemental {
 		var vulns []cve.Vuln
 		for _, vuln := range result.Vulns {
 			key := identity(result.Package, vuln.ID)
-			if !seen[key] {
+			if at, ok := seen[key]; ok {
+				// Keep the publisher prerequisites and provenance when the feed
+				// starts indexing this same advisory (under either known ID).
+				results[at.result].Vulns[at.vuln] = vuln
+			} else {
 				vulns = append(vulns, vuln)
-				seen[key] = true
+				seen[key] = position{len(results), len(vulns) - 1}
 			}
 		}
 		if len(vulns) > 0 {
