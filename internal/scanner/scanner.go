@@ -201,10 +201,14 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		}
 		if selected {
 			report.Coverage.SelectedChecks = append(report.Coverage.SelectedChecks, c.ID())
+			if c.ID() == "SEC-001" && ctx.Manifest != nil {
+				report.Coverage.MetadataFields = []string{"server.description", "server.instructions", "tools.names_titles_descriptions", "tools.inputSchema_strings_keys", "tools.outputSchema_strings_keys", "tools.annotation_titles", "resources.names_uris_descriptions", "prompts.names_descriptions_arguments"}
+			}
 		} else {
 			report.Coverage.SkippedChecks = append(report.Coverage.SkippedChecks, c.ID())
 		}
 	}
+	report.Coverage.Unassessed = []string{"runtime_behavior_and_tool_results", "resource_contents_and_prompt_bodies", "unrecognized_metadata_extensions", "general_semantic_understanding"}
 	var protected []string
 	if ctx.ClientConfig != nil {
 		for _, entry := range ctx.ClientConfig.MCPServers {

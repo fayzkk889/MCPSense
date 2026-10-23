@@ -8,6 +8,7 @@ type MCPManifest struct {
 	Version         string        `json:"version"`
 	ProtocolVersion string        `json:"protocolVersion,omitempty"`
 	Description     string        `json:"description"`
+	Instructions    string        `json:"instructions,omitempty"`
 	Tools           []MCPTool     `json:"tools"`
 	Resources       []MCPResource `json:"resources,omitempty"`
 	Prompts         []MCPPrompt   `json:"prompts,omitempty"`

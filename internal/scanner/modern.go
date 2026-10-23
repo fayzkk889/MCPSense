@@ -98,7 +98,7 @@ func negotiateManifest(call rpcCall, notify rpcNotify, policy string, legacy fun
 			return nil, fmt.Errorf("invalid server identity metadata")
 		}
 	}
-	m := &models.MCPManifest{Name: info.Name, Version: info.Version, ProtocolVersion: modernProtocolVersion, Description: d.Instructions}
+	m := &models.MCPManifest{Name: info.Name, Version: info.Version, ProtocolVersion: modernProtocolVersion, Instructions: d.Instructions}
 	return listManifest(mc, m, d.Capabilities)
 }
 func readHTTPRPC(resp *http.Response, id int) (*models.MCPJSONRPCResponse, error) {

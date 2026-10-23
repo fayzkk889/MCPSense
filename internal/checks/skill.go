@@ -25,12 +25,12 @@ func (c *SkillInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	}
 	var findings []models.Finding
 	for path, content := range ctx.SkillFiles {
-		matches := ctx.Patterns.ScanDescriptions(content)
+		matches := ctx.Patterns.ScanInstructions(content)
 		for _, m := range matches {
 			findings = append(findings, models.Finding{
 				ID:          "SKILL-001",
-				Title:       fmt.Sprintf("Prompt injection in skill file (%s)", m.PatternName),
-				Description: fmt.Sprintf("Skill file %q contains content matching injection pattern %s: %q. Skills are loaded directly into the agent's instruction context, so injected directives here hijack the agent's reasoning the same way a poisoned tool description does.", path, m.PatternID, truncateSkill(m.MatchedText, 120)),
+				Title:       fmt.Sprintf("Possible prompt injection in skill file (%s)", m.PatternName),
+				Description: fmt.Sprintf("Skill file %q triggered injection pattern %s. %s Evidence excerpt: %q. Review the complete instruction file and its authorized purpose; this heuristic does not establish exploitation.", path, m.PatternID, m.Description, truncateSkill(m.MatchedText, 120)),
 				Severity:    m.Severity,
 				Category:    models.CategorySecurity,
 				Location:    models.Location{File: path},

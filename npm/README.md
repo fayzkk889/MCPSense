@@ -7,8 +7,11 @@ Install a published version:
 ```
 npm install -g mcpsense@latest
 mcpsense version
-mcpsense scan ./manifest.json --offline --no-baseline
+mcpsense init --example
+mcpsense scan ./mcp.json --offline --no-baseline
 ```
+
+Run the example in an empty directory. It creates a synthetic offline manifest, refuses to overwrite an existing `mcp.json`, and does not connect to your server. To inspect your own setup, scan the path to its existing MCP manifest or client configuration. Plain `mcpsense init` creates scanner settings, not a scan target.
 
 Node.js/npm is sufficient for this route: Go is not required on Windows, Linux or macOS. The installer downloads the selected platform archive, verifies its release SHA-256 checksum, extracts only the CLI executable and checks its version/startup before replacing an existing installation. A checksum is not a signature.
 

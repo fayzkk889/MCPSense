@@ -3,6 +3,8 @@ package models
 // Coverage describes only the explicitly evaluated scope, never overall security.
 type Coverage struct {
 	DetectorProfile string   `json:"detector_profile"`
+	MetadataFields  []string `json:"metadata_fields,omitempty"`
+	Unassessed      []string `json:"unassessed,omitempty"`
 	Inputs          []string `json:"inputs"`
 	Protocol        string   `json:"protocol,omitempty"`
 	Baseline        string   `json:"baseline"`

@@ -62,6 +62,7 @@ const oldBaseline=write('legacy-baseline.json',{version:1,tools:[{description:'s
 const large=write('oversized.json',' '.repeat(4*1024*1024+1));r=scan('oversized-input',large);check('Oversized input fails visibly',r.exit===2,'exit='+r.exit);
 const corpora=[['historical',path.resolve('testdata/description_benchmark.json')],['holdout',path.resolve('testdata/product-description-holdout-2026-10-23.json')]];
 if(process.env.MCPSENSE_VALIDATION)corpora.push(['validation',path.resolve('testdata/product-validation-2026-10-23.json')]);
+if(process.env.MCPSENSE_INTENT_VALIDATION)corpora.push(['intent-validation',path.resolve('testdata/intent-validation-2026-10-23.json')]);
 const benchmarks=[];
 for(const [name,file] of corpora){
  const bytes=fs.readFileSync(file),data=JSON.parse(bytes),cases=Array.isArray(data)?data:data.cases,records=[];
@@ -74,6 +75,6 @@ for(const [name,file] of corpora){
 const summary={binary,runtime:wsl?'WSL '+wsl:process.platform,version:version.stdout.trim(),candidateSHA256:createHash('sha256').update(fs.readFileSync(binary)).digest('hex'),results,credentialResults,benchmarks:benchmarks.map(b=>({...b,records:undefined})),invocationCount:invocations.length};
 fs.writeFileSync(path.join(root,'acceptance-summary.json'),JSON.stringify(summary,null,2));
 console.log('Evidence: '+root);console.log('Product assertions: '+results.filter(r=>r.status==='PASS').length+' passed, '+results.filter(r=>r.status==='FAIL').length+' failed');
-const detectionFailures=process.env.MCPSENSE_ENFORCE_PRODUCT?benchmarks.filter(b=>b.anySecuritySignal.FN>0||b.anySecuritySignal.FP>(b.name==='validation'?2:0)):[];
+const detectionFailures=process.env.MCPSENSE_ENFORCE_PRODUCT?benchmarks.filter(b=>b.FN>0||b.FP>(b.name==='validation'?2:0)||b.anySecuritySignal.FN>0||b.anySecuritySignal.FP>(b.name==='validation'?2:0)):[];
 if(detectionFailures.length)console.error('Detection regression gate failed: '+detectionFailures.map(b=>b.name).join(', '));
 process.exitCode=results.some(r=>r.status==='FAIL')||detectionFailures.length?1:0;

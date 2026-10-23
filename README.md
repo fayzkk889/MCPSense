@@ -10,6 +10,8 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 
 This checkout describes the **0.4.0 candidate**. The linked npm/GitHub badges show the published versions; changes on main are delivered by package commands only after a release is published. Run `mcpsense version` after installing. The candidate also supports `mcpsense version --check` to compare both public channels explicitly; older versions may not have that flag.
 
+**Release readiness:** the [beginner/expert retest](docs/engineering/persona-retest-2026-10-23.md) exposed first-run gaps, missed attack paraphrases, unexamined metadata fields and source-analysis false alarms. Follow-up fixes and their measured limits are tracked in the [release-blocker report](docs/engineering/release-blockers-2026-10-23.md). Earlier corpus scores do not establish general detection reliability. Public installation receives these changes only after publication.
+
 ## Start safely
 
 Choose one installation route for a published release:
@@ -21,11 +23,14 @@ npm install -g mcpsense@latest
 go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
 
-Then scan your MCP manifest or configuration:
+For a first offline walkthrough, open an empty project directory and run:
 
 ```sh
+mcpsense init --example
 mcpsense scan ./mcp.json --offline --no-baseline
 ```
+
+This creates a synthetic example manifest and refuses to overwrite an existing `mcp.json`. It does not connect to or configure your real MCP server. For a real inspection, replace the target path with your existing manifest or client MCP configuration. `mcpsense init` without `--example` creates scanner settings; it does not create a scan target.
 
 Check installation with `mcpsense version` and `mcpsense --help`. In the candidate, `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically; ordinary startup and offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
 
@@ -56,6 +61,8 @@ npm downloads the selected platform executable and verifies its release SHA-256 
 ### Windows installation
 
 On Windows x64, the npm route needs Node.js/npm only. The separate Go route needs Go 1.22 or newer only. The optional standalone PowerShell installer below is a convenience for Go users: it builds from source, verifies startup, installs without administrator privileges, and adds its directory to your user PATH. No installation route changes Windows protection settings. Downloaded and locally built executables can both be restricted by machine policy; no warning-free guarantee is made.
+
+The current unsigned candidate was blocked by Smart App Control on the local validation machine, despite passing hosted Windows installation tests. Windows release readiness therefore still requires trusted signing and a protected-device retest; changing to ZIP packaging or installing Go does not supply a publisher signature. See the [Windows readiness record](docs/engineering/windows-signing-readiness-2026-10-23.md).
 
 From a downloaded or cloned checkout:
 
@@ -114,7 +121,9 @@ There are 32 registered checks: 5 manifest/spec checks, 16 security heuristics, 
 
 Checks include prompt-injection patterns, suspicious execution/URL/file-access patterns, Unicode and cross-tool poisoning signals, annotation inconsistencies, credential exposure, package references, schemas and tool quality. A shell metacharacter or changed annotation alone does not prove command execution or permission escalation. OWASP mappings are advisory classifications.
 
-Credential-name heuristics include generic API_KEY/APIKEY/ACCESS_KEY names and provider-specific names; their values are not printed. Tool descriptions that consist entirely of a narrowly recognized document-query operation treat a quoted search phrase as data. Arbitrary quotation marks or the word “example” do not exempt instructions; appended directives remain detectable. This context rule does not exempt agent instruction files. Indirect credential-disclosure and safety-policy override patterns remain heuristics, not general semantic understanding.
+Credential-name heuristics include generic API_KEY/APIKEY/ACCESS_KEY names and provider-specific names; their values are not printed. Tool descriptions that consist entirely of a narrowly recognized document-query operation treat a quoted search phrase as data. Arbitrary quotation marks or the word “example” do not exempt instructions; appended directives are still screened. Literal skill rules inspect the original instructions. Relational rules combine lexical action, object and scope signals for authority replacement, disclosure, deception, routing, permission bypass and persistent policy changes. They can miss paraphrases or misinterpret legitimate tasks; they do not determine authorization or understand arbitrary language.
+
+Metadata screening includes server descriptions/instructions, tool names/titles/descriptions, schema string values and keys, annotation titles, resource names/URIs/descriptions and prompt names/descriptions/arguments. Reports list this scope and what was not assessed. Resource contents, prompt bodies, runtime tool responses and unknown extension fields are not inspected. Source shell findings distinguish direct argument arrays from explicit shell evaluation for recognized Go/Python forms; this is not full parsing of every language or dataflow/alias analysis.
 
 ```sh
 # One scan, consistent JSON and SARIF including drift findings

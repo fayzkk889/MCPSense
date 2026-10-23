@@ -161,6 +161,7 @@ func legacyManifest(call rpcCall, notify rpcNotify) (*models.MCPManifest, error)
 		ProtocolVersion string                     `json:"protocolVersion"`
 		Capabilities    map[string]json.RawMessage `json:"capabilities"`
 		ServerInfo      models.MCPInfo             `json:"serverInfo"`
+		Instructions    string                     `json:"instructions"`
 	}
 	if json.Unmarshal(r.Result, &init) != nil || init.Capabilities == nil || init.ServerInfo.Name == "" {
 		return nil, fmt.Errorf("invalid initialize result")
@@ -173,7 +174,7 @@ func legacyManifest(call rpcCall, notify rpcNotify) (*models.MCPManifest, error)
 	if err := notify(); err != nil {
 		return nil, fmt.Errorf("initialized notification: %w", err)
 	}
-	m := &models.MCPManifest{Name: init.ServerInfo.Name, Version: init.ServerInfo.Version, ProtocolVersion: init.ProtocolVersion}
+	m := &models.MCPManifest{Name: init.ServerInfo.Name, Version: init.ServerInfo.Version, ProtocolVersion: init.ProtocolVersion, Instructions: init.Instructions}
 	return listManifest(call, m, init.Capabilities)
 }
 func listManifest(call rpcCall, m *models.MCPManifest, capabilities map[string]json.RawMessage) (*models.MCPManifest, error) {
