@@ -31,6 +31,8 @@ type Vuln struct {
 	Summary      string
 	CVSS         float64
 	FixedVersion string
+	Source       string
+	ReviewedAt   string
 }
 
 // Result pairs a package with the vulns found for it.

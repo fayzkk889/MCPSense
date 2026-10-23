@@ -16,4 +16,5 @@ type Coverage struct {
 	SelectedChecks  []string `json:"selected_checks"`
 	SkippedChecks   []string `json:"skipped_checks"`
 	Advisories      string   `json:"advisories"`
+	AdvisoryScope   string   `json:"advisory_scope,omitempty"`
 }

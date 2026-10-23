@@ -30,6 +30,8 @@ This minor release adds modern MCP metadata discovery, explicit coverage and off
 - Detector fingerprints that reject before/after comparisons across changed or missing scanner identities. This is an equivalence guard, not a report signature.
 - Baseline comparisons for server text, tool titles/output schemas/annotations, existing resource metadata and prompt additions/edits. Existing format-2 baselines retain their captured comparisons with an explicit missing-field warning; expanding scope requires a reviewed `--update-baseline`. Drift implementation is included in detector identity.
 - Bounded retries for transient executable replacement/cleanup locks during npm installation, preserving prior installations and original failure messages. Node 14.14+ is required for the filesystem API already used by the installer.
+- Correct primary-package identities for supported npm/uvx/pipx launch forms; unrelated arguments and moving tags cannot establish exact version pins. Explicit package-runner shell-call modes request execution review.
+- Dated vendor supplement for the AWS PostgreSQL read-only enforcement advisory missing from the observed OSV lookup, with deployment prerequisites, unresolved-version qualification and source provenance. Advisory guidance requires configuration review; project/transitive dependencies and runtime enforcement remain explicitly unassessed.
 - Enforced beginner/experienced-user scenarios, four labelled description sets, and live poisoned-instruction checks over legacy and modern discovery.
 
 ## Compatibility changes
