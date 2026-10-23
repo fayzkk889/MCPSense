@@ -123,7 +123,7 @@ func parsePackageLaunch(entry models.MCPServerEntry) packageLaunch {
 			continue
 		default:
 			// Unknown launcher syntax has no reliable registry identity.
-			return packageLaunch{}
+			return packageLaunch{shellCall: out.shellCall}
 		}
 	}
 	if len(explicit) > 0 {

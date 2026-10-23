@@ -68,6 +68,8 @@ The last three observations do not freeze expected misses into passing security 
 
 The asset is the user's authority and data, not merely the description text. For each proposed operation, determine the initiating principal, delegated capability, target resource, permitted effects and current policy. Untrusted text may propose an operation but must not grant a capability. All effects must pass a policy boundary outside the model's text interpretation.
 
+The placement matters: an untrusted server can attack its client/agent, and an untrusted client can attack the server. Upstream documents and package publishers introduce further inputs. A proxy on the client side cannot constrain filesystem, database or network effects inside a remote server; the server operator must enforce those boundaries in the server's own execution environment. Protection must be designed for both directions and for the infrastructure performing the actual effect.
+
 | Invariant | Derived failure class, including novel compositions | Testable enforcement requirement |
 | --- | --- | --- |
 | Authority originates in authenticated policy | Prompt injection, forged user messages, poisoned metadata/results, false-error escalation | Substitute arbitrary untrusted instructions; sensitive actions still require an independent grant. A quoted benign document remains usable. |
@@ -91,3 +93,7 @@ These are design deductions, not a proof that MCPSense presently enforces them. 
 5. **Independent evaluation:** rotate withheld attacks and benign workflows, include responses/skills/metadata/argument boundaries and multi-step flows, measure unauthorized effects and useful-task success, and publish reproducible versioned results. The existing authored description suites remain regressions rather than field-accuracy estimates.
 
 Windows signing/protected-device validation remains a separate release gate. This research does not alter protection settings, publish a package, or establish SignPath acceptance. The existing MIT license and user-owned checkpoint file are preserved.
+
+## Validation checkpoint
+
+Local Linux Go 1.22 full tests and vet pass, including the seven original reproductions, option-boundary/exact-pin tests, affected/fixed/unknown vendor versions, empty successful OSV lookups, source/date preservation and explicit advisory disable. The actual CLI passes the ten-invocation research audit, all 24 existing product assertions, all 14 baseline assertions, and beginner/experienced-user acceptance. The existing 164-description and 16-description persona regressions retain their prior outcomes with no observed misses or false alarms in these authored examples; they do not estimate field accuracy. Local packaging/Action tests pass (14 tests, one native wrapper test deferred to CI). Hosted Windows/Linux Go 1.22/1.27 full/race/vet, no-Go npm installation, live/product/baseline/threat-audit scenarios and publication-disabled snapshots remain required before merging. Raw local receipts stay under ignored `bin/` paths.
