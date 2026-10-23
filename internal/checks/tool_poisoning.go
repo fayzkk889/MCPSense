@@ -3,6 +3,7 @@ package checks
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/detection"
 	"regexp"
 	"strings"
 	"unicode"
@@ -19,8 +20,10 @@ import (
 // Unicode tag characters (U+E0000 range) to embed invisible exfiltration instructions.
 type InvisibleUnicodeCheck struct{}
 
-func (c *InvisibleUnicodeCheck) ID() string              { return "SEC-009" }
-func (c *InvisibleUnicodeCheck) Name() string            { return "Invisible Unicode characters in tool definitions" }
+func (c *InvisibleUnicodeCheck) ID() string { return "SEC-009" }
+func (c *InvisibleUnicodeCheck) Name() string {
+	return "Invisible Unicode characters in tool definitions"
+}
 func (c *InvisibleUnicodeCheck) Category() models.Category { return models.CategorySecurity }
 
 // isInvisibleChar returns true if the rune is a zero-width, control, or formatting character
@@ -28,25 +31,40 @@ func (c *InvisibleUnicodeCheck) Category() models.Category { return models.Categ
 func isInvisibleChar(r rune) bool {
 	switch {
 	// Zero-width and formatting characters
-	case r == '\u200B': return true // zero-width space
-	case r == '\u200C': return true // zero-width non-joiner
-	case r == '\u200D': return true // zero-width joiner
-	case r == '\u200E': return true // left-to-right mark
-	case r == '\u200F': return true // right-to-left mark
-	case r == '\u00AD': return true // soft hyphen
-	case r == '\u2060': return true // word joiner
-	case r == '\uFEFF': return true // zero-width no-break space (BOM)
+	case r == '\u200B':
+		return true // zero-width space
+	case r == '\u200C':
+		return true // zero-width non-joiner
+	case r == '\u200D':
+		return true // zero-width joiner
+	case r == '\u200E':
+		return true // left-to-right mark
+	case r == '\u200F':
+		return true // right-to-left mark
+	case r == '\u00AD':
+		return true // soft hyphen
+	case r == '\u2060':
+		return true // word joiner
+	case r == '\uFEFF':
+		return true // zero-width no-break space (BOM)
 	// Bidirectional override characters
-	case r >= '\u202A' && r <= '\u202E': return true
-	case r >= '\u2066' && r <= '\u2069': return true
+	case r >= '\u202A' && r <= '\u202E':
+		return true
+	case r >= '\u2066' && r <= '\u2069':
+		return true
 	// Unicode Tag characters (U+E0001 to U+E007F) — used in ASCII smuggling attacks
-	case r >= 0xE0001 && r <= 0xE007F: return true
+	case r >= 0xE0001 && r <= 0xE007F:
+		return true
 	// Variation selectors used for ASCII smuggling (U+E0100 to U+E01EF)
-	case r >= 0xE0100 && r <= 0xE01EF: return true
+	case r >= 0xE0100 && r <= 0xE01EF:
+		return true
 	// C0/C1 control characters (except normal whitespace: tab, newline, carriage return)
-	case r < 0x0020 && r != '\t' && r != '\n' && r != '\r': return true
-	case r >= 0x007F && r <= 0x009F: return true
-	default: return false
+	case r < 0x0020 && r != '\t' && r != '\n' && r != '\r':
+		return true
+	case r >= 0x007F && r <= 0x009F:
+		return true
+	default:
+		return false
 	}
 }
 
@@ -164,8 +182,8 @@ func (c *InvisibleUnicodeCheck) Run(ctx *ScanContext) []models.Finding {
 // tool shadowing attacks (registering a visually identical but different tool name).
 type HomoglyphCheck struct{}
 
-func (c *HomoglyphCheck) ID() string              { return "SEC-010" }
-func (c *HomoglyphCheck) Name() string            { return "Homoglyph characters in tool names" }
+func (c *HomoglyphCheck) ID() string                { return "SEC-010" }
+func (c *HomoglyphCheck) Name() string              { return "Homoglyph characters in tool names" }
 func (c *HomoglyphCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *HomoglyphCheck) Run(ctx *ScanContext) []models.Finding {
@@ -238,9 +256,15 @@ func findMixedScriptWords(text string) []string {
 			}
 		}
 		scriptCount := 0
-		if hasLatin { scriptCount++ }
-		if hasCyrillic { scriptCount++ }
-		if hasGreek { scriptCount++ }
+		if hasLatin {
+			scriptCount++
+		}
+		if hasCyrillic {
+			scriptCount++
+		}
+		if hasGreek {
+			scriptCount++
+		}
 		if scriptCount >= 2 {
 			mixed = append(mixed, fmt.Sprintf("%q", word))
 		}
@@ -254,14 +278,16 @@ func findMixedScriptWords(text string) []string {
 // or send sensitive data — the primary mechanism for tool-poisoning-based data theft.
 type ExfilInstructionCheck struct{}
 
-func (c *ExfilInstructionCheck) ID() string              { return "SEC-011" }
-func (c *ExfilInstructionCheck) Name() string            { return "Data exfiltration instructions in descriptions" }
+func (c *ExfilInstructionCheck) ID() string { return "SEC-011" }
+func (c *ExfilInstructionCheck) Name() string {
+	return "Data exfiltration instructions in descriptions"
+}
 func (c *ExfilInstructionCheck) Category() models.Category { return models.CategorySecurity }
 
 var exfilInstructionPatterns = []*regexp.Regexp{
 	// Instructions to read sensitive files
 	regexp.MustCompile(`(?i)(read|include|send|attach|return|output|append|add|embed|insert)\s+(the\s+)?(contents?\s+of|data\s+from|file)\s+[~./]`),
-	regexp.MustCompile(`(?i)(\.ssh|\.env|\.git|\.aws|\.kube|/etc/passwd|/etc/shadow|id_rsa|credentials|\.npmrc|\.pypirc|\.docker|config\.json)`),
+	regexp.MustCompile(`(?i)\b(read|copy|send|upload|print|include|access)\b[^\n!?]{0,160}(\.ssh|\.env|\.aws|\.kube|/etc/passwd|/etc/shadow|id_rsa|id_ed25519|\.npmrc|\.pypirc|\.docker|credentials)`),
 	// Instructions to exfiltrate to external services
 	regexp.MustCompile(`(?i)(send|post|forward|upload|transmit|exfiltrate|leak)\s+(to|via|using)\s+(http|https|ftp|webhook|endpoint|url|api)`),
 	regexp.MustCompile(`(?i)(include|embed|encode|base64|hex).{0,30}(in\s+the\s+response|in\s+your\s+(response|output|answer))`),
@@ -269,7 +295,7 @@ var exfilInstructionPatterns = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)(read|access|get|retrieve|print|output|include)\s+(the\s+)?(environment\s+variable|env\s+var|API.?key|secret|token|password|credential)`),
 	// Instructions to hide actions from the user
 	regexp.MustCompile(`(?i)(do\s+not|don'?t|never)\s+(show|display|tell|reveal|mention|report)\s+(the\s+user|to\s+the\s+user|this)`),
-	regexp.MustCompile(`(?i)(silently|quietly|without\s+(telling|informing|notifying|showing))`),
+	regexp.MustCompile(`(?i)(silently|quietly|without\s+(telling|informing|notifying|showing))[^\n.!?]{0,100}\b(copy|send|upload|transfer|credentials?|private|secrets?)\b`),
 }
 
 func (c *ExfilInstructionCheck) Run(ctx *ScanContext) []models.Finding {
@@ -279,7 +305,7 @@ func (c *ExfilInstructionCheck) Run(ctx *ScanContext) []models.Finding {
 	var findings []models.Finding
 	for _, tool := range ctx.Manifest.Tools {
 		for _, pat := range exfilInstructionPatterns {
-			if loc := pat.FindStringIndex(tool.Description); loc != nil {
+			if loc := pat.FindStringIndex(detection.InstructionText(tool.Description)); loc != nil {
 				matched := tool.Description[loc[0]:loc[1]]
 				findings = append(findings, models.Finding{
 					ID:          "SEC-011",
@@ -303,8 +329,8 @@ func (c *ExfilInstructionCheck) Run(ctx *ScanContext) []models.Finding {
 // interacts with OTHER tools — a key vector in multi-server poisoning attacks.
 type CrossToolManipulationCheck struct{}
 
-func (c *CrossToolManipulationCheck) ID() string              { return "SEC-012" }
-func (c *CrossToolManipulationCheck) Name() string            { return "Cross-tool manipulation in descriptions" }
+func (c *CrossToolManipulationCheck) ID() string                { return "SEC-012" }
+func (c *CrossToolManipulationCheck) Name() string              { return "Cross-tool manipulation in descriptions" }
 func (c *CrossToolManipulationCheck) Category() models.Category { return models.CategorySecurity }
 
 var crossToolPatterns = []*regexp.Regexp{
@@ -331,7 +357,7 @@ func (c *CrossToolManipulationCheck) Run(ctx *ScanContext) []models.Finding {
 		matchCount := 0
 		var matchedTexts []string
 		for _, pat := range crossToolPatterns {
-			if loc := pat.FindStringIndex(tool.Description); loc != nil {
+			if loc := pat.FindStringIndex(detection.InstructionText(tool.Description)); loc != nil {
 				matchCount++
 				matchedTexts = append(matchedTexts, fmt.Sprintf("%q", tool.Description[loc[0]:loc[1]]))
 			}
@@ -362,8 +388,8 @@ func (c *CrossToolManipulationCheck) Run(ctx *ScanContext) []models.Finding {
 // Per MCP spec: annotations are HINTS from UNTRUSTED servers and should not be relied upon for security.
 type AnnotationIntegrityCheck struct{}
 
-func (c *AnnotationIntegrityCheck) ID() string              { return "SEC-013" }
-func (c *AnnotationIntegrityCheck) Name() string            { return "Annotation integrity mismatch" }
+func (c *AnnotationIntegrityCheck) ID() string                { return "SEC-013" }
+func (c *AnnotationIntegrityCheck) Name() string              { return "Annotation integrity mismatch" }
 func (c *AnnotationIntegrityCheck) Category() models.Category { return models.CategorySecurity }
 
 // writeLikeVerbs are name fragments that strongly imply mutation.

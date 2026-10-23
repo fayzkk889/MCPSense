@@ -12,8 +12,8 @@ import (
 // InjectionCheck detects prompt injection patterns in tool descriptions.
 type InjectionCheck struct{}
 
-func (c *InjectionCheck) ID() string            { return "SEC-001" }
-func (c *InjectionCheck) Name() string          { return "Prompt injection in tool descriptions" }
+func (c *InjectionCheck) ID() string                { return "SEC-001" }
+func (c *InjectionCheck) Name() string              { return "Prompt injection in tool descriptions" }
 func (c *InjectionCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
@@ -32,9 +32,9 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 			seen[key] = true
 			findings = append(findings, models.Finding{
 				ID:          "SEC-001",
-				Title:       fmt.Sprintf("Prompt injection in tool description: %s", tool.Name),
+				Title:       fmt.Sprintf("Possible prompt injection in tool description: %s", tool.Name),
 				Description: fmt.Sprintf("Tool description for %q triggered pattern %s (%s). Matched text: %q", tool.Name, m.PatternID, m.PatternName, m.MatchedText),
-				Severity:    models.SeverityCritical,
+				Severity:    m.Severity,
 				Category:    models.CategorySecurity,
 				Location:    models.Location{ToolName: tool.Name},
 				Remediation: "Remove instruction-like or directive language from tool descriptions. Descriptions should explain what the tool does, not manipulate agent behavior.",
@@ -56,8 +56,8 @@ var shellExecPatterns = []*regexp.Regexp{
 // ShellExecCheck detects shell command execution in source files.
 type ShellExecCheck struct{}
 
-func (c *ShellExecCheck) ID() string            { return "SEC-002" }
-func (c *ShellExecCheck) Name() string          { return "Shell command execution" }
+func (c *ShellExecCheck) ID() string                { return "SEC-002" }
+func (c *ShellExecCheck) Name() string              { return "Shell command execution" }
 func (c *ShellExecCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *ShellExecCheck) Run(ctx *ScanContext) []models.Finding {
@@ -97,8 +97,8 @@ var ssrfPatterns = []*regexp.Regexp{
 // SSRFCheck detects server-side request forgery risks.
 type SSRFCheck struct{}
 
-func (c *SSRFCheck) ID() string            { return "SEC-003" }
-func (c *SSRFCheck) Name() string          { return "SSRF risk" }
+func (c *SSRFCheck) ID() string                { return "SEC-003" }
+func (c *SSRFCheck) Name() string              { return "SSRF risk" }
 func (c *SSRFCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *SSRFCheck) Run(ctx *ScanContext) []models.Finding {
@@ -136,8 +136,8 @@ var traversalPatterns = []*regexp.Regexp{
 // PathTraversalCheck detects path traversal vulnerabilities.
 type PathTraversalCheck struct{}
 
-func (c *PathTraversalCheck) ID() string            { return "SEC-004" }
-func (c *PathTraversalCheck) Name() string          { return "Path traversal" }
+func (c *PathTraversalCheck) ID() string                { return "SEC-004" }
+func (c *PathTraversalCheck) Name() string              { return "Path traversal" }
 func (c *PathTraversalCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *PathTraversalCheck) Run(ctx *ScanContext) []models.Finding {
@@ -192,8 +192,8 @@ var sensitivePaths = []string{"file", "exec", "run", "command", "shell", "databa
 // MissingAuthCheck flags servers that expose sensitive tools/resources without auth.
 type MissingAuthCheck struct{}
 
-func (c *MissingAuthCheck) ID() string            { return "SEC-005" }
-func (c *MissingAuthCheck) Name() string          { return "Missing authentication" }
+func (c *MissingAuthCheck) ID() string                { return "SEC-005" }
+func (c *MissingAuthCheck) Name() string              { return "Missing authentication" }
 func (c *MissingAuthCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *MissingAuthCheck) Run(ctx *ScanContext) []models.Finding {
@@ -241,8 +241,8 @@ func (c *MissingAuthCheck) Run(ctx *ScanContext) []models.Finding {
 // ResourceScopeCheck flags overly broad resource URI patterns.
 type ResourceScopeCheck struct{}
 
-func (c *ResourceScopeCheck) ID() string            { return "SEC-006" }
-func (c *ResourceScopeCheck) Name() string          { return "Overly permissive resource access" }
+func (c *ResourceScopeCheck) ID() string                { return "SEC-006" }
+func (c *ResourceScopeCheck) Name() string              { return "Overly permissive resource access" }
 func (c *ResourceScopeCheck) Category() models.Category { return models.CategorySecurity }
 
 var broadURIPatterns = []*regexp.Regexp{
@@ -281,8 +281,8 @@ func (c *ResourceScopeCheck) Run(ctx *ScanContext) []models.Finding {
 // CommandInjectionCheck detects user input interpolated into command strings.
 type CommandInjectionCheck struct{}
 
-func (c *CommandInjectionCheck) ID() string            { return "SEC-007" }
-func (c *CommandInjectionCheck) Name() string          { return "Command injection via string interpolation" }
+func (c *CommandInjectionCheck) ID() string                { return "SEC-007" }
+func (c *CommandInjectionCheck) Name() string              { return "Command injection via string interpolation" }
 func (c *CommandInjectionCheck) Category() models.Category { return models.CategorySecurity }
 
 var cmdInjectionPatterns = []*regexp.Regexp{
@@ -322,8 +322,8 @@ func (c *CommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 // DataExfilCheck detects tools that return raw file or database contents.
 type DataExfilCheck struct{}
 
-func (c *DataExfilCheck) ID() string            { return "SEC-008" }
-func (c *DataExfilCheck) Name() string          { return "Data exfiltration vectors" }
+func (c *DataExfilCheck) ID() string                { return "SEC-008" }
+func (c *DataExfilCheck) Name() string              { return "Data exfiltration vectors" }
 func (c *DataExfilCheck) Category() models.Category { return models.CategorySecurity }
 
 var dataExfilPatterns = []*regexp.Regexp{
