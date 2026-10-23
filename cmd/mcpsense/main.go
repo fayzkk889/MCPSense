@@ -57,7 +57,9 @@ func rootCmd() *cobra.Command {
 		Use:           "mcpsense",
 		Short:         "Security scanner for MCP servers",
 		Long:          "mcpsense scans MCP servers for security vulnerabilities, spec compliance issues, and tool quality problems.",
+		Version:       version,
 	}
+	root.SetVersionTemplate("mcpsense v{{.Version}}\n")
 
 	root.AddCommand(scanCmd())
 	root.AddCommand(versionCmd())
@@ -380,10 +382,14 @@ func versionCmd() *cobra.Command {
 }
 
 func initConfigCmd() *cobra.Command {
-	return &cobra.Command{
+	example := false
+	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Generate a .mcpsenserc.json config file with default settings",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if example {
+				return writeExample(cmd)
+			}
 			if _, err := os.Stat(configFile); err == nil {
 				return fmt.Errorf("%s already exists, remove it first if you want to regenerate", configFile)
 			}
@@ -396,9 +402,13 @@ func initConfigCmd() *cobra.Command {
 				return fmt.Errorf("writing config file: %w", err)
 			}
 			fmt.Printf("Created %s with default settings.\n", configFile)
+			fmt.Fprintln(cmd.OutOrStdout(), "This configures MCPSense; it does not create an MCP server config.")
+			fmt.Fprintln(cmd.OutOrStdout(), "For a safe first scan, run: mcpsense init --example")
 			return nil
 		},
 	}
+	cmd.Flags().BoolVar(&example, "example", false, "Create a safe example mcp.json for a first offline scan (never overwrite)")
+	return cmd
 }
 
 // MCPSenseConfig holds project-level configuration for CI/CD customization.

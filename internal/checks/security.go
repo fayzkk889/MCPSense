@@ -21,22 +21,30 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 		return nil
 	}
 	var findings []models.Finding
-	for _, tool := range ctx.Manifest.Tools {
-		matches := ctx.Patterns.ScanToolDescription(tool.Description)
+	texts, err := metadataTexts(ctx.Manifest)
+	if err != nil {
+		ctx.Errors = append(ctx.Errors, err)
+		return nil
+	}
+	for _, text := range texts {
+		matches := ctx.Patterns.ScanToolDescription(text.text)
+		if text.instructions {
+			matches = ctx.Patterns.ScanDescriptions(text.text)
+		}
 		seen := make(map[string]bool)
 		for _, m := range matches {
-			key := tool.Name + ":" + m.PatternID
+			key := text.owner + ":" + text.field + ":" + m.PatternID
 			if seen[key] {
 				continue
 			}
 			seen[key] = true
 			findings = append(findings, models.Finding{
 				ID:          "SEC-001",
-				Title:       fmt.Sprintf("Possible prompt injection in tool description: %s", tool.Name),
-				Description: fmt.Sprintf("Tool description for %q triggered pattern %s (%s). Matched text: %q", tool.Name, m.PatternID, m.PatternName, m.MatchedText),
+				Title:       fmt.Sprintf("Possible prompt injection in metadata: %s (%s)", text.owner, text.field),
+				Description: fmt.Sprintf("Metadata field %s for %q triggered pattern %s (%s). Matched text: %q", text.field, text.owner, m.PatternID, m.PatternName, m.MatchedText),
 				Severity:    m.Severity,
 				Category:    models.CategorySecurity,
-				Location:    models.Location{ToolName: tool.Name},
+				Location:    models.Location{ToolName: text.owner},
 				Remediation: "Remove instruction-like or directive language from tool descriptions. Descriptions should explain what the tool does, not manipulate agent behavior.",
 			})
 		}
@@ -286,33 +294,37 @@ func (c *CommandInjectionCheck) Name() string              { return "Command inj
 func (c *CommandInjectionCheck) Category() models.Category { return models.CategorySecurity }
 
 var cmdInjectionPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`exec\.command\s*\([^)]*fmt\.sprintf`),
-	regexp.MustCompile(`exec\.command\s*\([^)]*\+\s*\w+`),
 	regexp.MustCompile(`os\.system\s*\([^)]*\+`),
 	regexp.MustCompile(`os\.system\s*\([^)]*%`),
-	regexp.MustCompile(`subprocess\.run\s*\([^)]*f["']`),
 	regexp.MustCompile(`child_process\.exec\s*\([^)]*\+`),
-	regexp.MustCompile("exec\\.command\\s*\\([^)]*`[^`]*\\$\\{"),
 }
 
 func (c *CommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	var findings []models.Finding
 	for filePath, content := range ctx.SourceFiles {
+		shellLines := map[int]bool{}
+		if strings.HasSuffix(filePath, ".go") {
+			shellLines = goShellInterpolation(content)
+		}
+		if strings.HasSuffix(filePath, ".py") {
+			shellLines = pythonShellInterpolation(content)
+		}
 		lines := strings.Split(content, "\n")
 		for lineNum, line := range lines {
+			matched := shellLines[lineNum+1]
 			for _, pat := range cmdInjectionPatterns {
-				if pat.MatchString(strings.ToLower(line)) {
-					findings = append(findings, models.Finding{
-						ID:          "SEC-007",
-						Title:       "Command injection via string interpolation",
-						Description: fmt.Sprintf("User input appears to be interpolated into a command execution call at %s:%d.", filePath, lineNum+1),
-						Severity:    models.SeverityCritical,
-						Category:    models.CategorySecurity,
-						Location:    models.Location{File: filePath, Line: lineNum + 1},
-						Remediation: "Use parameterized execution. Pass command arguments as separate strings to exec.Command rather than building a command string with fmt.Sprintf or string concatenation.",
-					})
-					break
-				}
+				matched = matched || pat.MatchString(strings.ToLower(line))
+			}
+			if matched {
+				findings = append(findings, models.Finding{
+					ID:          "SEC-007",
+					Title:       "Review formatted data reaching shell evaluation",
+					Description: fmt.Sprintf("Formatted data reaches an explicit shell-evaluation API at %s:%d. Review its origin and quoting; this is not proof of exploitability.", filePath, lineNum+1),
+					Severity:    models.SeverityCritical,
+					Category:    models.CategorySecurity,
+					Location:    models.Location{File: filePath, Line: lineNum + 1},
+					Remediation: "Use parameterized execution. Pass command arguments as separate strings to exec.Command rather than building a command string with fmt.Sprintf or string concatenation.",
+				})
 			}
 		}
 	}
