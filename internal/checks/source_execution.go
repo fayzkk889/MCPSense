@@ -14,7 +14,10 @@ func goShellInterpolation(content string) map[int]bool {
 	lines := map[int]bool{}
 	fset := token.NewFileSet()
 	file, _ := parser.ParseFile(fset, "input.go", content, parser.AllErrors)
-	var root ast.Node = file
+	var root ast.Node
+	if file != nil {
+		root = file
+	}
 	if expr, err := parser.ParseExprFrom(fset, "expression.go", content, 0); err == nil {
 		root = expr
 	}
@@ -101,56 +104,97 @@ func goShellInterpolation(content string) map[int]bool {
 var pythonCall = regexp.MustCompile(`\bsubprocess\.(run|call|Popen|check_output|check_call)\s*\(`)
 var pythonShellFlag = regexp.MustCompile(`\bshell\s*=\s*True\b`)
 var pythonShellList = regexp.MustCompile(`(?s)^\s*\[\s*["'](?:/bin/)?(?:sh|bash|dash|zsh|cmd(?:\.exe)?|powershell(?:\.exe)?)["']\s*,\s*["'](?:-[a-z]*c|/c|-Command)["']`)
-var pythonFString = regexp.MustCompile(`\b[fF][rR]?["']`)
 
-// Bound each lexical call by balanced parentheses, ignoring parentheses in
-// quoted strings. This is not Python dataflow or complete language analysis.
+// pythonCode masks comments and single/triple quoted literals without changing
+// byte positions. It records f-string starts separately from literal contents.
+// This is bounded lexical screening, not Python parsing or dataflow analysis.
+func pythonCode(content string) (string, []int) {
+	code := []byte(content)
+	var formatted []int
+	blank := func(start, end int) {
+		for i := start; i < end; i++ {
+			if code[i] != '\n' && code[i] != '\r' {
+				code[i] = ' '
+			}
+		}
+	}
+	identifier := func(c byte) bool {
+		return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_'
+	}
+	for i := 0; i < len(content); {
+		if content[i] == '#' {
+			end := i
+			for end < len(content) && content[end] != '\n' {
+				end++
+			}
+			blank(i, end)
+			i = end
+			continue
+		}
+		if content[i] != '\'' && content[i] != '"' {
+			i++
+			continue
+		}
+		start, quote, width := i, content[i], 1
+		prefixStart := i
+		for prefixStart > 0 && identifier(content[prefixStart-1]) {
+			prefixStart--
+		}
+		prefix := strings.ToLower(content[prefixStart:i])
+		if prefix == "f" || prefix == "fr" || prefix == "rf" {
+			formatted = append(formatted, i)
+		}
+		if i+2 < len(content) && content[i+1] == quote && content[i+2] == quote {
+			width = 3
+		}
+		i += width
+		for i < len(content) {
+			if content[i] == '\\' {
+				i += 2
+				continue
+			}
+			if content[i] == quote && (width == 1 || i+2 < len(content) && content[i+1] == quote && content[i+2] == quote) {
+				i += width
+				break
+			}
+			i++
+		}
+		if i > len(content) {
+			i = len(content)
+		}
+		blank(start, i)
+	}
+	return string(code), formatted
+}
+
 func pythonShellInterpolation(content string) map[int]bool {
 	lines := map[int]bool{}
-	for _, loc := range pythonCall.FindAllStringIndex(content, -1) {
-		start := loc[1]
-		depth := 1
-		quote := byte(0)
-		escaped := false
-		end := start
-		var code strings.Builder
-		for ; end < len(content) && end-start < 1<<20; end++ {
-			c := content[end]
-			if quote != 0 {
-				code.WriteByte(' ')
-				if escaped {
-					escaped = false
-					continue
-				}
-				if c == '\\' {
-					escaped = true
-				} else if c == quote {
-					quote = 0
-				}
-				continue
-			}
-			if c == '"' || c == '\'' {
-				quote = c
-				code.WriteByte(' ')
-				continue
-			}
-			if c == '(' {
+	code, fstrings := pythonCode(content)
+	for _, loc := range pythonCall.FindAllStringIndex(code, -1) {
+		start, depth, end := loc[1], 1, loc[1]
+		for ; end < len(code) && end-start < 1<<20; end++ {
+			if code[end] == '(' {
 				depth++
 			}
-			if c == ')' {
+			if code[end] == ')' {
 				depth--
 				if depth == 0 {
 					break
 				}
 			}
-			code.WriteByte(c)
 		}
 		if depth != 0 {
 			continue
 		}
 		body := content[start:end]
-		shell := pythonShellFlag.MatchString(code.String()) || pythonShellList.MatchString(body)
-		formatted := pythonFString.MatchString(body) || strings.ContainsAny(code.String(), "+%")
+		shell := pythonShellFlag.MatchString(code[start:end]) || pythonShellList.MatchString(body)
+		formatted := strings.ContainsAny(code[start:end], "+%")
+		for _, pos := range fstrings {
+			if pos >= start && pos < end {
+				formatted = true
+				break
+			}
+		}
 		if shell && formatted {
 			lines[strings.Count(content[:loc[0]], "\n")+1] = true
 		}

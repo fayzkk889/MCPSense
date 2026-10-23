@@ -3,6 +3,7 @@ package checks
 import (
 	"encoding/json"
 	"github.com/fayzkk889/MCPSense/internal/models"
+	"strings"
 	"testing"
 )
 
@@ -42,6 +43,27 @@ func TestMetadataFieldInjection(t *testing.T) {
 	}
 }
 
+func TestMetadataInspectionLimitsFailClosed(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		data json.RawMessage
+	}{
+		{"invalid", json.RawMessage(`{"type":`)},
+		{"nesting", json.RawMessage(strings.Repeat(`[`, 130) + `"text"` + strings.Repeat(`]`, 130))},
+		{"strings", json.RawMessage(`[` + strings.Repeat(`"x",`, 100001) + `"end"]`)},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			ctx := newTestCtx()
+			ctx.Manifest = manifestWithTool("read", "Read the record.", nil)
+			ctx.Manifest.Tools[0].InputSchema = tc.data
+			(&InjectionCheck{}).Run(ctx)
+			if len(ctx.Errors) == 0 {
+				t.Fatal("incomplete metadata inspection must report an execution error")
+			}
+		})
+	}
+}
+
 func TestSourceArgvVersusShell(t *testing.T) {
 	for _, tc := range []struct {
 		file, source string
@@ -49,11 +71,17 @@ func TestSourceArgvVersusShell(t *testing.T) {
 	}{
 		{"safe.go", `exec.Command("printf", fmt.Sprintf("%s", input))`, false},
 		{"safe.go", `exec.Command("printf", "prefix" + input)`, false},
+		{"invalid.go", `not valid Go at all !!!`, false},
 		{"unsafe.go", `exec.Command("sh", "-c", fmt.Sprintf("printf %s", input))`, true},
 		{"unsafe.go", "package main\nfunc x(){exec.Command(\"sh\",\n\"-c\", fmt.Sprintf(\"printf %s\", input))}", true},
 		{"safe.py", `subprocess.run(["printf", f"{user_input}"], shell=False)`, false},
 		{"unsafe.py", `subprocess.run(f"printf {user_input}", shell=True)`, true},
 		{"unsafe.py", `subprocess.run(["sh", "-c", f"printf {user_input}"], shell=False)`, true},
+		{"safe.py", `# subprocess.run(f"printf {user_input}", shell=True)`, false},
+		{"safe.py", `"""subprocess.run(f"printf {user_input}", shell=True)"""`, false},
+		{"safe.py", `subprocess.run(["printf", "shell=True", f"{user_input}"], shell=False)`, false},
+		{"safe.py", `subprocess.run("printf a", shell=True) # f"{user_input}"`, false},
+		{"unsafe.py", "subprocess.run(\nrf\"printf {user_input}\",\nshell=True\n)", true},
 	} {
 		ctx := newTestCtx()
 		ctx.SourceFiles = map[string]string{tc.file: tc.source}

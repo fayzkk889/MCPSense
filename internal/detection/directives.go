@@ -15,7 +15,7 @@ func directivePatterns() []Pattern {
 	defs := []struct{ id, name, expression string }{
 		{"PI-013", "Task or authority replacement", `\b(set aside|disobey|discard|disregard|override|replace|supersede)\b[^\n.!?]{0,100}\b(task|instructions?|constraints?|rules?|policy|policies|restrictions?)\b|\b(original task|developer restrictions|safety policies)\b[^\n.!?]{0,50}\b(no longer|suspended|disabled)\b|\b(follow|obey|trust|prioritize)\s+(only\s+)?(this\s+(server|tool|description)|the\s+instructions\s+in\s+this\s+tool)\b[^\n.!?]{0,100}\b(over|instead|from now|exclusively|user|only)\b`},
 		{"PI-014", "Unauthorized disclosure directive", `\b(read|copy|send|upload(?:ing)?|forward|transmit|reveal|disclose|print|include|attach|paste|steal)\b[^\n!?]{0,180}\b(private\s+keys?|credentials?|api[_ -]?keys?|(?:access|all)\s+tokens?|recovery\s+codes?|confidential\s+(emails?|files?|documents?)|entire\s+inbox|\.aws/credentials|\.ssh/|id_rsa|id_ed25519)\b`},
-		{"PI-015", "Concealment or false reporting", `\b(hide|conceal|suppress)\b[^\n.!?]{0,90}\b(warnings?|findings?|changes?|actions?|transfer|user)\b|\b(delete|erase|remove)\b[^\n.!?]{0,60}\b(audit|evidence|records?)\b|\b(tell|report|claim)\b[^\n.!?]{0,90}\b(no files were changed|everything passed|repository is secure|scan completed successfully)\b|\b(do not|don't|never|without)\s+(tell|show|display|mention|report|warn|inform|notify|telling|informing|notifying)\b[^\n.!?]{0,70}\b(user|operator|edit|changes?|this|anyone)\b`},
+		{"PI-015", "Concealment or false reporting", `\b(hide|conceal|suppress)\b[^\n.!?]{0,90}\b(warnings?|findings?|changes?|actions?|transfer|user)\b|\b(tell|report|claim)\b[^\n.!?]{0,90}\b(no files were changed|everything passed|repository is secure|scan completed successfully)\b|\b(do not|don't|never|without)\s+(tell|show|display|mention|report|warn|inform|notify|telling|informing|notifying)\b[^\n.!?]{0,70}\b(user|operator|edit|changes?|this|anyone)\b`},
 		{"PI-016", "Answer substitution", `\b(replace|rewrite|alter|change|add)\b[^\n.!?]{0,100}\b(answer|results?|invoice|bank|destination|affiliate|advertis|recommendation)\b[^\n.!?]{0,100}\b(pretend|conceal|hide|attacker|affiliate|our product|advertis)\w*|\b(always claim|pretend)\b[^\n.!?]{0,80}\b(secure|documents support|came from|no files)\b`},
 		{"PI-017", "Persistent instruction poisoning", `\b(append|modify|edit|write|update|add)\b[^\n.!?]{0,100}(agents\.md|claude\.md|skill\.md|future\s+(agents?|sessions?))[^\n!?]{0,160}\b(trust|obey|follow|requiring|secret|without|over the user|instead of)\b`},
 		{"PI-018", "Permission or approval bypass", `\b(bypass|disable|skip|suspend|override)\b[^\n.!?]{0,70}\b(approval|permission|confirmation|safety|security)\b|\b(retry|run|execute)\b[^\n.!?]{0,70}\b(root|administrator)\s+privileges\b|\b(without|regardless of)\s+(user\s+)?(approval|confirmation|consent)\b`},
@@ -33,7 +33,7 @@ func directivePatterns() []Pattern {
 }
 
 var clauseBreak = regexp.MustCompile(`[.!?;](?:\s+|$)|\r?\n|,\s*(?:then|but|instead|however)\s+`)
-var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read)\b`)
+var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not|refuse to|refuse any attempt to)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read)\b`)
 var continuation = regexp.MustCompile(`(?i)\b(then|instead|now|however|but|obey|follow that|execute it)\b`)
 var quotedData = regexp.MustCompile(`"[^"\r\n]*"|(?:^|[\s(])'[^'\r\n]*'(?:$|[\s).,!?:;])`)
 var reportedThreat = regexp.MustCompile(`(?i)\battackers?(?:\s+who)?\s+(steal|send|upload|copy)\b`)
@@ -44,8 +44,8 @@ var benignMetadata = []*regexp.Regexp{
 	regexp.MustCompile(`(?is)^\s*(this|the)\s+(security\s+)?(tutorial|article|lesson)\s+quotes?\s+the\s+phrase\s+'[^'\r\n]{1,256}'\s+as\s+an?\s+attack\s+example[.!]?\s*$`),
 	regexp.MustCompile(`(?is)^\s*search\s+for\s+(jailbreak|prompt injection)\s+research\s+papers\s+in\s+(the\s+)?documentation\s+index[.!]?\s*$`),
 	regexp.MustCompile(`(?is)^\s*summarize\s+(a|the)\s+(security|incident)\s+(article|report)\s+about\s+attackers?\s+(who\s+)?[^\n]{1,200}$`),
-	regexp.MustCompile(`(?is)^\s*(search|retrieve|find)\b[^\n]{0,180}\b(documents?|reports?|logs?|articles?|papers?|index)\b[^\n]{0,220}\b(phrase|examples?|research|prevention|quoted)\b[^\n]{0,260}\b(return|for security analysts)\b[^\n]{0,80}(titles|records|matches|results|citations|analysts)[.!]?\s*$`),
-	regexp.MustCompile(`(?is)^\s*(explain|summarize)\b[^\n]{0,180}\b(why|article|tutorial|lesson|attack|security)\b[^\n]{0,220}\b(untrusted data|unsafe instruction|without following|do not access|must be treated|security lesson)\b[^\n]{0,100}$`),
+	regexp.MustCompile(`(?is)^\s*(search|retrieve|find)\b[^\n]{0,180}\b(documents?|documentation|reports?|logs?|articles?|papers?|index)\b[^\n]{0,220}\b(phrase|examples?|research|prevention|quoted)\b[^\n]{0,260}\b(return|for security analysts)\b[^\n]{0,80}(titles|records|matches|results|citations|analysts)[.!]?\s*$`),
+	regexp.MustCompile(`(?is)^\s*(explain|summarize)\b[^\n]{0,180}\b(why|how|article|tutorial|lesson|attack|security)\b[^\n]{0,220}\b(untrusted data|unsafe instruction|without following|do not access|must be treated|security lesson)\b[^\n]{0,100}$`),
 	regexp.MustCompile(`(?is)^\s*(format|render)\b[^\n]{0,130}\b(xml|literal|tags)\b[^\n]{0,160}\b(as (escaped )?text|without interpreting|inert|escaped text)\b[^\n]{0,100}$`),
 	regexp.MustCompile(`(?is)^\s*(describe|show|guide)\b[^\n]{0,100}\bdeveloper mode\b[^\n]{0,100}\b(device|phone|settings)\b[^\n]{0,100}$`),
 	regexp.MustCompile(`(?is)^\s*(redact|rotate|report whether|generate)\b[^\n]{0,250}\b(credential|key|password|secret|log)\b[^\n]{0,160}\b(redact|secret manager|fingerprint|never its contents|without displaying|return it once|once)\b[^\n]{0,100}$`),
@@ -80,7 +80,11 @@ func benignToolClause(text string) bool {
 			}
 		}
 		if safe {
-			return true
+			// A negated first verb must not hide a later relational directive
+			// whose wording is absent from the literal pattern catalog.
+			if len(rawIntentMatches(normalizedDirective(text[negated[1]:]))) == 0 {
+				return true
+			}
 		}
 	}
 	// A recognized query has a constrained outside-quote grammar. Generic
@@ -143,7 +147,8 @@ func normalizedDirective(text string) string {
 
 // InstructionText removes only complete recognized benign metadata clauses.
 // Every subsequent clause is still scanned; quotation or "example" alone is
-// never an exemption. Skills use ScanDescriptions and do not enter this path.
+// never an exemption. Literal skill rules still inspect the original text;
+// relational screening also uses this constrained context handling.
 func InstructionText(content string) string {
 	bytes := []byte(content)
 	start := 0

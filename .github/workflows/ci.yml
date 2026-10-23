@@ -43,6 +43,13 @@ jobs:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_ACCEPTANCE_DIR: bin/product-ci
           MCPSENSE_VALIDATION: '1'
+          MCPSENSE_INTENT_VALIDATION: '1'
+          MCPSENSE_ENFORCE_PRODUCT: '1'
+      - name: Beginner and experienced-user acceptance
+        run: node scripts/persona-acceptance.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_PERSONA_DIR: bin/persona-ci
           MCPSENSE_ENFORCE_PRODUCT: '1'
       - name: Live metadata product scenarios
         run: node scripts/product-live-acceptance.mjs

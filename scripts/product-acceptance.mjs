@@ -62,6 +62,7 @@ const oldBaseline=write('legacy-baseline.json',{version:1,tools:[{description:'s
 const large=write('oversized.json',' '.repeat(4*1024*1024+1));r=scan('oversized-input',large);check('Oversized input fails visibly',r.exit===2,'exit='+r.exit);
 const corpora=[['historical',path.resolve('testdata/description_benchmark.json')],['holdout',path.resolve('testdata/product-description-holdout-2026-10-23.json')]];
 if(process.env.MCPSENSE_VALIDATION)corpora.push(['validation',path.resolve('testdata/product-validation-2026-10-23.json')]);
+if(process.env.MCPSENSE_INTENT_VALIDATION)corpora.push(['intent-validation',path.resolve('testdata/intent-validation-2026-10-23.json')]);
 const benchmarks=[];
 for(const [name,file] of corpora){
  const bytes=fs.readFileSync(file),data=JSON.parse(bytes),cases=Array.isArray(data)?data:data.cases,records=[];

@@ -9,11 +9,11 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
-// InjectionCheck detects prompt injection patterns in tool descriptions.
+// InjectionCheck screens enumerated metadata for prompt injection signals.
 type InjectionCheck struct{}
 
 func (c *InjectionCheck) ID() string                { return "SEC-001" }
-func (c *InjectionCheck) Name() string              { return "Prompt injection in tool descriptions" }
+func (c *InjectionCheck) Name() string              { return "Prompt injection in enumerated metadata" }
 func (c *InjectionCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
@@ -29,7 +29,7 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	for _, text := range texts {
 		matches := ctx.Patterns.ScanToolDescription(text.text)
 		if text.instructions {
-			matches = ctx.Patterns.ScanDescriptions(text.text)
+			matches = ctx.Patterns.ScanInstructions(text.text)
 		}
 		seen := make(map[string]bool)
 		for _, m := range matches {
@@ -41,11 +41,11 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 			findings = append(findings, models.Finding{
 				ID:          "SEC-001",
 				Title:       fmt.Sprintf("Possible prompt injection in metadata: %s (%s)", text.owner, text.field),
-				Description: fmt.Sprintf("Metadata field %s for %q triggered pattern %s (%s). Matched text: %q", text.field, text.owner, m.PatternID, m.PatternName, m.MatchedText),
+				Description: fmt.Sprintf("Metadata field %s for %q triggered pattern %s (%s). %s Evidence excerpt: %q", text.field, text.owner, m.PatternID, m.PatternName, m.Description, m.MatchedText),
 				Severity:    m.Severity,
 				Category:    models.CategorySecurity,
 				Location:    models.Location{ToolName: text.owner},
-				Remediation: "Remove instruction-like or directive language from tool descriptions. Descriptions should explain what the tool does, not manipulate agent behavior.",
+				Remediation: "Review the complete metadata field and remove unauthorized directives. Enforce permissions in the host; screening cannot establish authorization or prevent execution.",
 			})
 		}
 	}
