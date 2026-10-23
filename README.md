@@ -5,8 +5,10 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 [![CI](https://img.shields.io/github/actions/workflow/status/fayzkk889/MCPSense/ci.yml?branch=main)](https://github.com/fayzkk889/MCPSense/actions)
 [![Go](https://img.shields.io/badge/go-1.22%2B-blue)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![npm latest](https://img.shields.io/npm/v/mcpsense?label=npm%20latest)](https://www.npmjs.com/package/mcpsense)
+[![GitHub release](https://img.shields.io/github/v/release/fayzkk889/MCPSense?label=GitHub%20release)](https://github.com/fayzkk889/MCPSense/releases/latest)
 
-This documentation describes **0.4.0**. Run `mcpsense version` to check your installed version: older versions do not include these controls. A development checkout can contain changes newer than the latest published release.
+This checkout describes the **0.4.0 candidate**. The linked npm/GitHub badges show the published versions; changes on main are delivered by package commands only after a release is published. Run `mcpsense version` after installing. The candidate also supports `mcpsense version --check` to compare both public channels explicitly; older versions may not have that flag.
 
 ## Start safely
 
@@ -14,7 +16,7 @@ Choose one installation route for a published release:
 
 ```sh
 # Node.js/npm users: no Go compiler required
-npm install -g mcpsense
+npm install -g mcpsense@latest
 # Go users: no Node.js/npm required
 go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
 ```
@@ -24,6 +26,8 @@ Then scan your MCP manifest or configuration:
 ```sh
 mcpsense scan ./mcp.json --offline --no-baseline
 ```
+
+Check installation with `mcpsense version` and `mcpsense --help`. In the candidate, `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically; ordinary startup and offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
 
 ### From a source checkout
 
@@ -144,6 +148,8 @@ mcpsense verify before.json after.json
 
 Verification is offline and requires completed, equivalent schema-2 scans: same target, mode, input inventory, protocol, selected checks, advisory/baseline policy, approved-baseline digest and severity filter. Changed or incomplete coverage remains unverified. `resolved` means a rule/component group was no longer detected in that equivalent scope; it does not prove exploit prevention or authenticity of unsigned report files.
 
+Reports also carry a detector fingerprint derived from the checked-in rule source and Go toolchain. Verification refuses changed or missing fingerprints, so upgrading the scanner cannot masquerade as fixing the target. Recreate both reports with the same detector when comparing older reports or changing toolchains. The fingerprint is an equivalence guard, not a signature.
+
 See the [reproducible before/after demonstration](docs/engineering/remediation-demo.md), [test report](docs/engineering/test-report.md), and [release readiness](docs/engineering/release-readiness.md).
 
 ## GitHub Action
@@ -177,5 +183,9 @@ Inputs: `target` (required), `mode` (auto), `severity` (low), `fail-on` (high), 
 Run `go test ./... -count=1`, `go test -race ./...`, `go vet ./...`, and `node --test scripts/action.test.mjs npm/package.test.cjs`. CI tests Linux/Windows with Go 1.22 and 1.27. GoReleaser builds Linux amd64/arm64, macOS amd64/arm64 and Windows amd64. Cross-compilation alone does not demonstrate runtime correctness.
 
 The [40-description diagnostic corpus](testdata/description_benchmark.json) includes benign security documentation and semantic attacks. Observed precision was 0.7727 and recall 0.8500, with five false positives and three misses. It is a small authored corpus, not an independent field evaluation; detection percentages and statement coverage are not security guarantees.
+
+A [broader product acceptance check](docs/engineering/product-acceptance-2026-10-23.md) tested 60 newly labelled descriptions on Windows and Linux. Across all security rules, 16 of 30 hostile cases were flagged and 9 of 30 benign cases were falsely flagged (64.0% precision, 53.3% recall). Injection-rule-only recall was 26.7%. Two hostile examples scored 100. These exploratory results expose substantial detection limits; a clean scan must not determine whether an integration is safe. The same walkthrough reproduced an unsupported critical command-injection claim for literal argument data.
+
+Those are the preserved pre-fix results. The [subsequent fixes and evaluation](docs/engineering/product-improvements-2026-10-23.md) address directive families, benign metadata context and literal argv. A further40 pre-labelled examples initially produced20/20 hostile detections and2/20 benign false alarms. Reused datasets are regression evidence; none of these small agent-authored sets establishes deployment accuracy or universal protection.
 
 See [baseline audit](docs/engineering/repository-audit.md), [security research](docs/research/2026-10-security-landscape.md), and [commercial hypothesis](docs/research/commercial-validation.md) for evidence and remaining uncertainty. No hosted service, payment system, exploit verification or incident-response claim is included. MIT remains unchanged.

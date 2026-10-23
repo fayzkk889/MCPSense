@@ -63,7 +63,29 @@ func (e *PatternEngine) ScanDescriptions(content string) []PatternMatch {
 var documentQuery = regexp.MustCompile(`(?is)^\s*(?:search(?:es)?|retriev(?:e|es))\s+(?:[\p{L}\p{N}_-]+\s+){0,8}(?:documents?|reports?|logs?|examples?)\s+(?:for\s+(?:examples?\s+such\s+as|(?:the\s+)?(?:literal|quoted)\s+(?:text|phrase))|containing\s+(?:the\s+quoted\s+phrase\s+)?)\s*["“]([^"”\r\n]{1,256})["”]\s*(?:and\s+returns?\s+(?:matching\s+)?(?:document\s+)?(?:titles|records|matches|results)|for\s+security\s+analysts)?[.!]?\s*$`)
 
 func (e *PatternEngine) ScanToolDescription(content string) []PatternMatch {
-	matches := e.ScanDescriptions(content)
+	screened := InstructionText(content)
+	matches := e.ScanDescriptions(screened)
+	for i := range matches {
+		m := &matches[i]
+		m.MatchedText = content[m.Offset : m.Offset+len(m.MatchedText)]
+	}
+	// Normalization is a second pass. Evidence always refers to original text,
+	// never fabricated normalized byte offsets.
+	normalized := normalizedDirective(screened)
+	if normalized != strings.ToLower(screened) {
+		seen := map[string]bool{}
+		for _, m := range matches {
+			seen[m.PatternID] = true
+		}
+		for _, m := range e.ScanDescriptions(normalized) {
+			if !seen[m.PatternID] {
+				m.MatchedText = content
+				m.Offset = 0
+				matches = append(matches, m)
+				seen[m.PatternID] = true
+			}
+		}
+	}
 	span := documentQuery.FindStringSubmatchIndex(content)
 	if span == nil {
 		return matches

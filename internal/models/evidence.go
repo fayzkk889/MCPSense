@@ -56,6 +56,12 @@ func VerifyReports(before, after *Report) (*Verification, error) {
 		if r == nil || r.SchemaVersion != 2 || r.Coverage.State != "completed" || len(r.Coverage.Surfaces) == 0 || len(r.Coverage.Inputs) == 0 || len(r.Coverage.SelectedChecks) == 0 || len(r.TargetHash) != 64 {
 			return nil, fmt.Errorf("verification requires complete schema-2 reports")
 		}
+		if len(r.Coverage.DetectorProfile) != 64 {
+			return nil, fmt.Errorf("verification requires detector identity; recreate both reports with the same scanner")
+		}
+		if _, err := hex.DecodeString(r.Coverage.DetectorProfile); err != nil {
+			return nil, fmt.Errorf("invalid detector identity")
+		}
 		if r.Coverage.Advisories != "completed" && r.Coverage.Advisories != "skipped" && r.Coverage.Advisories != "not_applicable" {
 			return nil, fmt.Errorf("advisory verification incomplete")
 		}

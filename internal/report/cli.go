@@ -58,12 +58,15 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	fmt.Fprintf(w, "Mode:    %-43s", truncate(report.ScanMode, 43))
 	fmt.Fprint(w, colorBold.Sprint("║\n"))
 	fmt.Fprint(w, colorBold.Sprint("║  "))
-	scoreStr := fmt.Sprintf("%d/100", report.Score)
+	scoreStr := fmt.Sprintf("%d/100 (finding score)", report.Score)
 	scoreColored := scoreColor(report.Score).Sprint(scoreStr)
 	padding := 43 - len(scoreStr)
 	fmt.Fprintf(w, "Score:   %s%s", scoreColored, strings.Repeat(" ", padding))
 	fmt.Fprint(w, colorBold.Sprint("║\n"))
 	fmt.Fprint(w, colorBold.Sprint("╚"+line+"╝\n"))
+	fmt.Fprintf(w, "  Version: %s\n", AppVersion)
+	fmt.Fprintln(w, "  Score summarizes detected findings; it is not a probability of safety.")
+	fmt.Fprintln(w, "  Metadata screening cannot prove that an integration is safe.")
 	fmt.Fprint(w, "\n")
 }
 

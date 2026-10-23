@@ -1,13 +1,29 @@
 package models
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func evidenceReport(fs []Finding) *Report {
 	r := NewReport("target", "manifest", fs)
 	r.MinSeverity = "low"
-	r.Coverage = Coverage{State: "completed", Surfaces: []string{"manifest"}, Inputs: []string{"same"}, SelectedChecks: []string{"SEC-001"}, Advisories: "skipped"}
+	r.Coverage = Coverage{DetectorProfile: strings.Repeat("a", 64), State: "completed", Surfaces: []string{"manifest"}, Inputs: []string{"same"}, SelectedChecks: []string{"SEC-001"}, Advisories: "skipped"}
 	r.FinalizeEvidence()
 	return r
+}
+
+func TestDetectorChangeIsNotRemediation(t *testing.T) {
+	before, after := evidenceReport([]Finding{{ID: "SEC-001", Location: Location{ToolName: "read"}}}), evidenceReport(nil)
+	after.Coverage.DetectorProfile = strings.Repeat("b", 64)
+	if _, err := VerifyReports(before, after); err == nil {
+		t.Fatal("scanner change was counted as a remediation")
+	}
+	before.Coverage.DetectorProfile = ""
+	after.Coverage.DetectorProfile = ""
+	if _, err := VerifyReports(before, after); err == nil {
+		t.Fatal("reports lacking detector identity were compared")
+	}
 }
 func TestVerificationRequiresEquivalentCompleteCoverage(t *testing.T) {
 	old := evidenceReport([]Finding{{ID: "SEC-001", Location: Location{ToolName: "read"}}})

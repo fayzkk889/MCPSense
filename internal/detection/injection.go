@@ -5,6 +5,7 @@ import "github.com/fayzkk889/MCPSense/internal/models"
 // loadCorePatterns registers prompt injection patterns ported from P.I. SHIELD concepts.
 func (e *PatternEngine) loadCorePatterns() {
 	e.patterns = append(e.patterns, coreInjectionPatterns()...)
+	e.patterns = append(e.patterns, directivePatterns()...)
 }
 
 func coreInjectionPatterns() []Pattern {

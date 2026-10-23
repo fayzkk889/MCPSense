@@ -2,7 +2,6 @@ package checks
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/models"
@@ -14,68 +13,62 @@ import (
 // MCP client config files that could achieve RCE when the config is loaded by an IDE.
 type ConfigCommandInjectionCheck struct{}
 
-func (c *ConfigCommandInjectionCheck) ID() string              { return "SEC-014" }
-func (c *ConfigCommandInjectionCheck) Name() string            { return "Command injection in MCP client config" }
+func (c *ConfigCommandInjectionCheck) ID() string                { return "SEC-014" }
+func (c *ConfigCommandInjectionCheck) Name() string              { return "Command injection in MCP client config" }
 func (c *ConfigCommandInjectionCheck) Category() models.Category { return models.CategorySecurity }
 
-// shellMetacharPattern matches shell metacharacters in command strings.
-var shellMetacharPattern = regexp.MustCompile(`[;&|` + "`" + `$(){}]`)
-
-// suspiciousCommands are binaries that should never appear in MCP server configs.
-var suspiciousCommands = []string{
-	"curl", "wget", "nc", "ncat", "netcat", "bash -c", "sh -c", "cmd /c",
-	"powershell -c", "python -c", "python3 -c", "ruby -e", "perl -e", "node -e",
-}
-
+// Configuration supplies argv, not evidence that a shell interprets every value.
+// Report explicit interpreters/inline code as review signals; never infer proven
+// injection from punctuation in a literal argument or a substring of a path.
 func (c *ConfigCommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	if ctx.ClientConfig == nil {
 		return nil
 	}
 	var findings []models.Finding
 	for serverName, entry := range ctx.ClientConfig.MCPServers {
-		// Check the command field
-		if shellMetacharPattern.MatchString(entry.Command) {
-			findings = append(findings, models.Finding{
-				ID:          "SEC-014",
-				Title:       fmt.Sprintf("Shell metacharacters in config server %q command", serverName),
-				Description: fmt.Sprintf("MCP server entry %q has command %q containing shell metacharacters. This is the exact attack vector used in CVE-2025-6514 and CVE-2026-30615 to achieve RCE via MCP config files.", serverName, entry.Command),
-				Severity:    models.SeverityCritical,
-				Category:    models.CategorySecurity,
-				Location:    models.Location{File: serverName},
-				Remediation: "Remove all shell metacharacters from the command field. Use only a direct binary path (e.g., 'npx', 'node', 'python3'). Never use shell-interpreted command strings in MCP configs.",
-			})
+		command := strings.TrimSpace(entry.Command)
+		args := entry.Args
+		fields := strings.Fields(command)
+		if len(fields) > 1 && !strings.ContainsAny(command, "\\/") {
+			command = fields[0]
+			args = append(append([]string{}, fields[1:]...), args...)
 		}
-
-		// Check args for shell metacharacters
-		fullArgs := strings.Join(entry.Args, " ")
-		if shellMetacharPattern.MatchString(fullArgs) {
-			findings = append(findings, models.Finding{
-				ID:          "SEC-014",
-				Title:       fmt.Sprintf("Shell metacharacters in config server %q args", serverName),
-				Description: fmt.Sprintf("MCP server entry %q has args containing shell metacharacters: %v. Arguments are passed to shell execution by most MCP clients, enabling command injection.", serverName, entry.Args),
-				Severity:    models.SeverityCritical,
-				Category:    models.CategorySecurity,
-				Location:    models.Location{File: serverName},
-				Remediation: "Remove shell metacharacters from all arguments. Each argument should be a plain string with no shell interpretation.",
-			})
+		name := strings.ToLower(strings.ReplaceAll(command, "\\", "/"))
+		if i := strings.LastIndex(name, "/"); i >= 0 {
+			name = name[i+1:]
 		}
-
-		// Check for suspicious commands
-		cmdLower := strings.ToLower(entry.Command + " " + fullArgs)
-		for _, suspicious := range suspiciousCommands {
-			if strings.Contains(cmdLower, suspicious) {
-				findings = append(findings, models.Finding{
-					ID:          "SEC-014",
-					Title:       fmt.Sprintf("Suspicious command in config server %q", serverName),
-					Description: fmt.Sprintf("MCP server entry %q uses %q, which is unusual for a legitimate MCP server and may indicate an attempt to download or execute malicious code.", serverName, suspicious),
-					Severity:    models.SeverityHigh,
-					Category:    models.CategorySecurity,
-					Location:    models.Location{File: serverName},
-					Remediation: "Verify this is a legitimate MCP server. Standard MCP servers use 'npx', 'uvx', 'node', 'python', or a direct binary path as their command. Network-fetching commands like curl/wget in a config are a red flag.",
-				})
-				break
+		name = strings.TrimSuffix(name, ".exe")
+		reason := ""
+		for _, arg := range args {
+			flag := strings.ToLower(arg)
+			switch name {
+			case "sh", "bash", "zsh", "dash", "ksh", "fish":
+				if strings.HasPrefix(flag, "-") && !strings.HasPrefix(flag, "--") && strings.Contains(flag, "c") {
+					reason = "explicit shell command evaluation"
+				}
+			case "cmd":
+				if flag == "/c" || flag == "/k" {
+					reason = "explicit Windows shell command evaluation"
+				}
+			case "powershell", "pwsh":
+				if flag == "-c" || strings.HasPrefix(flag, "-command") || strings.HasPrefix(flag, "-enc") {
+					reason = "explicit PowerShell code evaluation"
+				}
+			case "node", "nodejs", "python", "python3", "ruby", "perl":
+				if flag == "-e" || flag == "-c" || flag == "--eval" || strings.HasPrefix(flag, "--eval=") {
+					reason = "inline interpreter code"
+				}
 			}
 		}
+		if reason == "" {
+			continue
+		}
+		findings = append(findings, models.Finding{
+			ID: "SEC-014", Title: fmt.Sprintf("Review executable code in config server %q", serverName),
+			Description: fmt.Sprintf("MCP server entry %q selects %s. Review the code and any untrusted values reaching it. Configuration metadata alone does not establish command injection or exploitation.", serverName, reason),
+			Severity:    models.SeverityHigh, Category: models.CategorySecurity, Location: models.Location{File: serverName},
+			Remediation: "Prefer a reviewed executable or script with separate argument values. If shell or inline code is necessary, review its inputs and enforce permissions at execution time. Literal punctuation in argv is not itself shell execution.",
+		})
 	}
 	return findings
 }
@@ -85,8 +78,8 @@ func (c *ConfigCommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 // ConfigEnvLeakageCheck flags config entries that pass sensitive environment variables to MCP servers.
 type ConfigEnvLeakageCheck struct{}
 
-func (c *ConfigEnvLeakageCheck) ID() string              { return "SEC-015" }
-func (c *ConfigEnvLeakageCheck) Name() string            { return "Sensitive env vars passed to MCP server" }
+func (c *ConfigEnvLeakageCheck) ID() string                { return "SEC-015" }
+func (c *ConfigEnvLeakageCheck) Name() string              { return "Sensitive env vars passed to MCP server" }
 func (c *ConfigEnvLeakageCheck) Category() models.Category { return models.CategorySecurity }
 
 // sensitiveEnvPrefixes lists env var name prefixes that indicate secrets.
@@ -146,8 +139,8 @@ func (c *ConfigEnvLeakageCheck) Run(ctx *ScanContext) []models.Finding {
 // ConfigUnverifiedSourceCheck flags MCP server entries that use unpinned or unverified package sources.
 type ConfigUnverifiedSourceCheck struct{}
 
-func (c *ConfigUnverifiedSourceCheck) ID() string              { return "SEC-016" }
-func (c *ConfigUnverifiedSourceCheck) Name() string            { return "Unverified MCP server source" }
+func (c *ConfigUnverifiedSourceCheck) ID() string                { return "SEC-016" }
+func (c *ConfigUnverifiedSourceCheck) Name() string              { return "Unverified MCP server source" }
 func (c *ConfigUnverifiedSourceCheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *ConfigUnverifiedSourceCheck) Run(ctx *ScanContext) []models.Finding {

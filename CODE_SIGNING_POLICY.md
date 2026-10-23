@@ -6,4 +6,6 @@ GoReleaser builds from source and produces SHA-256 checksums. Checksums detect m
 
 Static/config scans can send recognized package names and versions to OSV.dev by default. --no-cve disables advisory access. --offline prohibits scanner networking and local server execution. Explicit live scans contact the authorized target subject to destination policy. Installation and source builds may separately require network access.
 
+`mcpsense version --check` explicitly contacts GitHub and npm for public version metadata; no project files or target configuration are sent. Ordinary version/startup and offline scanning do not perform this lookup. It does not automatically install or change protection settings.
+
 Format-2 snapshots minimize retained metadata; report redaction is best effort. Read the README privacy section before sharing baselines, reports or CI artifacts. MIT licensing is unchanged.

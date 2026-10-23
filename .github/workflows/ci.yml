@@ -26,6 +26,7 @@ jobs:
       - run: go vet ./...
       - run: node --test scripts/action.test.mjs npm/package.test.cjs
       - run: npm pack ./npm --dry-run --json --ignore-scripts
+      - run: node scripts/release-verify.mjs
       - run: go build -ldflags="-X main.version=0.4.0" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
       - run: node --test npm/package.test.cjs
         env:
@@ -36,6 +37,18 @@ jobs:
       - run: node scripts/npm-install-smoke.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+      - name: Expanded product and frozen description evaluation
+        run: node scripts/product-acceptance.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_ACCEPTANCE_DIR: bin/product-ci
+          MCPSENSE_VALIDATION: '1'
+          MCPSENSE_ENFORCE_PRODUCT: '1'
+      - name: Live metadata product scenarios
+        run: node scripts/product-live-acceptance.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_ACCEPTANCE_DIR: bin/product-live-ci
   action:
     runs-on: ubuntu-latest
     permissions:
