@@ -2,6 +2,8 @@
 
 This follows the [failing persona retest](persona-retest-2026-10-23.md). Its original failures and labels remain available. PR8 contains the fixes; publication is a separate approval boundary. Nothing here establishes universal detection, field accuracy or warning-free Windows installation.
 
+**Superseding Windows installation result:** all seven jobs passed for implementation commit `eda1d70`, including both native hosted Windows matrices and real archive installation without Go. However, the exact verified CI Windows snapshot failed startup on the local machine during installation. Event3077 identifies Smart App Control policy `{0283ac0f-fff1-49ae-ada1-8a933130cad6}`; its executable is unsigned. This is a remaining public-release blocker for the requested Windows experience. See the [confirmed cause and signing prerequisites](windows-signing-readiness-2026-10-23.md). Passing hosted CI does not clear it.
+
 ## Installation and first use
 
 The 0.4.0 npm installer already downloads a prebuilt platform executable, verifies the archive checksum and tests startup/version before replacing an installation. It does not invoke or install Go. Automatically installing a compiler would add downloads, platform changes and failure modes without helping this route. The separate Go installation remains available without npm. The public 0.3.0 npm package has the old Windows Go dependency; pushing source does not change that package. A successful public 0.4.0 installation can only be verified after approved publication.

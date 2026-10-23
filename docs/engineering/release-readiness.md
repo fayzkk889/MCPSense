@@ -4,6 +4,8 @@
 
 [PR8](https://github.com/fayzkk889/MCPSense/pull/8) addresses the observed metadata omissions, attack paraphrases, safe-argv false alarms and first-run gaps. See the [release-blocker report](release-blockers-2026-10-23.md) for research, measurements and limits. Final exact-commit checks and public publication/installation are separate gates. The sections below preserve historical failures and delivery states; they do not describe the current branch or merge status.
 
+**Windows public-release gate remains open:** the verified CI snapshot is blocked locally by Smart App Control because it is unsigned. Hosted install tests pass, but trusted signing and a protected-device retest are still required for the requested distribution experience. [Evidence and next steps](windows-signing-readiness-2026-10-23.md).
+
 ## Historical persona retest
 
 The [beginner/expert retest](persona-retest-2026-10-23.md) on main5f94d78 found eight new hostile paraphrases missed, four benign false alarms in16 stress descriptions, five unexamined metadata-field probes, safe argv source called critical injection, and public npm-only Windows installation still failing on0.3.0. These are corroborated Windows/Linux observations, not a field-accuracy estimate. **Broad-release acceptance remains blocked despite green engineering CI and the earlier140-case results.** Read that report before interpreting the historical checkpoints below.
