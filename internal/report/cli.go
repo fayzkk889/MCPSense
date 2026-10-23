@@ -76,6 +76,9 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	if report.Coverage.BaselineWarning != "" {
 		fmt.Fprintln(w, "  Baseline coverage: "+report.Coverage.BaselineWarning)
 	}
+	if report.Coverage.AdvisoryScope != "" {
+		fmt.Fprintln(w, "  Advisory scope: recognized launch packages only; project and transitive dependencies are not inventoried.")
+	}
 	fmt.Fprint(w, "\n")
 }
 

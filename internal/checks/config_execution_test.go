@@ -20,6 +20,8 @@ func TestConfigExecutionEvidence(t *testing.T) {
 		{"windows shell", "C:\\Windows\\System32\\cmd.exe", []string{"/c", "echo harmless"}, true},
 		{"powershell code", "powershell.exe", []string{"-NoProfile", "-Command", "Write-Output harmless"}, true},
 		{"inline code", "node", []string{"-e", "console.log('harmless')"}, true},
+		{"npm shell call", "npm", []string{"exec", "--package=example@1.2.3", "--call", "echo harmless"}, true},
+		{"npx shell call", "npx", []string{"--call=echo harmless"}, true},
 		{"legacy command string", "bash -c", []string{"printf harmless"}, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

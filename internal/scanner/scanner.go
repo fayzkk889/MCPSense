@@ -154,7 +154,7 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		return nil, nil, ctx.Errors[0]
 	}
 	report := models.NewReport(target, string(mode), findings)
-	report.Coverage = models.Coverage{DetectorProfile: checks.DetectorProfile(), State: "completed", Advisories: ctx.AdvisoryState, Surfaces: []string{}, SelectedChecks: []string{}, SkippedChecks: []string{}}
+	report.Coverage = models.Coverage{DetectorProfile: checks.DetectorProfile(), State: "completed", Advisories: ctx.AdvisoryState, AdvisoryScope: ctx.AdvisoryScope, Surfaces: []string{}, SelectedChecks: []string{}, SkippedChecks: []string{}}
 	if report.Coverage.Advisories == "" {
 		report.Coverage.Advisories = "skipped"
 	}
@@ -208,7 +208,7 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 			report.Coverage.SkippedChecks = append(report.Coverage.SkippedChecks, c.ID())
 		}
 	}
-	report.Coverage.Unassessed = []string{"runtime_behavior_and_tool_results", "resource_contents_and_prompt_bodies", "unrecognized_metadata_extensions", "general_semantic_understanding"}
+	report.Coverage.Unassessed = []string{"runtime_behavior_and_tool_results", "resource_contents_and_prompt_bodies", "unrecognized_metadata_extensions", "general_semantic_understanding", "project_and_transitive_dependency_inventory", "authorization_enforcement_and_session_isolation", "runtime_resource_limits"}
 	var protected []string
 	if ctx.ClientConfig != nil {
 		for _, entry := range ctx.ClientConfig.MCPServers {

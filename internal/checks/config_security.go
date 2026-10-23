@@ -60,6 +60,9 @@ func (c *ConfigCommandInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 				}
 			}
 		}
+		if parsePackageLaunch(entry).shellCall {
+			reason = "explicit package-runner shell command evaluation"
+		}
 		if reason == "" {
 			continue
 		}
@@ -150,40 +153,22 @@ func (c *ConfigUnverifiedSourceCheck) Run(ctx *ScanContext) []models.Finding {
 	var findings []models.Finding
 	for serverName, entry := range ctx.ClientConfig.MCPServers {
 		allArgs := strings.Join(entry.Args, " ")
-		cmdLower := strings.ToLower(entry.Command)
 
-		// Check for npx without version pinning (-y flag means auto-install without confirmation)
-		if cmdLower == "npx" {
-			hasAutoYes := false
-			for _, arg := range entry.Args {
-				if arg == "-y" || arg == "--yes" {
-					hasAutoYes = true
-					break
+		launch := parsePackageLaunch(entry)
+		if launch.autoYes {
+			for _, spec := range launch.specs {
+				name, version := registryPackage(spec, launch.ecosystem)
+				if name == "" || version != "" {
+					continue
 				}
-			}
-			// Check if the package has a version specifier (@version)
-			hasVersion := false
-			for _, arg := range entry.Args {
-				if !strings.HasPrefix(arg, "-") && strings.Contains(arg, "@") && !strings.HasPrefix(arg, "@") {
-					// package@version format (not @scoped/package)
-					hasVersion = true
-					break
-				}
-				if strings.HasPrefix(arg, "@") && strings.Count(arg, "@") >= 2 {
-					// @scope/package@version
-					hasVersion = true
-					break
-				}
-			}
-			if hasAutoYes && !hasVersion {
 				findings = append(findings, models.Finding{
 					ID:          "SEC-016",
-					Title:       fmt.Sprintf("Unpinned npx package in config server %q", serverName),
-					Description: fmt.Sprintf("MCP server %q uses 'npx -y' to auto-install a package without version pinning. A supply chain attack (typosquatting or package takeover) could install malicious code.", serverName),
+					Title:       fmt.Sprintf("Unpinned launch package in config server %q", serverName),
+					Description: fmt.Sprintf("MCP server %q selects a package without an exact version pin. Moving tags and ranges do not identify immutable package versions. Registry compromise or package takeover could change the code installed.", serverName),
 					Severity:    models.SeverityMedium,
 					Category:    models.CategorySecurity,
 					Location:    models.Location{File: serverName},
-					Remediation: "Pin the package to a specific version (e.g., 'npx -y @scope/package@1.2.3') or use 'npm install' with a lockfile instead of npx.",
+					Remediation: "Review and pin the actual launch package to an exact version, or use a verified lockfile and installation provenance. A version pin alone does not authenticate publisher or artifact contents.",
 				})
 			}
 		}

@@ -12,6 +12,7 @@ type ScanContext struct {
 	ComponentFiles map[string]string
 	Errors         []error
 	AdvisoryState  string
+	AdvisoryScope  string
 	Manifest       *models.MCPManifest
 	ClientConfig   *models.MCPClientConfig
 	SourceFiles    map[string]string
