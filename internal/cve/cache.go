@@ -16,6 +16,7 @@ const (
 )
 
 type cacheEntry struct {
+	Version   int       `json:"cache_version"`
 	FetchedAt time.Time `json:"fetched_at"`
 	Vulns     []Vuln    `json:"vulns"`
 }
@@ -50,7 +51,7 @@ func loadCache(pkg Package) (vulns []Vuln, fresh bool, found bool) {
 		return nil, false, false
 	}
 	var entry cacheEntry
-	if json.Unmarshal(data, &entry) != nil {
+	if json.Unmarshal(data, &entry) != nil || entry.Version != 2 || entry.FetchedAt.IsZero() || entry.FetchedAt.After(time.Now().Add(time.Minute)) {
 		return nil, false, false
 	}
 	fresh = time.Since(entry.FetchedAt) < cacheTTL
@@ -63,7 +64,7 @@ func saveCache(pkg Package, vulns []Vuln) {
 		return
 	}
 	_ = os.MkdirAll(dir, 0o755)
-	entry := cacheEntry{FetchedAt: time.Now().UTC(), Vulns: vulns}
+	entry := cacheEntry{Version: 2, FetchedAt: time.Now().UTC(), Vulns: vulns}
 	data, err := json.Marshal(entry)
 	if err != nil {
 		return
