@@ -61,6 +61,11 @@ jobs:
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_BASELINE_DIR: bin/baseline-ci
+      - name: Package pinning and diagnostic trust-boundary review
+        run: node scripts/threat-review.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_THREAT_DIR: bin/threat-review-ci
   action:
     runs-on: ubuntu-latest
     permissions:
