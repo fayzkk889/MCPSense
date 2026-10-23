@@ -27,9 +27,13 @@ func TestPublishedVersionChannels(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(tc.status)
 				if r.URL.Path == "/github" {
-					w.Write([]byte(tc.github))
+					if _, err := w.Write([]byte(tc.github)); err != nil {
+						t.Error(err)
+					}
 				} else {
-					w.Write([]byte(tc.npm))
+					if _, err := w.Write([]byte(tc.npm)); err != nil {
+						t.Error(err)
+					}
 				}
 			}))
 			defer server.Close()

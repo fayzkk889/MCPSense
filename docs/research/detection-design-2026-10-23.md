@@ -24,6 +24,8 @@ Config execution review examines actual interpreter names and code-evaluation fl
 
 Terminal output retains the machine-compatible score and JSON format but labels the human score as a finding score, displays the full installed version, and explains that it is not a probability of safety. `version --check` explicitly queries public GitHub/npm version metadata with deadlines and bounded JSON. Ordinary version/startup/offline scans remain offline. Lookup failure and channel disagreement are visible, and no automatic upgrade occurs.
 
+Verification includes a fingerprint of the embedded production check/detection sources and Go toolchain. Embedded-source completeness tests reject adding an unprofiled production rule file. Line endings are normalized for cross-OS identity. Different or absent fingerprints prevent changed detection logic being mistaken for target remediation; this is not report signing, authenticity or full supply-chain attestation.
+
 ## Evaluation discipline
 
 The original40 and earlier60 descriptions are now development/regression data. Their labels and text remain unchanged. A further40 descriptions were labelled before implementing this change and run only after the main detector was built. Their first-run results are retained separately. Improvements on reused data are regression progress, not independent evidence. All are agent-authored synthetic examples; external users and representative deployment traffic remain untested.

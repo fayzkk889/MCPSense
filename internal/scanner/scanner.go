@@ -154,7 +154,7 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		return nil, nil, ctx.Errors[0]
 	}
 	report := models.NewReport(target, string(mode), findings)
-	report.Coverage = models.Coverage{State: "completed", Advisories: ctx.AdvisoryState, Surfaces: []string{}, SelectedChecks: []string{}, SkippedChecks: []string{}}
+	report.Coverage = models.Coverage{DetectorProfile: checks.DetectorProfile(), State: "completed", Advisories: ctx.AdvisoryState, Surfaces: []string{}, SelectedChecks: []string{}, SkippedChecks: []string{}}
 	if report.Coverage.Advisories == "" {
 		report.Coverage.Advisories = "skipped"
 	}

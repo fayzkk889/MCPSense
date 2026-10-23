@@ -148,6 +148,8 @@ mcpsense verify before.json after.json
 
 Verification is offline and requires completed, equivalent schema-2 scans: same target, mode, input inventory, protocol, selected checks, advisory/baseline policy, approved-baseline digest and severity filter. Changed or incomplete coverage remains unverified. `resolved` means a rule/component group was no longer detected in that equivalent scope; it does not prove exploit prevention or authenticity of unsigned report files.
 
+Reports also carry a detector fingerprint derived from the checked-in rule source and Go toolchain. Verification refuses changed or missing fingerprints, so upgrading the scanner cannot masquerade as fixing the target. Recreate both reports with the same detector when comparing older reports or changing toolchains. The fingerprint is an equivalence guard, not a signature.
+
 See the [reproducible before/after demonstration](docs/engineering/remediation-demo.md), [test report](docs/engineering/test-report.md), and [release readiness](docs/engineering/release-readiness.md).
 
 ## GitHub Action

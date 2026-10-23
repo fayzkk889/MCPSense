@@ -9,6 +9,7 @@ This follows the [failing acceptance evaluation](product-acceptance-2026-10-23.m
 - Installed version and safety-score interpretation are clearer. `mcpsense version --check` compares public GitHub/npm channels only on explicit request.
 - README exposes both live publication badges, latest-install/update commands and the distinction between source and public releases. Release tooling validates tags/package version and public archive/channel alignment. It never publishes by itself.
 - Expanded user and live-server scenarios and description evaluation run in every Windows/Linux Go1.22/1.27 CI matrix.
+- Review reproduced a further defect: an unchanged target looked remediated after replacing the scanner. Reports now include a rule-source/toolchain fingerprint, and verification refuses missing/different fingerprints. Unit tests and a real old/new-binary reproduction cover this guard. Older reports need both scans recreated with one detector.
 
 ## Local executed evidence
 
