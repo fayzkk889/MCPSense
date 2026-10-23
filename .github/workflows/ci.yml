@@ -56,6 +56,11 @@ jobs:
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_ACCEPTANCE_DIR: bin/product-live-ci
+      - name: Saved baseline metadata and compatibility journeys
+        run: node scripts/baseline-acceptance.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_BASELINE_DIR: bin/baseline-ci
   action:
     runs-on: ubuntu-latest
     permissions:
