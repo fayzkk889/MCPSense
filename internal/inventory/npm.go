@@ -50,9 +50,7 @@ func ParseNPM(b []byte, file string) (*models.DependencyInventory, error) {
 	inv := &models.DependencyInventory{Format: fmt.Sprintf("npm-lock-v%d", version), Input: file, SHA256: digest, Packages: []models.Dependency{}}
 	paths := []string{}
 	for p := range packages {
-		if p != "" {
-			paths = append(paths, p)
-		}
+		paths = append(paths, p)
 	}
 	sort.Strings(paths)
 	for _, p := range paths {
@@ -71,6 +69,9 @@ func ParseNPM(b []byte, file string) (*models.DependencyInventory, error) {
 				return nil, fmt.Errorf("invalid npm dependency descriptor field")
 			}
 		}
+		if p == "" {
+			continue
+		}
 		dep := models.Dependency{Path: p}
 		name := item.Name
 		if name == "" {
@@ -79,7 +80,7 @@ func ParseNPM(b []byte, file string) (*models.DependencyInventory, error) {
 		switch {
 		case item.Link || !strings.Contains("/"+p, "/node_modules/"):
 			dep.Unresolved = "local_or_workspace_dependency"
-		case path.Clean(p) != p || strings.ContainsAny(p, "\\\x00\r\n") || strings.HasPrefix(p, "/") || strings.HasPrefix(p, "../"):
+		case !validLocation(p):
 			dep.Unresolved = "unsupported_dependency_path"
 		case !npmName.MatchString(name) || len(name) > 214:
 			dep.Unresolved = "unsupported_package_identity"
@@ -92,7 +93,65 @@ func ParseNPM(b []byte, file string) (*models.DependencyInventory, error) {
 		}
 		inv.Packages = append(inv.Packages, dep)
 	}
+	missing := map[string]bool{}
+	for _, p := range paths {
+		if p != "" && !validLocation(p) {
+			continue
+		}
+		var fields map[string]json.RawMessage
+		_ = json.Unmarshal(packages[p], &fields) // descriptor shape was validated above
+		var required, optional map[string]string
+		for key, dest := range map[string]*map[string]string{"dependencies": &required, "optionalDependencies": &optional} {
+			if value, exists := fields[key]; exists && json.Unmarshal(value, dest) != nil {
+				return nil, fmt.Errorf("invalid npm dependency reference map")
+			}
+		}
+		for name := range required {
+			if !npmName.MatchString(name) || len(name) > 214 {
+				return nil, fmt.Errorf("unsupported npm dependency reference name")
+			}
+			if _, isOptional := optional[name]; isOptional {
+				continue
+			}
+			if !hasDependency(packages, p, name) {
+				location := path.Join(p, "node_modules", name)
+				if !missing[location] {
+					missing[location] = true
+					inv.Packages = append(inv.Packages, models.Dependency{Path: location, Unresolved: "missing_required_dependency"})
+					if len(inv.Packages) > 10000 {
+						return nil, fmt.Errorf("dependency entry count exceeds 10000")
+					}
+				}
+			}
+		}
+	}
+	if len(inv.Packages) > 10000 {
+		return nil, fmt.Errorf("dependency entry count exceeds 10000")
+	}
+	sort.Slice(inv.Packages, func(i, j int) bool { return inv.Packages[i].Path < inv.Packages[j].Path })
 	return inv, nil
+}
+
+func hasDependency(packages map[string]json.RawMessage, parent, name string) bool {
+	for {
+		if path.Base(parent) != "node_modules" {
+			if _, exists := packages[path.Join(parent, "node_modules", name)]; exists {
+				return true
+			}
+		}
+		if parent == "" || parent == "." {
+			return false
+		}
+		next := path.Dir(parent)
+		if next == parent {
+			return false
+		}
+		parent = next
+	}
+}
+
+func validLocation(p string) bool {
+	return len(p) <= 4096 && strings.Count(p, "/") <= 64 && path.Clean(p) == p && !strings.ContainsAny(p, "\\\x00\r\n") && !strings.HasPrefix(p, "/") && p != ".." && !strings.HasPrefix(p, "../")
 }
 
 func locationName(p string) string {

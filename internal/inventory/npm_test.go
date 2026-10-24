@@ -98,6 +98,47 @@ func TestNPMKeysAreCaseSensitive(t *testing.T) {
 	}
 }
 
+func TestMissingRequiredDependencyCannotLookComplete(t *testing.T) {
+	b := []byte(`{"lockfileVersion":3,"packages":{"":{"dependencies":{"missing":"^1.0.0"}}}}`)
+	inv, err := ParseNPM(b, "lock.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(inv.Packages) != 1 || inv.Packages[0].Unresolved != "missing_required_dependency" {
+		t.Fatalf("truncated graph looked complete: %+v", inv)
+	}
+	if _, err := Packages(inv); err == nil {
+		t.Fatal("truncated graph eligible for clean advisory scan")
+	}
+}
+
+func TestHoistedNestedAndOptionalReferences(t *testing.T) {
+	pkgs := map[string]interface{}{"": map[string]interface{}{"dependencies": map[string]string{"parent": "1.0.0"}}}
+	parent := descriptor("parent", "1.0.0")
+	parent["dependencies"] = map[string]string{"lodash": "^4.0.0", "@scope/nested": "^1.0.0", "omitted": "1.0.0"}
+	parent["optionalDependencies"] = map[string]string{"omitted": "1.0.0"}
+	pkgs["node_modules/parent"] = parent
+	pkgs["node_modules/lodash"] = descriptor("lodash", "4.17.20")
+	pkgs["node_modules/parent/node_modules/@scope/nested"] = descriptor("@scope/nested", "1.0.0")
+	b, _ := json.Marshal(map[string]interface{}{"lockfileVersion": 3, "packages": pkgs})
+	inv, err := ParseNPM(b, "lock.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Packages(inv); err != nil {
+		t.Fatal(err)
+	}
+	delete(pkgs, "node_modules/lodash")
+	b, _ = json.Marshal(map[string]interface{}{"lockfileVersion": 3, "packages": pkgs})
+	inv, err = ParseNPM(b, "lock.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Packages(inv); err == nil {
+		t.Fatal("missing hoisted dependency lost")
+	}
+}
+
 func TestDistinctQueryLimitAndRepeatedLocations(t *testing.T) {
 	inv := &models.DependencyInventory{}
 	for i := 0; i < 2049; i++ {
