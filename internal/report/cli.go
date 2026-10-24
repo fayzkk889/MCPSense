@@ -76,7 +76,19 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	if report.Coverage.BaselineWarning != "" {
 		fmt.Fprintln(w, "  Baseline coverage: "+report.Coverage.BaselineWarning)
 	}
-	if report.Coverage.AdvisoryScope != "" {
+	if report.Dependencies != nil {
+		unresolved := 0
+		for _, dep := range report.Dependencies.Packages {
+			if dep.Unresolved != "" {
+				unresolved++
+			}
+		}
+		fmt.Fprintf(w, "  Dependency inventory: %d declared entries; %d unresolved; advisories %s.\n", len(report.Dependencies.Packages), unresolved, report.Coverage.Advisories)
+		fmt.Fprintln(w, "  Scope: selected npm lockfile only; installed code and effective security settings are not verified.")
+		if unresolved > 0 {
+			fmt.Fprintln(w, "  Unresolved entries have not been checked for advisories; inspect JSON dependencies.packages.")
+		}
+	} else if report.Coverage.AdvisoryScope != "" {
 		fmt.Fprintln(w, "  Advisory scope: recognized launch packages only; project and transitive dependencies are not inventoried.")
 	}
 	fmt.Fprint(w, "\n")
@@ -124,7 +136,11 @@ func (r *CLIReporter) writeFinding(w io.Writer, f models.Finding) {
 		fmt.Fprintf(w, "           %s\n", colorCyan.Sprint("File: "+loc))
 	}
 	if f.Location.ToolName != "" {
-		fmt.Fprintf(w, "           %s\n", colorCyan.Sprint("Tool: "+f.Location.ToolName))
+		label := "Tool: "
+		if f.ID == "CVE-001" {
+			label = "Dependency location: "
+		}
+		fmt.Fprintf(w, "           %s\n", colorCyan.Sprint(label+f.Location.ToolName))
 	}
 
 	fmt.Fprintf(w, "           %s %s\n", colorHiBlack("→"), f.Description)

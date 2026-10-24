@@ -85,7 +85,7 @@ func mergeAdvisoryResults(results, supplemental []cve.Result) []cve.Result {
 		if id == "CVE-2026-87911" {
 			id = "GHSA-fph8-pg5w-78fv"
 		}
-		return pkg.Server + "\x00" + pkg.Ecosystem + "\x00" + pkg.Name + "\x00" + pkg.Version + "\x00" + id
+		return pkg.File + "\x00" + pkg.Server + "\x00" + pkg.Ecosystem + "\x00" + pkg.Name + "\x00" + pkg.Version + "\x00" + id
 	}
 	for i, result := range results {
 		for j, vuln := range result.Vulns {

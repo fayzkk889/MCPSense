@@ -25,6 +25,18 @@ func TestDetectorChangeIsNotRemediation(t *testing.T) {
 		t.Fatal("reports lacking detector identity were compared")
 	}
 }
+
+func TestDependencyInventoryProtectedCopyDoesNotMutateEvidence(t *testing.T) {
+	r := evidenceReport(nil)
+	r.Dependencies = &DependencyInventory{Input: "token=PRIVATE_VALUE", Packages: []Dependency{{Path: "node_modules/PRIVATE_VALUE", Name: "safe", Version: "1.0.0"}}}
+	copy := r.ProtectedCopy([]string{"PRIVATE_VALUE"})
+	if strings.Contains(copy.Dependencies.Input, "PRIVATE_VALUE") || strings.Contains(copy.Dependencies.Packages[0].Path, "PRIVATE_VALUE") {
+		t.Fatal("known credential leaked through inventory")
+	}
+	if r.Dependencies.Input != "token=PRIVATE_VALUE" || r.Dependencies.Packages[0].Path != "node_modules/PRIVATE_VALUE" {
+		t.Fatal("privacy export mutated original evidence")
+	}
+}
 func TestVerificationRequiresEquivalentCompleteCoverage(t *testing.T) {
 	old := evidenceReport([]Finding{{ID: "SEC-001", Location: Location{ToolName: "read"}}})
 	now := evidenceReport(nil)

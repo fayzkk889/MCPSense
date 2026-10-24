@@ -1,12 +1,15 @@
 package checks
 
 import (
+	"context"
 	"github.com/fayzkk889/MCPSense/internal/detection"
 	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
 // ScanContext holds all input data available to checks during a scan.
 type ScanContext struct {
+	Context        context.Context
+	Dependencies   *models.DependencyInventory
 	InputPaths     []string
 	ManifestFile   string
 	ComponentFiles map[string]string

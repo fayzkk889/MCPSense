@@ -41,6 +41,16 @@ func (r *Report) ProtectedCopy(known []string) *Report {
 		return RedactText(s)
 	}
 	out.Target = protect(r.Target)
+	if r.Dependencies != nil {
+		inventory := *r.Dependencies
+		inventory.Input = protect(inventory.Input)
+		inventory.Packages = append([]Dependency{}, inventory.Packages...)
+		for i := range inventory.Packages {
+			dep := &inventory.Packages[i]
+			dep.Path, dep.Name, dep.Version = protect(dep.Path), protect(dep.Name), protect(dep.Version)
+		}
+		out.Dependencies = &inventory
+	}
 	for i := range out.Findings {
 		f := &out.Findings[i]
 		f.Title = protect(f.Title)
