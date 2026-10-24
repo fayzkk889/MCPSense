@@ -66,6 +66,11 @@ jobs:
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_THREAT_DIR: bin/threat-review-ci
+      - name: Dependency inventory beginner and expert journeys
+        run: node scripts/dependency-acceptance.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_DEPENDENCY_DIR: bin/dependency-ci
   action:
     runs-on: ubuntu-latest
     permissions:

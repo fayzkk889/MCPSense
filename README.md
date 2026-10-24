@@ -89,12 +89,36 @@ On Linux/macOS, `sh install.sh` installs the latest published release into `~/.l
 | `--mode config` | Reads `mcpServers` or `servers` configuration entries |
 | `--mode skill` | Reads agent instructions such as AGENTS.md, CLAUDE.md, SKILL.md and supported client rule paths |
 | `--mode live` | Enumerates metadata at the explicitly selected endpoint or authorized local process |
+| `--mode dependencies` | Reads an explicitly selected npm v2/v3 lockfile, including nested, development and optional entries |
 
 A directory scan does not start configured MCP commands or contact configured server URLs. Advisory lookups are a separate network operation enabled by default for recognized package references. Use `--offline` for no scanner networking; it also prohibits all live scans and local server execution. `--no-cve` disables advisory lookups only.
 
 Multiple configs with distinct server names are included. Ambiguous duplicate names or multiple manifests require separate explicit scans; they fail instead of silently omitting a component. Unreadable/malformed discovered inputs and exceeded limits fail the scan. Dependency/build directories are excluded. Supported source extensions are `.go`, `.py`, `.ts`, and `.js`; this is not complete language or dependency coverage.
 
 Input files must be regular non-symlink files, at most 4 MiB. Source, skill, and config discovery each have a 64 MiB phase budget and a 10,000-input cap. These checks are not filesystem isolation against concurrent local path replacement.
+
+### Dependency inspection (0.4.0 candidate)
+
+```sh
+# Auto-detect a package-lock.json or npm-shrinkwrap.json
+mcpsense scan ./package-lock.json --no-baseline
+# Include one selected lockfile alongside project checks
+mcpsense scan ./server --dependencies ./server/package-lock.json --no-baseline
+# Inspect declarations locally without querying advisories
+mcpsense scan ./package-lock.json --offline --format json --no-baseline
+# A differently named lockfile needs an explicit mode
+mcpsense scan ./saved-lock.json --mode dependencies --no-baseline
+```
+
+Directory scans do not automatically read lockfiles or send their package names. Selecting a dependency inventory explicitly enables OSV queries for recognized names and exact versions unless `--offline` or `--no-cve` is set. Public-registry tarball identities are supported, including aliases with an explicit actual package name. Git, local/workspace links, private registries, missing source metadata and unsupported versions remain unresolved. Online advisory checks fail before querying an incomplete inventory; use offline JSON inspection to see `dependencies.packages[].unresolved`. No packages are installed and no lifecycle scripts run.
+
+The JSON and SARIF inventory records the input SHA-256, package locations and declared versions. Missing required package references are unresolved; nested and hoisted resolution is checked, while optional omissions and peer installation remain environment-dependent. It describes the selected file, including nested/development/optional entries; it does not attest the installed tree, environment-specific omissions or running code. A `package.json` version range is not an installed version. Other ecosystems, SBOM formats, other lockfiles and effective server security settings remain outside this inventory's scope.
+
+Advisory lookup allows up to 2,048 distinct identities and 10,000 locations, with eight concurrent lookups, a 30-second phase budget, five seconds per request, at most 32 pages/16 MiB per package, and a 64 MiB aggregate response budget. Duplicate identities share a query while findings retain each location. Failed pages, stale data after a failed refresh, cancellation and exceeded limits fail the scan; they do not produce a successful partial report. Fresh complete results are cached for 24 hours. Cache entries from the older non-paginating client are discarded.
+
+For remediation comparison, keep the same inventory file, format, package names and locations. Version upgrades can be compared; removing entries changes coverage and cannot count as an equivalent completed remediation. The inventory hash is evidence of the file read, not a signature or proof that its contents are authentic.
+
+Recent MCP SDK advisories require deployment changes as well as upgrades: for example, [tool-input element limits must be enabled](https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-46jr-4wx8-v453), and [token audience checks require both middleware and verifier configuration](https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-rvq5-wwqv-78pq). A quiet dependency report does not verify those settings. See the [threat review](docs/research/2026-10-23-mcp-threat-review.md) for the remaining runtime enforcement priorities.
 
 ## Live metadata discovery
 
