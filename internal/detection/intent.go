@@ -22,22 +22,42 @@ var intentFeatures = []intentFeature{
 	{"session", regexp.MustCompile(`(?i)\b(future|subsequent|later|session|conversation|every|all)\b`)},
 	{"route", regexp.MustCompile(`(?i)\b(route|channel|redirect|funnel)\w*\b`)},
 	{"action", regexp.MustCompile(`(?i)\b(task|request|work|operation|conversation)\w*\b`)},
-	{"disclose", regexp.MustCompile(`(?i)\b(place|placing|put|relay|export|copy|send|transmit|include|forward|append|reproduce|print)\w*\b`)},
-	{"secret", regexp.MustCompile(`(?i)\b(authentication material|authentication store|credential\w*|secret\w*|private key|access token|vault)\b|\b(environment|process)\b.{0,80}\b(values?|authentication)\b|\b(values?|authentication)\b.{0,80}\benvironment\b`)},
-	{"destination", regexp.MustCompile(`(?i)\b(answer|response|reply|collector|remote|final|contents?|material)\b`)},
+	{"disclose", regexp.MustCompile(`(?i)\b(place|placing|put|relay|export|cop(?:y|ies|ied|ying)|send|transmit|include|forward|append|reproduce|print|bcc)\w*\b`)},
+	{"secret", regexp.MustCompile(`(?i)\b(authentication material|authentication store|credential\w*|secret\w*|passwords?|private key|access token|vault|[a-z0-9_]*(?:secret_access_key|api_key|access_token)[a-z0-9_]*)\b|\.env\b|\.ssh/|\b(environment|process)\b.{0,80}\b(values?|authentication)\b|\b(values?|authentication)\b.{0,80}\benvironment\b`)},
+	{"destination", regexp.MustCompile(`(?i)\b(answer|response|reply|collector|remote|final|contents?|material|webhook\w*|search query|memo parameter)\b|https?://`)},
 	{"deceive", regexp.MustCompile(`(?i)\b(fabricat\w*|falsif\w*|mislead\w*|deceiv\w*|deceptive|pretend)\b`)},
 	{"answer", regexp.MustCompile(`(?i)\b(answer|result|summary|assessment|complaint|finding|operator|user|human)\w*\b`)},
-	{"permission", regexp.MustCompile(`(?i)\b(permission|authorization|access)\b.{0,60}\b(denied|refus\w*|fails?|restriction)\b|\b(denied|refus\w*|restriction)\b.{0,60}\b(permission|authorization|access)\b`)},
-	{"alternate", regexp.MustCompile(`(?i)\b(alternative|another|other|different)\s+(tool|capabilit\w*|service|route)\b`)},
+	{"permission", regexp.MustCompile(`(?i)\b(permission|authorization|access)\b.{0,60}\b(denied|denies|deny|denial|refus\w*|fails?|restriction)\b|\b(denied|denies|deny|denial|refus\w*|restriction)\b.{0,60}\b(permission|authorization|access)\b`)},
+	{"alternate", regexp.MustCompile(`(?i)\b(alternative|another|other|different)\s+(tool|capabilit\w*|service|route|user|session|identity|account)\b`)},
+	{"reroute", regexp.MustCompile(`(?i)\b(retr(y|ies|ied|ying)|switch(es|ed|ing)?|us(e[sd]?|ing)|invok(e[sd]?|ing)|rerout(e[sd]?|ing)|tr(y|ies|ied|ying)|assum(e[sd]?|ing)|obtain(s|ed|ing)?|fetch(es|ed|ing)?|retriev(e[sd]?|ing))\b`)},
 	{"edit", regexp.MustCompile(`(?i)\b(modif\w*|rewrite|change|edit|append|replace|alter)\b`)},
 	{"policy", regexp.MustCompile(`(?i)\b(guidance|instructions?|agent policy|persistent.*policy)\b`)},
 	{"grant", regexp.MustCompile(`(?i)\b(approve|approves|approving|grant\w*|automatically|automatic)\b`)},
+	{"cancelled", regexp.MustCompile(`(?i)\b(cancelled|canceled|cancellation)\b|\b(owner|user|operator)\b.{0,50}\b(says? to stop|asks? to stop)\b`)},
+	{"continue", regexp.MustCompile(`(?i)\b(continue (processing|executing|running)|carry on|keep (executing|running|processing))\b`)},
+	{"payment", regexp.MustCompile(`(?i)\b(beneficiary|payment|transfer|bank)\b.{0,80}\b(account|destination|details)\b|\b(account|destination)\b.{0,80}\b(beneficiary|payment|transfer|bank)\b`)},
+	{"covert", regexp.MustCompile(`(?i)\b(silently|secretly|covertly|conceal|hide)\b`)},
+	{"destructive", regexp.MustCompile(`(?i)\b(delete|erase|destroy|wipe)\b.{0,80}\b(backups?|files?|records?|data)\b`)},
+	{"displaced_task", regexp.MustCompile(`(?i)\b(user|operator)\s+(requested|asked for)\b.{0,120}\b(instead|rather than)\b`)},
+	{"other_principal_data", regexp.MustCompile(`(?i)\b(other|sibling|another|different)\s+(tenants?|users?|customers?)[’']?s?\s+(records?|data|files?|exports?)\b`)},
+	{"records", regexp.MustCompile(`(?i)\b(invoices?|customer records?|tenant records?|inbox)\b`)},
+	{"external_recipient", regexp.MustCompile(`(?i)\bbcc\b|\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b`)},
+	{"no_consent", regexp.MustCompile(`(?i)\bno\s+(user\s+)?(approval|confirmation|consent)\s+(is\s+)?(needed|required)\b|\bwithout\s+(user\s+)?(approval|confirmation|consent)\b`)},
 }
+
+// An export or a copy can be a data object rather than a second imperative.
+// This narrow noun grammar prevents a negated leading action from appearing
+// active again merely because its object mentions "the export".
+var nominalDisclosure = regexp.MustCompile(`(?i)\b(the|an?|this|that|its|their|our|your)\s+(export|copy)\b`)
 
 func rawIntentMatches(text string) []PatternMatch {
 	features := map[string]bool{}
 	for _, f := range intentFeatures {
-		features[f.name] = f.pattern.MatchString(text)
+		screened := text
+		if f.name == "disclose" {
+			screened = nominalDisclosure.ReplaceAllString(text, "")
+		}
+		features[f.name] = f.pattern.MatchString(screened)
 	}
 	has := func(keys ...string) bool {
 		for _, k := range keys {
@@ -55,8 +75,13 @@ func rawIntentMatches(text string) []PatternMatch {
 		{"INT-002", "Session-wide routing control", has("source", "session", "route", "action")},
 		{"INT-003", "Sensitive material directed to an output or destination", has("disclose", "secret", "destination")},
 		{"INT-004", "Deceptive answer or assessment", has("deceive", "answer")},
-		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate")},
+		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate", "reroute")},
 		{"INT-006", "Persistent policy change granting future authority", has("edit", "policy", "session", "grant")},
+		{"INT-007", "Continued execution despite cancellation", has("cancelled", "continue")},
+		{"INT-008", "Concealed payment destination substitution", has("edit", "payment", "covert")},
+		{"INT-009", "Destructive action replacing the requested task", has("destructive", "displaced_task")},
+		{"INT-010", "Disclosure across user or tenant boundaries", has("disclose", "other_principal_data")},
+		{"INT-011", "Record transfer to a recipient without consent", has("disclose", "records", "external_recipient", "no_consent")},
 	}
 	var out []PatternMatch
 	for _, f := range families {

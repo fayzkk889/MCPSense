@@ -27,10 +27,9 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 		return nil
 	}
 	for _, text := range texts {
+		// Server instructions are untrusted metadata, like descriptions. Skill
+		// files retain their separate literal instruction screening policy.
 		matches := ctx.Patterns.ScanToolDescription(text.text)
-		if text.instructions {
-			matches = ctx.Patterns.ScanInstructions(text.text)
-		}
 		seen := make(map[string]bool)
 		for _, m := range matches {
 			key := text.owner + ":" + text.field + ":" + m.PatternID
