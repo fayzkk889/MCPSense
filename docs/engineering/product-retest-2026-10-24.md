@@ -29,7 +29,7 @@ Observed gaps included environment-file and named-environment-variable disclosur
 
 The correction adds bounded lexical action/object/boundary relations and constrained benign context handling. It distinguishes nominal objects such as “the export” from a second action, preserves negated safety instructions, and detects malicious continuations after a benign prefix. Server instructions use the same untrusted-metadata context handling as descriptions; skills retain their separate literal screening policy. It does not supply general semantic understanding, runtime permission enforcement or a guarantee against unknown paraphrases.
 
-An intermediate fix missed an older permission-bypass regression using “obtain ... via another tool.” The existing full product gate caught it; the final verb relation restores that case. No labels or older corpus expectations were relaxed.
+An intermediate fix missed older permission-bypass regressions using “obtain ... via another tool” and “perform ... through an alternative tool.” The existing local product and hosted persona gates caught them. Final review preserves the broad permission relation and confines verb discrimination to negated safety instructions. No labels or older corpus expectations were relaxed.
 
 ## Other user workflows
 

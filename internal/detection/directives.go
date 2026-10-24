@@ -94,7 +94,7 @@ func benignToolClause(text string) bool {
 		if safe {
 			// A negated first verb must not hide a later relational directive
 			// whose wording is absent from the literal pattern catalog.
-			if len(rawIntentMatches(normalizedDirective(text[negated[1]:]))) == 0 {
+			if !remainingIntentAfterNegatedAction(normalizedDirective(text[negated[1]:])) {
 				return true
 			}
 		}

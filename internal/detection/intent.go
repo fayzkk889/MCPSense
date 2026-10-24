@@ -29,7 +29,6 @@ var intentFeatures = []intentFeature{
 	{"answer", regexp.MustCompile(`(?i)\b(answer|result|summary|assessment|complaint|finding|operator|user|human)\w*\b`)},
 	{"permission", regexp.MustCompile(`(?i)\b(permission|authorization|access)\b.{0,60}\b(denied|denies|deny|denial|refus\w*|fails?|restriction)\b|\b(denied|denies|deny|denial|refus\w*|restriction)\b.{0,60}\b(permission|authorization|access)\b`)},
 	{"alternate", regexp.MustCompile(`(?i)\b(alternative|another|other|different)\s+(tool|capabilit\w*|service|route|user|session|identity|account)\b`)},
-	{"reroute", regexp.MustCompile(`(?i)\b(retr(y|ies|ied|ying)|switch(es|ed|ing)?|us(e[sd]?|ing)|invok(e[sd]?|ing)|rerout(e[sd]?|ing)|tr(y|ies|ied|ying)|assum(e[sd]?|ing)|obtain(s|ed|ing)?|fetch(es|ed|ing)?|retriev(e[sd]?|ing))\b`)},
 	{"edit", regexp.MustCompile(`(?i)\b(modif\w*|rewrite|change|edit|append|replace|alter)\b`)},
 	{"policy", regexp.MustCompile(`(?i)\b(guidance|instructions?|agent policy|persistent.*policy)\b`)},
 	{"grant", regexp.MustCompile(`(?i)\b(approve|approves|approving|grant\w*|automatically|automatic)\b`)},
@@ -49,6 +48,20 @@ var intentFeatures = []intentFeature{
 // This narrow noun grammar prevents a negated leading action from appearing
 // active again merely because its object mentions "the export".
 var nominalDisclosure = regexp.MustCompile(`(?i)\b(the|an?|this|that|its|their|our|your)\s+(export|copy)\b`)
+var permissionReroute = regexp.MustCompile(`(?i)\b(retr(y|ies|ied|ying)|switch(es|ed|ing)?|us(e[sd]?|ing)|invok(e[sd]?|ing)|rerout(e[sd]?|ing)|tr(y|ies|ied|ying)|assum(e[sd]?|ing)|obtain(s|ed|ing)?|fetch(es|ed|ing)?|retriev(e[sd]?|ing)|perform(s|ed|ing)?|fall back)\b`)
+
+// Only the negated-leading-action check needs to distinguish a fresh rerouting
+// verb from the remaining object of "never retry". The ordinary permission
+// relation stays broad so uncatalogued verbs do not weaken existing coverage.
+func remainingIntentAfterNegatedAction(text string) bool {
+	for _, m := range rawIntentMatches(text) {
+		if m.PatternID == "INT-005" && !permissionReroute.MatchString(text) {
+			continue
+		}
+		return true
+	}
+	return false
+}
 
 func rawIntentMatches(text string) []PatternMatch {
 	features := map[string]bool{}
@@ -75,7 +88,7 @@ func rawIntentMatches(text string) []PatternMatch {
 		{"INT-002", "Session-wide routing control", has("source", "session", "route", "action")},
 		{"INT-003", "Sensitive material directed to an output or destination", has("disclose", "secret", "destination")},
 		{"INT-004", "Deceptive answer or assessment", has("deceive", "answer")},
-		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate", "reroute")},
+		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate")},
 		{"INT-006", "Persistent policy change granting future authority", has("edit", "policy", "session", "grant")},
 		{"INT-007", "Continued execution despite cancellation", has("cancelled", "continue")},
 		{"INT-008", "Concealed payment destination substitution", has("edit", "payment", "covert")},
