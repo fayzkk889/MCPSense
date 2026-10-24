@@ -71,6 +71,12 @@ jobs:
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_DEPENDENCY_DIR: bin/dependency-ci
+      - name: Fresh product descriptions and benign-context regression
+        run: node scripts/fresh-product-retest.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_FRESH_DIR: bin/fresh-product-ci
+          MCPSENSE_FRESH_ENFORCE: '1'
   action:
     runs-on: ubuntu-latest
     permissions:

@@ -62,7 +62,7 @@ npm downloads the selected platform executable and verifies its release SHA-256 
 
 On Windows x64, the npm route needs Node.js/npm only. The separate Go route needs Go 1.22 or newer only. The optional standalone PowerShell installer below is a convenience for Go users: it builds from source, verifies startup, installs without administrator privileges, and adds its directory to your user PATH. No installation route changes Windows protection settings. Downloaded and locally built executables can both be restricted by machine policy; no warning-free guarantee is made.
 
-The current unsigned candidate was blocked by Smart App Control on the local validation machine, despite passing hosted Windows installation tests. Windows release readiness therefore still requires trusted signing and a protected-device retest; changing to ZIP packaging or installing Go does not supply a publisher signature. See the [Windows readiness record](docs/engineering/windows-signing-readiness-2026-10-23.md).
+Windows behavior has varied by executable: earlier unsigned candidates and the published 0.3.0 npm binary were blocked by local Code Integrity policy, while the newer unpublished `0.4.0-SNAPSHOT-3d1c18b` archive installed and ran with Go absent during the [24 October product retest](docs/engineering/product-retest-2026-10-24.md). The candidate remains unsigned. Windows release readiness still requires trusted signing and a protected-device retest; ZIP packaging or installing Go does not supply a publisher signature. See the [Windows readiness record](docs/engineering/windows-signing-readiness-2026-10-23.md).
 
 From a downloaded or cloned checkout:
 

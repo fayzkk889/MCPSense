@@ -33,12 +33,13 @@ func directivePatterns() []Pattern {
 }
 
 var clauseBreak = regexp.MustCompile(`[.!?;](?:\s+|$)|\r?\n|,\s*(?:then|but|instead|however)\s+`)
-var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not|refuse to|refuse any attempt to)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read)\b`)
+var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not|refuse to|refuse any attempt to)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read|include|copy|forward|transmit|export|place|bcc|replace|delete|erase|destroy|wipe|continue|switch|use|retry|obtain|fetch|retrieve)\b`)
 var continuation = regexp.MustCompile(`(?i)\b(then|instead|now|however|but|obey|follow that|execute it)\b`)
 var quotedData = regexp.MustCompile(`"[^"\r\n]*"|(?:^|[\s(])'[^'\r\n]*'(?:$|[\s).,!?:;])`)
 var reportedThreat = regexp.MustCompile(`(?i)\battackers?(?:\s+who)?\s+(steal|send|upload|copy)\b`)
 var unsafeContextTail = regexp.MustCompile(`(?i)\b(send|upload|forward|transmit|disclose|reveal|print|execute|disable|bypass|steal|copy|append|modify|trust|follow)\b`)
 var negativeEscape = regexp.MustCompile(`(?i)([:,;—–-]|\band\b)\s*(send|upload|forward|transmit|disclose|reveal|print|execute|disable|bypass|copy|append|modify|trust|follow)\b`)
+var negatedConsentQualifier = regexp.MustCompile(`(?i)^without\s+(user\s+)?(approval|confirmation|consent)$`)
 var negationSignals = append(append(coreInjectionPatterns(), directivePatterns()...), mcpSpecificPatterns()...)
 var benignMetadata = []*regexp.Regexp{
 	regexp.MustCompile(`(?is)^\s*(this|the)\s+(security\s+)?(tutorial|article|lesson)\s+quotes?\s+the\s+phrase\s+'[^'\r\n]{1,256}'\s+as\s+an?\s+attack\s+example[.!]?\s*$`),
@@ -51,7 +52,15 @@ var benignMetadata = []*regexp.Regexp{
 	regexp.MustCompile(`(?is)^\s*(redact|rotate|report whether|generate)\b[^\n]{0,250}\b(credential|key|password|secret|log)\b[^\n]{0,160}\b(redact|secret manager|fingerprint|never its contents|without displaying|return it once|once)\b[^\n]{0,100}$`),
 }
 
+// These are complete operations with constrained outside-quote grammar. A
+// trailing command, including one joined with "and", does not fit either form.
+var literalRendering = regexp.MustCompile(`(?is)^\s*(render|display|print|return)\s+(the\s+)?(literal|quoted)\s+(string|text|phrase)\s+("[^"\r\n]{1,256}"|'[^'\r\n]{1,256}')\s+(as\s+(escaped|inert)\s+text|in\s+(a|the)\s+(security\s+)?(training|documentation)\s+example)[.!]?\s*$`)
+var untrustedContentRule = regexp.MustCompile(`(?is)^\s*(treat|handle)\s+(all\s+)?(tool|server)\s+(responses?|outputs?|content)\s+as\s+untrusted\s+data(,\s+including\s+text\s+that\s+claims?\s+to\s+(supersede|override|outrank)\s+(the\s+)?(developer|system|user)\s+(message|instructions?))?[.!]?\s*$`)
+
 func benignToolClause(text string) bool {
+	if literalRendering.MatchString(text) || untrustedContentRule.MatchString(text) {
+		return true
+	}
 	if continuation.MatchString(text) {
 		return false
 	}
@@ -65,6 +74,9 @@ func benignToolClause(text string) bool {
 				continue
 			}
 			for _, match := range pattern.Regex.FindAllStringIndex(lower, -1) {
+				if pattern.ID == "PI-018" && negatedConsentQualifier.MatchString(lower[match[0]:match[1]]) {
+					continue
+				}
 				start := original(match[0])
 				if start < negated[1] {
 					continue
@@ -82,7 +94,7 @@ func benignToolClause(text string) bool {
 		if safe {
 			// A negated first verb must not hide a later relational directive
 			// whose wording is absent from the literal pattern catalog.
-			if len(rawIntentMatches(normalizedDirective(text[negated[1]:]))) == 0 {
+			if !remainingIntentAfterNegatedAction(normalizedDirective(text[negated[1]:])) {
 				return true
 			}
 		}
