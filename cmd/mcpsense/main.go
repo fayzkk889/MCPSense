@@ -87,7 +87,8 @@ func scanCmd() *cobra.Command {
 		Long: `Scan an MCP server manifest, source directory, or live server.
 
 Target auto-detection:
-  *.json file       manifest mode
+  package-lock.json npm dependency declarations (also npm-shrinkwrap.json)
+  *.json file       manifest or MCP client configuration
   directory         combined source, config, manifest and skill inspection
   http:// or https: guarded live HTTP metadata discovery
   command string    live stdio; requires --allow-exec
@@ -136,10 +137,12 @@ CLI flags override config file values.`,
 				scanMode = scanner.ModeConfig
 			case "skill":
 				scanMode = scanner.ModeSkill
+			case "dependencies":
+				scanMode = scanner.ModeDependencies
 			case "auto", "":
 				// ModeAuto is the default, nothing to do.
 			default:
-				return fmt.Errorf("unknown mode %q, use: static, live, manifest, config, skill, auto", mode)
+				return fmt.Errorf("unknown mode %q, use: static, live, manifest, config, skill, dependencies, auto", mode)
 			}
 
 			// Parse check filter lists.
@@ -162,14 +165,15 @@ CLI flags override config file values.`,
 			noCVE, _ := cmd.Flags().GetBool("no-cve")
 			sarifOutput, _ := cmd.Flags().GetString("sarif-output")
 			baselineArg, _ := cmd.Flags().GetString("baseline")
+			dependencyFile, _ := cmd.Flags().GetString("dependencies")
 			if format != "cli" && format != "json" && format != "sarif" {
 				return fmt.Errorf("unknown output format")
 			}
 			if minSev != "critical" && minSev != "high" && minSev != "medium" && minSev != "low" && minSev != "info" {
 				return fmt.Errorf("unknown severity")
 			}
-			paths := []string{target, outputFile, sarifOutput, baselineArg}
-			for i := 1; i < len(paths); i++ {
+			paths := []string{target, dependencyFile, outputFile, sarifOutput, baselineArg}
+			for i := 2; i < len(paths); i++ {
 				if paths[i] == "" {
 					continue
 				}
@@ -214,6 +218,7 @@ CLI flags override config file values.`,
 				ServerArgs:          serverArgs,
 				Protocol:            protocol,
 				AllowPrivateNetwork: allowPrivate,
+				DependencyFile:      dependencyFile,
 			})
 
 			rep, ctx, err := s.Scan(target)
@@ -353,7 +358,8 @@ CLI flags override config file values.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, config, skill, auto")
+	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, config, skill, dependencies, auto")
+	cmd.Flags().String("dependencies", "", "Explicit npm v2/v3 lockfile to include; online advisories send recognized package names/versions to OSV")
 	cmd.Flags().StringVarP(&format, "format", "f", "cli", "Output format: cli, json, sarif")
 	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: critical, high, medium, low, info")
 	cmd.Flags().StringVarP(&checkIDs, "checks", "c", "", "Comma-separated list of check IDs to run (default: all)")

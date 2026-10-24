@@ -13,6 +13,7 @@ import (
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
 	"github.com/fayzkk889/MCPSense/internal/detection"
+	"github.com/fayzkk889/MCPSense/internal/inventory"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"github.com/fayzkk889/MCPSense/internal/utils"
 )
@@ -21,13 +22,14 @@ import (
 type ScanMode string
 
 const (
-	ModeStatic    ScanMode = "static"
-	ModeLive      ScanMode = "live"
-	ModeManifest  ScanMode = "manifest"
-	ModeConfig    ScanMode = "config"
-	ModeSkill     ScanMode = "skill"
-	ModeAuto      ScanMode = "auto"
-	ModeDirectory ScanMode = "directory"
+	ModeStatic       ScanMode = "static"
+	ModeLive         ScanMode = "live"
+	ModeManifest     ScanMode = "manifest"
+	ModeConfig       ScanMode = "config"
+	ModeSkill        ScanMode = "skill"
+	ModeAuto         ScanMode = "auto"
+	ModeDirectory    ScanMode = "directory"
+	ModeDependencies ScanMode = "dependencies"
 )
 
 // Options configures the scanner behavior.
@@ -44,6 +46,7 @@ type Options struct {
 	ServerArgs          []string // explicit argv; target is the executable path
 	Protocol            string   // auto, modern or legacy
 	AllowPrivateNetwork bool
+	DependencyFile      string // explicit opt-in; never discovered recursively
 }
 
 // Scanner orchestrates the scan process.
@@ -110,6 +113,7 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 	}
 
 	ctx := &checks.ScanContext{
+		Context:  s.opts.Context,
 		Patterns: s.patterns,
 	}
 
@@ -130,6 +134,11 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		err = s.scanLive(target, ctx)
 	case ModeSkill:
 		err = s.scanSkill(target, ctx)
+	case ModeDependencies:
+		if s.opts.DependencyFile != "" {
+			return nil, nil, fmt.Errorf("dependencies mode already selects an inventory; omit --dependencies")
+		}
+		ctx.Dependencies, err = inventory.ReadNPM(target)
 	default:
 		return nil, nil, fmt.Errorf("unknown scan mode: %s", mode)
 	}
@@ -137,14 +146,23 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 	if err != nil {
 		return nil, nil, err
 	}
+	if s.opts.DependencyFile != "" {
+		ctx.Dependencies, err = inventory.ReadNPM(s.opts.DependencyFile)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+	if ctx.Dependencies != nil {
+		ctx.InputPaths = append(ctx.InputPaths, ctx.Dependencies.Input)
+	}
 
 	findings := s.runChecks(ctx)
 	for i := range findings {
 		f := &findings[i]
-		if ctx.ManifestFile != "" && (f.Location.File == "" || f.Location.ToolName != "" || f.ID == "SPEC-004" || f.ID == "SEC-006") {
+		if f.ID != "CVE-001" && ctx.ManifestFile != "" && (f.Location.File == "" || f.Location.ToolName != "" || f.ID == "SPEC-004" || f.ID == "SEC-006") {
 			f.Location.File = ctx.ManifestFile
 		}
-		if f.ID == "SEC-014" || f.ID == "SEC-015" || f.ID == "SEC-016" || f.ID == "CVE-001" {
+		if f.ID == "SEC-014" || f.ID == "SEC-015" || f.ID == "SEC-016" || (f.ID == "CVE-001" && f.Location.ToolName == "") {
 			if path, ok := ctx.ComponentFiles[f.Location.File]; ok {
 				f.Location.File = path
 			}
@@ -154,6 +172,7 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		return nil, nil, ctx.Errors[0]
 	}
 	report := models.NewReport(target, string(mode), findings)
+	report.Dependencies = ctx.Dependencies
 	report.Coverage = models.Coverage{DetectorProfile: checks.DetectorProfile(), State: "completed", Advisories: ctx.AdvisoryState, AdvisoryScope: ctx.AdvisoryScope, Surfaces: []string{}, SelectedChecks: []string{}, SkippedChecks: []string{}}
 	if report.Coverage.Advisories == "" {
 		report.Coverage.Advisories = "skipped"
@@ -170,6 +189,15 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 	if ctx.Manifest != nil {
 		report.Coverage.Surfaces = append(report.Coverage.Surfaces, "manifest")
 		report.Coverage.Protocol = ctx.Manifest.ProtocolVersion
+	}
+	if ctx.Dependencies != nil {
+		report.Coverage.Surfaces = append(report.Coverage.Surfaces, "dependencies")
+		report.Coverage.DependencyScope = []string{ctx.Dependencies.Format}
+		for _, dep := range ctx.Dependencies.Packages {
+			// Version/content may change during remediation, but silently removing
+			// packages or changing their identity is not equivalent coverage.
+			report.Coverage.DependencyScope = append(report.Coverage.DependencyScope, models.HashIdentity(dep.Path+"\x00"+dep.Name+"\x00"+dep.Unresolved))
+		}
 	}
 	for path := range ctx.SourceFiles {
 		report.Coverage.Inputs = append(report.Coverage.Inputs, models.HashIdentity(filepath.ToSlash(filepath.Clean(path))))
@@ -209,6 +237,15 @@ func (s *Scanner) Scan(target string) (*models.Report, *checks.ScanContext, erro
 		}
 	}
 	report.Coverage.Unassessed = []string{"runtime_behavior_and_tool_results", "resource_contents_and_prompt_bodies", "unrecognized_metadata_extensions", "general_semantic_understanding", "project_and_transitive_dependency_inventory", "authorization_enforcement_and_session_isolation", "runtime_resource_limits"}
+	if ctx.Dependencies != nil {
+		report.Coverage.Unassessed[4] = "dependencies_outside_selected_npm_lock_and_actual_installed_code"
+		for _, dep := range ctx.Dependencies.Packages {
+			if dep.Unresolved != "" {
+				report.Coverage.Unassessed = append(report.Coverage.Unassessed, "unresolved_npm_lock_entries")
+				break
+			}
+		}
+	}
 	var protected []string
 	if ctx.ClientConfig != nil {
 		for _, entry := range ctx.ClientConfig.MCPServers {
@@ -259,6 +296,9 @@ func detectMode(target string) ScanMode {
 	}
 
 	if strings.HasSuffix(target, ".json") {
+		if base := filepath.Base(target); base == "package-lock.json" || base == "npm-shrinkwrap.json" {
+			return ModeDependencies
+		}
 		// Try to detect whether this is a client config or a manifest.
 		// Client configs have a top-level "mcpServers" key.
 		data, err := utils.ReadInput(target)

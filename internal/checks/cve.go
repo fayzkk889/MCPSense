@@ -1,10 +1,12 @@
 package checks
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/cve"
+	"github.com/fayzkk889/MCPSense/internal/inventory"
 	"github.com/fayzkk889/MCPSense/internal/models"
 )
 
@@ -19,13 +21,26 @@ func (c *DependencyCVECheck) Name() string              { return "Known CVE in M
 func (c *DependencyCVECheck) Category() models.Category { return models.CategorySecurity }
 
 func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
-	if c.Disabled || ctx.ClientConfig == nil {
+	if c.Disabled || (ctx.ClientConfig == nil && ctx.Dependencies == nil) {
 		ctx.AdvisoryState = "skipped"
 		return nil
 	}
 
-	pkgs := extractPackages(ctx.ClientConfig)
+	pkgs := []cve.Package{}
+	if ctx.ClientConfig != nil {
+		pkgs = extractPackages(ctx.ClientConfig)
+	}
 	ctx.AdvisoryScope = "recognized_launch_packages_osv_plus_vendor_snapshot_" + vendorAdvisoryDate
+	if ctx.Dependencies != nil {
+		declared, err := inventory.Packages(ctx.Dependencies)
+		if err != nil {
+			ctx.AdvisoryState = "failed"
+			ctx.Errors = append(ctx.Errors, err)
+			return nil
+		}
+		pkgs = append(pkgs, declared...)
+		ctx.AdvisoryScope = "explicit_npm_lock_and_recognized_launch_packages_osv_plus_vendor_snapshot_" + vendorAdvisoryDate
+	}
 	if len(pkgs) == 0 {
 		ctx.AdvisoryState = "not_applicable"
 		return nil
@@ -33,7 +48,11 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 
 	client := cve.NewClient()
 	cve.PruneCache()
-	results, ok := client.CheckAll(pkgs)
+	parent := ctx.Context
+	if parent == nil {
+		parent = context.Background()
+	}
+	results, ok := client.CheckAllContext(parent, pkgs)
 	if !ok {
 		ctx.AdvisoryState = "failed"
 		ctx.Errors = append(ctx.Errors, fmt.Errorf("advisory coverage incomplete: OSV unavailable or cached data stale; retry or explicitly use --no-cve"))
@@ -44,6 +63,10 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 
 	var findings []models.Finding
 	for _, res := range results {
+		location := models.Location{File: res.Package.Server}
+		if res.Package.File != "" {
+			location = models.Location{File: res.Package.File, ToolName: res.Package.Server}
+		}
 		for _, v := range res.Vulns {
 			sev := severityFromCVSS(v.CVSS)
 			pinNote := ""
@@ -62,10 +85,10 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 			findings = append(findings, models.Finding{
 				ID:          "CVE-001",
 				Title:       fmt.Sprintf("%s in %q (%s)", v.ID, res.Package.Name, res.Package.Server),
-				Description: fmt.Sprintf("MCP server %q references %s%s. Advisory %s from %s: %s%s", res.Package.Server, res.Package.Name, versionSuffix(res.Package.Version), v.ID, source, summary, pinNote),
+				Description: fmt.Sprintf("Component %q declares %s%s. Advisory %s from %s: %s%s", res.Package.Server, res.Package.Name, versionSuffix(res.Package.Version), v.ID, source, summary, pinNote),
 				Severity:    sev,
 				Category:    models.CategorySecurity,
-				Location:    models.Location{File: res.Package.Server},
+				Location:    location,
 				Remediation: remediation,
 			})
 		}

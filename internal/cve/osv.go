@@ -28,6 +28,7 @@ type Package struct {
 	Version   string // may be empty (unpinned)
 	Ecosystem string // "npm", "PyPI", "Go", etc.
 	Server    string // MCP server entry name this package came from (for finding location)
+	File      string // explicitly selected inventory file, if any; not part of query identity
 }
 
 // Vuln is a normalized vulnerability result.

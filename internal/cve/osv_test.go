@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -123,6 +125,32 @@ func TestCancellationAndOldCacheCannotProduceCleanResult(t *testing.T) {
 	defer cancel()
 	if _, ok := c.CheckAllContext(ctx, []Package{{Name: "x", Ecosystem: "npm"}}); ok {
 		t.Fatal("cancellation marked complete")
+	}
+	pkg := Package{Name: "old-cache", Ecosystem: "npm"}
+	dir, err := cacheDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	entry, _ := json.Marshal(map[string]interface{}{"fetched_at": time.Now().UTC(), "vulns": []Vuln{}})
+	if err := os.WriteFile(filepath.Join(dir, cacheKey(pkg)), entry, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, found := loadCache(pkg); found {
+		t.Fatal("pre-pagination cache trusted")
+	}
+}
+
+func TestRedirectsAndAggregateBytesAreBounded(t *testing.T) {
+	c := NewClient()
+	if c.http.CheckRedirect == nil || c.http.CheckRedirect(nil, nil) != http.ErrUseLastResponse {
+		t.Fatal("advisory POST redirects may disclose package identities")
+	}
+	ctx := context.WithValue(context.Background(), responseBudgetKey{}, new(atomic.Int64))
+	if !consumeBudget(ctx, 64<<20) || consumeBudget(ctx, 1) {
+		t.Fatal("scan byte budget not bounded")
 	}
 }
 

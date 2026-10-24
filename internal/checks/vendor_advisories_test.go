@@ -50,7 +50,7 @@ func TestVendorAdvisorySurvivesAnEmptySuccessfulOSVLookup(t *testing.T) {
 	}
 	for _, version := range []string{"1.1.6", "1.1.7"} {
 		key := fmt.Sprintf("%x.json", sha256.Sum256([]byte("PyPI|awslabs.postgres-mcp-server|"+version)))
-		data, err := json.Marshal(map[string]interface{}{"fetched_at": time.Now().UTC(), "vulns": []interface{}{}})
+		data, err := json.Marshal(map[string]interface{}{"cache_version": 2, "fetched_at": time.Now().UTC(), "vulns": []interface{}{}})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -94,5 +94,10 @@ func TestSupplementPreservesOtherServersAndAvoidsDuplicateAdvisories(t *testing.
 	repeated[0].Vulns = append(repeated[0].Vulns, repeated[0].Vulns[0])
 	if merged := mergeAdvisoryResults(nil, repeated); len(merged) != 1 || len(merged[0].Vulns) != 1 {
 		t.Fatalf("repeated supplemental record was counted twice: %+v", merged)
+	}
+	declared := a
+	declared.File = "selected-lock.json"
+	if merged := mergeAdvisoryResults(reviewedVendorResults([]cve.Package{a}), reviewedVendorResults([]cve.Package{declared})); len(merged) != 2 {
+		t.Fatal("inventory and launch provenance collapsed")
 	}
 }

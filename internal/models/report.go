@@ -12,16 +12,17 @@ type Summary struct {
 
 // Report aggregates all findings from a scan.
 type Report struct {
-	TargetHash    string    `json:"target_hash"`
-	MinSeverity   string    `json:"min_severity"`
-	SchemaVersion int       `json:"schema_version"`
-	Coverage      Coverage  `json:"coverage"`
-	Target        string    `json:"target"`
-	ScanMode      string    `json:"scan_mode"`
-	Timestamp     time.Time `json:"timestamp"`
-	Findings      []Finding `json:"findings"`
-	Score         int       `json:"score"`
-	Summary       Summary   `json:"summary"`
+	TargetHash    string               `json:"target_hash"`
+	MinSeverity   string               `json:"min_severity"`
+	SchemaVersion int                  `json:"schema_version"`
+	Coverage      Coverage             `json:"coverage"`
+	Dependencies  *DependencyInventory `json:"dependencies,omitempty"`
+	Target        string               `json:"target"`
+	ScanMode      string               `json:"scan_mode"`
+	Timestamp     time.Time            `json:"timestamp"`
+	Findings      []Finding            `json:"findings"`
+	Score         int                  `json:"score"`
+	Summary       Summary              `json:"summary"`
 }
 
 // NewReport creates a Report and computes the summary and score.
