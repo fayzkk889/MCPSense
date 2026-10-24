@@ -55,11 +55,20 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 	results, ok := client.CheckAllContext(parent, pkgs)
 	if !ok {
 		ctx.AdvisoryState = "failed"
-		ctx.Errors = append(ctx.Errors, fmt.Errorf("advisory coverage incomplete: OSV unavailable or cached data stale; retry or explicitly use --no-cve"))
+		ctx.Errors = append(ctx.Errors, fmt.Errorf("advisory coverage incomplete: lookup failed, data stale, cancellation or scan limits exceeded; retry, reduce scope or explicitly use --no-cve"))
 		return nil
 	}
 	ctx.AdvisoryState = "completed"
 	results = mergeAdvisoryResults(results, reviewedVendorResults(pkgs))
+	count := 0
+	for _, res := range results {
+		count += len(res.Vulns)
+	}
+	if count > cve.MaxMatches {
+		ctx.AdvisoryState = "failed"
+		ctx.Errors = append(ctx.Errors, fmt.Errorf("advisory matches exceed %d finding limit; reduce scan scope", cve.MaxMatches))
+		return nil
+	}
 
 	var findings []models.Finding
 	for _, res := range results {

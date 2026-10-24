@@ -20,6 +20,7 @@ const (
 	callBudget  = 5 * time.Second
 	MaxPackages = 2048
 	maxWorkers  = 8
+	MaxMatches  = 10000
 )
 
 // Package identifies a package to query.
@@ -186,8 +187,13 @@ func (c *Client) CheckAllContext(parent context.Context, pkgs []Package) (result
 	if ctx.Err() != nil {
 		return nil, false
 	}
+	matches := 0
 	for _, pkg := range pkgs {
 		found := vulns[indexes[cacheKey(pkg)]]
+		matches += len(found)
+		if matches > MaxMatches {
+			return nil, false
+		}
 		if len(found) > 0 {
 			results = append(results, Result{Package: pkg, Vulns: found})
 		}

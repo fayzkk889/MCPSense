@@ -154,6 +154,21 @@ func TestRedirectsAndAggregateBytesAreBounded(t *testing.T) {
 	}
 }
 
+func TestRepeatedLocationsCannotExpandAdvisoriesWithoutLimit(t *testing.T) {
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("USERPROFILE", t.TempDir())
+	pkg := Package{Name: "many-locations", Ecosystem: "npm", Version: "1.0.0"}
+	saveCache(pkg, []Vuln{{ID: "ONE"}, {ID: "TWO"}})
+	pkgs := make([]Package, MaxMatches/2+1)
+	for i := range pkgs {
+		pkgs[i] = pkg
+		pkgs[i].Server = fmt.Sprint(i)
+	}
+	if _, ok := NewClient().CheckAll(pkgs); ok {
+		t.Fatal("unbounded repeated-location advisory expansion accepted")
+	}
+}
+
 type fakeTransport func(*http.Request) (*http.Response, error)
 
 func (f fakeTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }

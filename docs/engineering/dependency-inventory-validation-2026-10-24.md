@@ -8,7 +8,7 @@ A deterministic test against the previous advisory client returned one advisory 
 
 The client follows pagination, deduplicates advisory IDs, rejects page cycles and exceeded limits, and never caches a partial response as complete. Eight workers query distinct identities concurrently; repeated identities retain each original finding location. Cancellation, failed pages and failed stale-cache refreshes fail the scan. Old cache entries are invalidated because their completeness cannot be established. Advisory POST redirects are rejected.
 
-Limits are 4 MiB per input, 10,000 locations, 2,048 distinct advisory identities, a 30-second phase budget, five seconds per request, 32 pages/16 MiB per identity and 64 MiB aggregate response data. These are scanner limits, not resource restrictions on an MCP server.
+Limits are 4 MiB per input, 10,000 locations, 2,048 distinct advisory identities, a 30-second phase budget, five seconds per request, 32 pages/16 MiB per identity, 64 MiB aggregate response data and 10,000 advisory findings. Repeated locations cannot amplify one advisory set into an unbounded report. These are scanner limits, not resource restrictions on an MCP server.
 
 Inventory selection is explicit: `mcpsense scan package-lock.json`, `--mode dependencies` for a differently named file, or `--dependencies <file>` alongside a project scan. Directory discovery does not silently add lockfile package names to outbound advisory queries. Online queries send recognized package names and exact versions to OSV; offline/no-CVE inspection does not query advisories or use cached results as findings.
 
