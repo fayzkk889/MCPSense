@@ -7,12 +7,13 @@ import (
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"github.com/fayzkk889/MCPSense/internal/utils"
 )
 
 // skillFileMatchers decides whether a given path is a skill file we should scan.
 func isSkillFile(path string) bool {
-	base := filepath.Base(path)
+	base := nodebridge.Base(path)
 	lowerBase := strings.ToLower(base)
 	lowerPath := "/" + strings.TrimPrefix(strings.ToLower(filepath.ToSlash(path)), "/")
 

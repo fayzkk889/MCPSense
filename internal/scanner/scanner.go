@@ -15,6 +15,7 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/detection"
 	"github.com/fayzkk889/MCPSense/internal/inventory"
 	"github.com/fayzkk889/MCPSense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"github.com/fayzkk889/MCPSense/internal/utils"
 )
 
@@ -296,7 +297,7 @@ func detectMode(target string) ScanMode {
 	}
 
 	if strings.HasSuffix(target, ".json") {
-		if base := filepath.Base(target); base == "package-lock.json" || base == "npm-shrinkwrap.json" {
+		if base := nodebridge.Base(target); base == "package-lock.json" || base == "npm-shrinkwrap.json" {
 			return ModeDependencies
 		}
 		// Try to detect whether this is a client config or a manifest.
