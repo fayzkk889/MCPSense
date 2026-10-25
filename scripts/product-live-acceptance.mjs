@@ -1,6 +1,6 @@
 // Harmless local MCP peers: inspect metadata without executing advertised tools.
 import fs from 'node:fs';import path from 'node:path';import http from 'node:http';
-import {execFile} from 'node:child_process';import {promisify} from 'node:util';
+import {execFile} from './cli-process.cjs';import {promisify} from 'node:util';
 const exec=promisify(execFile),binary=process.env.MCPSENSE_TEST_BINARY;
 if(!binary)throw Error('MCPSENSE_TEST_BINARY required');
 const root=path.resolve(process.env.MCPSENSE_ACCEPTANCE_DIR||'bin/product-acceptance-2026-10-23');fs.mkdirSync(root,{recursive:true});

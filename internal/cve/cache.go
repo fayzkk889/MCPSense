@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"io"
 	"os"
 	"path/filepath"
@@ -63,7 +64,7 @@ func saveCache(pkg Package, vulns []Vuln) {
 	if err != nil {
 		return
 	}
-	_ = os.MkdirAll(dir, 0o755)
+	_ = nodebridge.MkdirAll(dir, 0o755)
 	entry := cacheEntry{Version: 2, FetchedAt: time.Now().UTC(), Vulns: vulns}
 	data, err := json.Marshal(entry)
 	if err != nil {

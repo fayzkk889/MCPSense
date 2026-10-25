@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"github.com/fayzkk889/MCPSense/internal/utils"
 	"os"
 	"path/filepath"
@@ -54,7 +55,7 @@ func Load(path string) (*Snapshot, error) {
 
 // Save writes a snapshot to disk, creating the directory if needed.
 func Save(path string, snap *Snapshot) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+	if err := nodebridge.MkdirAll(nodebridge.Dir(path), 0o700); err != nil {
 		return fmt.Errorf("creating snapshot directory: %w", err)
 	}
 	data, err := MarshalSnapshot(snap)
@@ -67,7 +68,7 @@ func Save(path string, snap *Snapshot) error {
 	if info, err := os.Lstat(path); err == nil && (!info.Mode().IsRegular() || info.Mode()&os.ModeSymlink != 0) {
 		return fmt.Errorf("baseline must be a regular file")
 	}
-	f, err := os.CreateTemp(filepath.Dir(path), ".baseline-*")
+	f, err := os.CreateTemp(nodebridge.Dir(path), ".baseline-*")
 	if err != nil {
 		return err
 	}

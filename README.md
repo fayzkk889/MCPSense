@@ -17,7 +17,7 @@ This checkout describes the **0.4.0 candidate**. The linked npm/GitHub badges sh
 Choose one installation route for a published release:
 
 ```sh
-# Node.js/npm users: no Go compiler required
+# npm candidate: Node.js 22+; no Go compiler required
 npm install -g mcpsense@latest
 # Go users: no Node.js/npm required
 go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
@@ -56,13 +56,13 @@ go build -o bin/mcpsense.exe ./cmd/mcpsense
 .\bin\mcpsense.exe scan .\manifest.json --offline --no-baseline
 ```
 
-npm downloads the selected platform executable and verifies its release SHA-256 checksum on Windows, Linux and macOS. It checks startup and the version before replacing an existing installation. Checksums detect corruption; they are not code signatures. To select 0.4.0 explicitly, use `npm install -g mcpsense@0.4.0` or `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@v0.4.0` once that version appears in the public release list.
+The 0.4.0 npm candidate bundles the same Go scanning engine compiled to WebAssembly. It runs inside Node.js 22+ on Windows, Linux and macOS. Installing it needs no Go compiler, platform archive utility, postinstall download or MCPSense native executable. Go users keep the independent native source-install route. To select 0.4.0 explicitly, use `npm install -g mcpsense@0.4.0` or `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@v0.4.0` once that version appears in the public release list. These changes are not delivered by the older public npm package.
 
 ### Windows installation
 
-On Windows x64, the npm route needs Node.js/npm only. The separate Go route needs Go 1.22 or newer only. The optional standalone PowerShell installer below is a convenience for Go users: it builds from source, verifies startup, installs without administrator privileges, and adds its directory to your user PATH. No installation route changes Windows protection settings. Downloaded and locally built executables can both be restricted by machine policy; no warning-free guarantee is made.
+On Windows, the npm candidate needs Node.js 22+ and npm only. It bundles WebAssembly and JavaScript rather than an unsigned MCPSense `.exe`. The separate Go route needs Go 1.22 or newer only. The optional standalone PowerShell installer below is a convenience for Go users: it builds from source, verifies startup, installs without administrator privileges, and adds its directory to your user PATH. No installation route changes Windows protection settings. Device policies can restrict Node.js, scripts or native programs; no universal warning-free guarantee is made.
 
-Windows behavior has varied by executable: earlier unsigned candidates and the published 0.3.0 npm binary were blocked by local Code Integrity policy, while the newer unpublished `0.4.0-SNAPSHOT-3d1c18b` archive installed and ran with Go absent during the [24 October product retest](docs/engineering/product-retest-2026-10-24.md). The candidate remains unsigned. Windows release readiness still requires trusted signing and a protected-device retest; ZIP packaging or installing Go does not supply a publisher signature. See the [Windows readiness record](docs/engineering/windows-signing-readiness-2026-10-23.md).
+Earlier unsigned candidates and the published 0.3.0 npm executable were blocked by local Code Integrity policy. The new npm architecture removes that executable from delivery, without waiting for a signing certificate. Its offline installation, Windows command shim and installed user workflows are checked separately from native archives; see the [npm runtime verification record](docs/engineering/npm-runtime-2026-10-25.md). Native Windows archives remain unsigned and their signing work remains open; ZIP packaging or installing Go does not supply a publisher signature. See the [earlier Windows readiness record](docs/engineering/windows-signing-readiness-2026-10-23.md).
 
 From a downloaded or cloned checkout:
 
@@ -75,7 +75,7 @@ From a downloaded or cloned checkout:
 .\install.ps1 -Version <full-40-character-commit> -InstallDir C:\dev\mcpsense-preview -NoPathUpdate
 ```
 
-Update the npm installation with `npm install -g mcpsense@latest`, or update the Go installation by rerunning the Go install command. Package users do not need an npm account. Supported npm release targets are Windows x64 and Linux/macOS x64/arm64; the downloaded executable uses the operating system's archive utility during installation.
+Update the npm installation with `npm install -g mcpsense@latest`, or update the Go installation by rerunning the Go install command. Package users do not need an npm account. The npm package supports Windows/Linux/macOS x64/arm64 where Node.js 22+ is available. Existing npm users on Node.js 14–21 must update Node.js for this candidate. NVM is optional; npm never installs a second language toolchain.
 
 On Linux/macOS, `sh install.sh` installs the latest published release into `~/.local/bin`, verifies its SHA-256 manifest before installation and checks startup. `MCPSENSE_VERSION=0.4.0` selects a published version; `MCPSENSE_INSTALL_DIR` selects a writable directory. Add that directory to PATH when instructed. No automatic sudo or Windows-binary fallback is used.
 
@@ -222,6 +222,8 @@ Inputs: `target` (required), `mode` (auto), `severity` (low), `fail-on` (high), 
 ## Contributing and limits
 
 Run `go test ./... -count=1`, `go test -race ./...`, `go vet ./...`, and `node --test scripts/action.test.mjs npm/package.test.cjs`. CI tests Linux/Windows with Go 1.22 and 1.27. GoReleaser builds Linux amd64/arm64, macOS amd64/arm64 and Windows amd64. Cross-compilation alone does not demonstrate runtime correctness.
+
+To build the npm candidate as a maintainer, use Go 1.27.3 and Node.js 22+: `node scripts/build-npm-runtime.cjs`, `node scripts/npm-wasm-smoke.cjs`, then `node scripts/npm-product-suite.cjs`. Generated runtime assets are ignored by Git and must be built before packing or publishing. CI exercises actual offline npm installation and the shared product journeys on Windows, Linux and macOS with Node.js 22 and 24. The package includes the Go runtime's BSD license alongside MCPSense's unchanged MIT license. WebAssembly does not sandbox explicitly authorized MCP processes or turn metadata inspection into runtime attack prevention.
 
 The [40-description diagnostic corpus](testdata/description_benchmark.json) includes benign security documentation and semantic attacks. Observed precision was 0.7727 and recall 0.8500, with five false positives and three misses. It is a small authored corpus, not an independent field evaluation; detection percentages and statement coverage are not security guarantees.
 

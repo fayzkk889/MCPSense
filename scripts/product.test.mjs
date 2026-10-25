@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {execFile} from 'node:child_process';
+import {execFile} from './cli-process.cjs';
 import {promisify} from 'node:util';
 import http from 'node:http';
 const exec = promisify(execFile);

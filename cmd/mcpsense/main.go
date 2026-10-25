@@ -1,21 +1,18 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
-	"os/signal"
-	"path/filepath"
 	"runtime/debug"
 	"strings"
-	"syscall"
 
 	"github.com/spf13/cobra"
 
 	"github.com/fayzkk889/MCPSense/internal/drift"
 	"github.com/fayzkk889/MCPSense/internal/models"
+	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"github.com/fayzkk889/MCPSense/internal/report"
 	"github.com/fayzkk889/MCPSense/internal/scanner"
 	"github.com/fayzkk889/MCPSense/internal/utils"
@@ -39,7 +36,11 @@ func init() {
 const configFile = ".mcpsenserc.json"
 
 func main() {
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	if err := validateRuntime(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	ctx, cancel := commandContext()
 	defer cancel()
 	if err := rootCmd().ExecuteContext(ctx); err != nil {
 		if errors.Is(err, errFindings) {
@@ -181,8 +182,8 @@ CLI flags override config file values.`,
 					if paths[j] == "" {
 						continue
 					}
-					a, _ := filepath.Abs(paths[i])
-					b, _ := filepath.Abs(paths[j])
+					a, _ := nodebridge.Abs(paths[i])
+					b, _ := nodebridge.Abs(paths[j])
 					same := a == b
 					ai, ae := os.Stat(a)
 					bi, be := os.Stat(b)

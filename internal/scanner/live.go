@@ -12,7 +12,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -260,22 +259,11 @@ func (s *Scanner) scanLiveStdio(target string, ctx *checks.ScanContext) error {
 	}
 	runCtx, cancel := context.WithTimeout(s.opts.Context, s.opts.Timeout)
 	defer cancel()
-	cmd := exec.CommandContext(runCtx, parts[0], parts[1:]...)
-	configureProcess(cmd)
-	stdin, err := cmd.StdinPipe()
+	stdin, stdout, stop, err := startStdioProcess(runCtx, parts)
 	if err != nil {
 		return err
 	}
-	defer stdin.Close()
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return err
-	}
-	defer stdout.Close()
-	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("could not start authorized MCP server")
-	}
-	defer func() { cancel(); stdin.Close(); stdout.Close(); _ = cmd.Cancel(); _ = cmd.Wait() }()
+	defer stop()
 	type result struct {
 		m   *models.MCPManifest
 		err error
