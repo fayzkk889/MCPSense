@@ -1,6 +1,6 @@
 # mcpsense npm CLI
 
-MIT-licensed MCPSense CLI, version 0.4.0 candidate, requiring Node.js 22+ and npm. Earlier public versions use a native executable and do not contain the same safety controls or installation architecture. Check `mcpsense version` after installation. This candidate reaches `@latest` only after publication.
+MIT-licensed MCPSense CLI, version 0.4.1 candidate, requiring Node.js 22+ and npm. Public 0.4.0 introduced WebAssembly delivery; 0.4.1 addresses additional hostile-description gaps found in user testing. Versions before 0.4.0 use a native executable. Check `mcpsense version` after installation. This candidate reaches `@latest` only after publication.
 
 Install a published version:
 
