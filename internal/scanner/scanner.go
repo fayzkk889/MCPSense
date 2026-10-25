@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -332,7 +331,7 @@ func detectMode(target string) ScanMode {
 		}
 		// Check for executable: on Unix check permission bits, on Windows check extension
 		isExec := false
-		if runtime.GOOS == "windows" {
+		if nodebridge.Windows() {
 			ext := strings.ToLower(filepath.Ext(target))
 			isExec = ext == ".exe" || ext == ".bat" || ext == ".cmd"
 		} else {

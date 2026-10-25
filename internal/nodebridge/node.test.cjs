@@ -1,8 +1,18 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
-const {createHost} = require('./node.cjs');
+const {createHost,filesystem} = require('./node.cjs');
 const invoke = (host, method, ...args) => new Promise((resolve, reject) => host[method](...args, (error, value) => error ? reject(Error(error)) : resolve(value)));
+
+test('directory-only filesystem opens reject ordinary files on Windows and Unix',async()=>{
+  const fs=require('fs'),path=require('path'),os=require('os');
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'mcpsense-directory-'));
+  const file=path.join(directory,'ordinary.txt');fs.writeFileSync(file,'control');
+  const api=filesystem();
+  const open=value=>new Promise((resolve,reject)=>api.open(value,api.constants.O_DIRECTORY,0,(error,fd)=>error?reject(error):resolve(fd)));
+  const fd=await open(directory);assert.ok(fs.fstatSync(fd).isDirectory());fs.closeSync(fd);
+  await assert.rejects(open(file),error=>error.code==='ENOTDIR');
+});
 
 async function withPeer(handler, run) {
   const host = createHost();

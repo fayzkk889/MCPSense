@@ -1,4 +1,5 @@
-// Exercise the production archive installer and wrapper with Go absent from PATH.
+// Historical native archive installer regression. New npm delivery is tested
+// separately in npm-wasm-smoke.cjs; this helper is not shipped in npm packages.
 const fs=require('fs'),os=require('os'),path=require('path'),assert=require('assert/strict');
 const {execFileSync,spawnSync}=require('child_process');
 const {createHash}=require('crypto');
@@ -40,8 +41,7 @@ async function main(){
    if(url.endsWith('/checksums.txt'))return Buffer.from(`${sum}  ${filename}\n`);
    assert.ok(url.endsWith('/'+filename));return data;
   }});
-  fs.copyFileSync(path.resolve('npm/bin/run.js'),path.join(binDir,'run.js'));
-  assert.equal(execFileSync(process.execPath,[path.join(binDir,'run.js'),'version'],{encoding:'utf8'}).trim(),'mcpsense v'+version);
+  assert.equal(execFileSync(binary,['version'],{encoding:'utf8'}).trim(),'mcpsense v'+version);
   execFileSync(process.execPath,['--test','scripts/product.test.mjs'],{env:{...process.env,MCPSENSE_TEST_BINARY:binary},stdio:'inherit'});
   console.log('PASS: real archive installation, npm wrapper and all user journeys with Go absent from PATH');
  }finally{process.env.PATH=priorPath;fs.rmSync(tmp,{recursive:true,force:true,maxRetries:10,retryDelay:100});}

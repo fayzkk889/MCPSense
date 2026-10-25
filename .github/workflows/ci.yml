@@ -24,7 +24,7 @@ jobs:
       - run: go test ./... -count=1 -cover
       - run: go test -race ./...
       - run: go vet ./...
-      - run: node --test scripts/action.test.mjs npm/package.test.cjs
+      - run: node --test scripts/action.test.mjs npm/package.test.cjs npm/runtime.test.cjs internal/nodebridge/node.test.cjs
       - run: npm pack ./npm --dry-run --json --ignore-scripts
       - run: node scripts/release-verify.mjs
       - run: go build -ldflags="-X main.version=0.4.0" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
@@ -77,6 +77,35 @@ jobs:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_FRESH_DIR: bin/fresh-product-ci
           MCPSENSE_FRESH_ENFORCE: '1'
+  npm-runtime:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: ['22', '24']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: '1.27.3'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node scripts/build-npm-runtime.cjs
+      - run: node scripts/release-verify.mjs --npm
+      - name: Install actual tarball offline without Go or archive tools
+        run: node scripts/npm-wasm-smoke.cjs
+      - name: Native-equivalent product journeys through npm entrypoint
+        run: node scripts/npm-product-suite.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: npm-product-${{ matrix.os }}-node${{ matrix.node }}-${{ github.sha }}
+          path: |
+            bin/npm-install-wasm/
+            bin/npm-product/
+          retention-days: 7
   action:
     runs-on: ubuntu-latest
     permissions:

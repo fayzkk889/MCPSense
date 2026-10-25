@@ -6,7 +6,7 @@
     "mcpsense": "bin/run.js"
   },
   "scripts": {
-    "postinstall": "node install.js"
+    "prepublishOnly": "node bin/wasm.js --verify"
   },
   "keywords": [
     "mcp",
@@ -31,7 +31,7 @@
     "url": "https://github.com/fayzkk889/MCPSense/issues"
   },
   "engines": {
-    "node": ">=14.14"
+    "node": ">=22"
   },
   "os": [
     "darwin",
@@ -43,8 +43,9 @@
     "arm64"
   ],
   "files": [
-    "bin/",
-    "install.js",
+    "bin/run.js",
+    "bin/wasm.js",
+    "runtime/",
     "README.md",
     "LICENSE"
   ]

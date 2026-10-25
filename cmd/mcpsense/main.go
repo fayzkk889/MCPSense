@@ -36,6 +36,10 @@ func init() {
 const configFile = ".mcpsenserc.json"
 
 func main() {
+	if err := validateRuntime(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
 	ctx, cancel := commandContext()
 	defer cancel()
 	if err := rootCmd().ExecuteContext(ctx); err != nil {

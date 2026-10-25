@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"syscall/js"
 )
 
@@ -69,6 +70,13 @@ func Abs(p string) (string, error) {
 }
 func Dir(p string) string  { return Host().Call("dirname", p).String() }
 func Base(p string) string { return Host().Call("basename", p).String() }
+func Windows() bool        { return Host().Get("platform").String() == "win32" }
+func ToSlash(p string) string {
+	if Windows() {
+		return strings.ReplaceAll(p, "\\", "/")
+	}
+	return p
+}
 func MkdirAll(p string, mode os.FileMode) error {
 	_, err := call(context.Background(), "mkdir", p, int(mode.Perm()))
 	return err

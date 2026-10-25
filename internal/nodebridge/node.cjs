@@ -9,6 +9,26 @@ const http = require('http');
 const https = require('https');
 const {spawn} = require('child_process');
 
+function filesystem() {
+  if (process.platform !== 'win32' || fs.constants.O_DIRECTORY !== undefined) return fs;
+  // Go 1.27 requests O_DIRECTORY for directory walks. Node on Windows omits
+  // that flag. Emulate its type check against the opened descriptor, without
+  // weakening it into a regular-file open or racing a path-based stat.
+  const directoryFlag = 0x10000000;
+  return {...fs, constants:{...fs.constants,O_DIRECTORY:directoryFlag},
+    open(file, flags, mode, callback) {
+      if (!(flags & directoryFlag)) return fs.open(file,flags,mode,callback);
+      fs.open(file,flags & ~directoryFlag,mode,(error,fd)=>{
+        if (error) return callback(error);
+        fs.fstat(fd,(error,stat)=>{
+          if (!error && stat.isDirectory()) return callback(null,fd);
+          fs.close(fd,()=>callback(error || Object.assign(Error('not a directory'),{code:'ENOTDIR'})));
+        });
+      });
+    }
+  };
+}
+
 function createHost() {
   let next = 1, signalHandler;
   const streams = new Map(), processes = new Map(), requests = new Set(), cleanup = new Set();
@@ -49,6 +69,7 @@ function createHost() {
   }
   function onSignal() {if (signalHandler) signalHandler();}
   const host = {
+    sourceHash: require('crypto').createHash('sha256').update(fs.readFileSync(__filename)).digest('hex'),
     platform: process.platform,
     absolute: value => path.resolve(value), dirname: value => path.dirname(value), basename: value => path.basename(value),
     mkdir(value, mode, callback) {const done = settle(callback); fs.mkdir(value, {recursive:true, mode}, error => done(error, true)); return () => done(true, null);},
@@ -141,4 +162,4 @@ function createHost() {
   };
   return host;
 }
-module.exports = {createHost};
+module.exports = {createHost,filesystem};

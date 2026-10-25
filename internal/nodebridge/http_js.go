@@ -49,8 +49,10 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	responseBody := &Reader{ctx: req.Context(), id: v.Get("id").Int()}
 	var raw []string
 	if json.Unmarshal([]byte(v.Get("headers").String()), &raw) != nil || len(raw)%2 != 0 || len(raw) > 4096 {
+		_ = responseBody.Close()
 		return nil, fmt.Errorf("invalid runtime HTTP headers")
 	}
 	h := make(http.Header)
@@ -59,7 +61,8 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	}
 	status := v.Get("status").Int()
 	if status < 100 || status > 599 {
+		_ = responseBody.Close()
 		return nil, fmt.Errorf("invalid runtime HTTP status")
 	}
-	return &http.Response{StatusCode: status, Status: fmt.Sprintf("%d %s", status, http.StatusText(status)), Header: h, Body: &Reader{ctx: req.Context(), id: v.Get("id").Int()}, ContentLength: -1, Request: req}, nil
+	return &http.Response{StatusCode: status, Status: fmt.Sprintf("%d %s", status, http.StatusText(status)), Header: h, Body: responseBody, ContentLength: -1, Request: req}, nil
 }

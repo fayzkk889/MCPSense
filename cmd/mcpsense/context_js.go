@@ -4,12 +4,21 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/fayzkk889/MCPSense/internal/netpolicy"
 	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"net/http"
 	"net/netip"
 	"syscall/js"
 )
+
+func validateRuntime() error {
+	h := nodebridge.Host()
+	if h.Type() != js.TypeObject || h.Get("sourceHash").Type() != js.TypeString || h.Get("sourceHash").String() != nodebridge.HostSourceHash() {
+		return fmt.Errorf("npm runtime components do not match; reinstall the reviewed package")
+	}
+	return nil
+}
 
 func init() {
 	http.DefaultTransport = &nodebridge.Transport{Allowed: func(ip netip.Addr) bool { return netpolicy.Allowed(ip, false) }}

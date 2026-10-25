@@ -31,6 +31,21 @@ jobs:
           go test ./... -count=1
           node --test scripts/action.test.mjs npm/package.test.cjs
 
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Prepare and verify the independent npm artifact
+        run: |
+          node scripts/build-npm-runtime.cjs
+          node scripts/release-verify.mjs --npm
+          node scripts/npm-wasm-smoke.cjs
+          node scripts/npm-product-suite.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: npm-candidate-${{ github.sha }}
+          path: bin/npm-install-wasm/
+          retention-days: 7
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a
         with:
