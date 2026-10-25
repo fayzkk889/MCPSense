@@ -1,7 +1,7 @@
 // Product acceptance through the real CLI. Keep evidence; never execute fixture commands.
 import fs from 'node:fs';
 import path from 'node:path';
-import {spawnSync} from 'node:child_process';
+import {spawnSync} from './cli-process.cjs';
 import {createHash} from 'node:crypto';
 const binary=process.env.MCPSENSE_TEST_BINARY;
 if(!binary)throw Error('MCPSENSE_TEST_BINARY must name the reviewed CLI');

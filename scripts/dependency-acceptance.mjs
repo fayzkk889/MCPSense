@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {spawnSync} from 'node:child_process';
+import {spawnSync} from './cli-process.cjs';
 
 const binary = process.env.MCPSENSE_TEST_BINARY;
 if (!binary) throw Error('MCPSENSE_TEST_BINARY is required');

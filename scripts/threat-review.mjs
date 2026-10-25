@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import {spawnSync} from 'node:child_process';
+import {spawnSync} from './cli-process.cjs';
 import {createHash} from 'node:crypto';
 
 const binary = process.env.MCPSENSE_TEST_BINARY;

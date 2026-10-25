@@ -1,5 +1,5 @@
 // Fresh CLI walkthroughs; no real credentials or advertised commands are used.
-import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';
+import fs from 'node:fs';import path from 'node:path';import {spawnSync} from './cli-process.cjs';
 const binary=process.env.MCPSENSE_TEST_BINARY;if(!binary)throw Error('MCPSENSE_TEST_BINARY required');
 const root=path.resolve(process.env.MCPSENSE_PERSONA_DIR||'bin/persona-test-2026-10-23');
 fs.mkdirSync(root,{recursive:true});const workspace=fs.mkdtempSync(path.join(root,'Fresh user project '));
