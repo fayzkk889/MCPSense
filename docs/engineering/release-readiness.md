@@ -2,9 +2,11 @@
 
 ## Current follow-up
 
-[PR8](https://github.com/fayzkk889/MCPSense/pull/8) addresses the observed metadata omissions, attack paraphrases, safe-argv false alarms and first-run gaps. See the [release-blocker report](release-blockers-2026-10-23.md) for research, measurements and limits. Final exact-commit checks and public publication/installation are separate gates. The sections below preserve historical failures and delivery states; they do not describe the current branch or merge status.
+[PR13](https://github.com/fayzkk889/MCPSense/pull/13) is merged at `247824f30d3c31cdf22ece3c4029fe56b353ef5e`. Its exact reviewed head `03ad077928072241465bff9e7ba0f24ca38d922d` passed all 13 jobs in [CI40172108106](https://github.com/fayzkk889/MCPSense/actions/runs/40172108106): six npm OS/Node combinations, four native Go/race combinations, lint, Action and a publication-disabled five-target snapshot. Main's source tree matches that head. [CI40208949378](https://github.com/fayzkk889/MCPSense/actions/runs/40208949378) records the separate post-merge run. See the [npm verification record](npm-runtime-2026-10-25.md), [24 October product retest](product-retest-2026-10-24.md) and [release notes](release-notes-0.4.0.md). The sections below preserve historical failures and delivery states; their branch/merge statements are not the current status.
 
-**Windows public-release gate remains open:** the verified CI snapshot is blocked locally by Smart App Control because it is unsigned. Hosted install tests pass, but trusted signing and a protected-device retest are still required for the requested distribution experience. [Evidence and next steps](windows-signing-readiness-2026-10-23.md).
+**Independent npm route:** the 0.4.0 candidate bundles Go WebAssembly and JavaScript, with no MCPSense native executable, install hook, archive utility or user Go prerequisite. It requires Node.js 22+; Go users keep their independent Go 1.22+ source route. Actual offline npm tarball installation, Windows command shim and installed product journeys pass. Signing work remains open for native Windows archives, not a prerequisite for the new npm execution format. Machine policies can still restrict Node.js/scripts; no universal warning-free guarantee is made. Nothing changes Windows protection settings.
+
+**Public-delivery gate remains open:** no 0.4.0 tag, GitHub release or npm publication is authorized yet. Public channels still distribute 0.3.0. Obtain explicit approval for the concrete version/commit/artifacts, then verify actual public installs/updates. Source merges and passing private CI artifacts do not update `@latest`. Description regression scores do not establish universal attack prevention.
 
 ## Historical persona retest
 
@@ -60,6 +62,6 @@ CI additionally builds a fresh, publication-disabled snapshot with `GORELEASER_C
 
 ## Approval boundary
 
-No merge, version tag, GitHub release or npm publication occurred. The tag-triggered release workflow would publish if a version tag were pushed, so **do not push one without explicit maintainer approval**. After review and green final checks, obtain approval for the exact commit, version and publication process; then verify public artifact/checksum URLs and npm package contents. Until then, this is a tested contribution and release preparation, not a completed public release.
+Implementation PRs have been merged under the user's standing review/merge authorization. No 0.4.0 version tag, public GitHub release or npm publication has occurred. The tag-triggered release workflow would publish native archives if a version tag were pushed, so **do not push one without explicit maintainer approval**. After review and green final checks, obtain approval for the exact commit, version and publication process; then verify public artifact/checksum URLs and npm package contents. Until then, this is tested release preparation, not a completed public release.
 
 Final review also requires the same approved-baseline digest when drift evidence is compared. Reapproval is a policy change, not a remediation. Schema digests preserve arbitrary JSON numeric constraints without float rounding, and Unicode offset tests include dotted-I compatibility. These are covered by focused regressions.
