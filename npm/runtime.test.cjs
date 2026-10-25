@@ -6,6 +6,12 @@ const {createHash} = require('crypto');
 const {spawnSync} = require('child_process');
 const {verifyRuntime} = require('./bin/wasm.js');
 const version = require('./package.json').version;
+test('only required filesystem and timezone values enter Go bootstrap memory',()=>{
+  const original={...process.env};
+  const env=require('./bin/wasm.js').runtimeEnvironment({MCPSENSE_TEST_PADDING:'x'.repeat(16384),TZ:'UTC'});
+  assert.deepEqual(Object.keys(env).sort(),['HOME','TMPDIR','TZ']);assert.equal(env.TZ,'UTC');
+  assert.deepEqual({...process.env},original,'Parent/child process environment must remain unchanged');
+});
 test('runtime verification rejects missing, corrupt, oversized and mixed assets',()=>{
   const dir = fs.mkdtempSync(path.join(os.tmpdir(),'mcpsense-runtime-'));
   const names = ['mcpsense.wasm','wasm_exec.cjs','host.cjs','LICENSE.Go'];
@@ -24,6 +30,8 @@ test('built engine version and offline scan use the packaged Node entrypoint', {
   verifyRuntime(path.join(__dirname,'runtime'),version);
   const run = args => spawnSync(process.execPath,[path.join(__dirname,'bin/run.js'),...args],{encoding:'utf8',timeout:30000});
   let result=run(['version']);assert.equal(result.status,0,result.stderr);assert.equal(result.stdout.trim(),'mcpsense v'+version);
+  result=spawnSync(process.execPath,[path.join(__dirname,'bin/run.js'),'version'],{encoding:'utf8',timeout:30000,env:{...process.env,MCPSENSE_TEST_PADDING:'x'.repeat(16384)}});
+  assert.equal(result.status,0,result.stderr);assert.equal(result.stdout.trim(),'mcpsense v'+version);
   result=run(['scan',path.resolve('testdata/compliant_server/manifest.json'),'--offline','--no-baseline','--format','json']);
   assert.equal(result.status,0,result.stderr);assert.equal(JSON.parse(result.stdout).coverage.state,'completed');
 });

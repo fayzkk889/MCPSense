@@ -18,6 +18,7 @@ This is a distribution change, not an evasion of machine protection or a runtime
 1. A bounded Node stream read could drain its buffer before Node emitted EOF, leaving an advisory request waiting until timeout. Driving the empty-buffer read transition fixes completion; streaming and cancellation tests preserve the original limits.
 2. Go 1.27 directory walks request `O_DIRECTORY`, which Node omits on Windows. Clean installed whole-project scanning failed visibly. A Windows filesystem adapter now validates the opened descriptor as a directory and rejects ordinary files with `ENOTDIR`; it does not silently weaken the directory-only check.
 3. Go's WebAssembly target reports `js` rather than its host OS. Windows path basenames, executable detection, nested skill paths, recursive directory creation and output/baseline path checks now use the Node host where platform semantics matter. Native builds retain their original OS implementations.
+4. Hosted Windows/macOS checks reproduced Go's 8 KiB bootstrap argv/environment limit with a large inherited CI environment. Only filesystem locations/timezone needed by the Go engine now enter bootstrap memory. Node's original environment remains intact for authorized child processes; a synthetic 16 KiB unrelated variable is covered by a startup regression. Very large CLI argument arrays still hit the upstream bootstrap limit and fail visibly.
 
 ## Local observed results
 

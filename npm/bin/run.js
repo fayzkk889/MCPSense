@@ -10,7 +10,7 @@ if (require.main === module) {
   } else {
     runCLI(process.argv.slice(2)).then(
       status => { process.exit(status); },
-      error => { console.error('MCPSense runtime failed: ' + error.message + '. Reinstall the package and retry.'); process.exit(2); }
+      error => { console.error('MCPSense runtime failed: ' + error.message); process.exit(2); }
     );
   }
 }

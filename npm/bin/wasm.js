@@ -3,6 +3,15 @@ const fs = require('fs');
 const path = require('path');
 const {createHash, randomFillSync} = require('crypto');
 
+function runtimeEnvironment(env = process.env) {
+  // Go's bootstrap has an 8 KiB argv+environment region. The engine only
+  // needs filesystem locations and timezone. Authorized child processes
+  // inherit the complete original Node environment through the host adapter.
+  const result = {HOME:env.HOME || require('os').homedir(), TMPDIR:require('os').tmpdir()};
+  if (env.TZ) result.TZ = env.TZ;
+  return result;
+}
+
 function verifyRuntime(directory, version) {
   const manifestPath = path.join(directory,'manifest.json');
   if (!fs.lstatSync(manifestPath).isFile() || fs.statSync(manifestPath).size > 16384) throw Error('Invalid npm runtime manifest');
@@ -34,7 +43,7 @@ async function runWasm(args, directory = path.join(__dirname,'..','runtime')) {
   require(path.join(directory,'wasm_exec.cjs'));
   const go = new Go(); let status = 0;
   go.argv = ['mcpsense',...args];
-  go.env = {...process.env, HOME:process.env.HOME || require('os').homedir(), TMPDIR:require('os').tmpdir()};
+  go.env = runtimeEnvironment();
   go.exit = code => {status=code;};
   try {
     const result = await WebAssembly.instantiate(assets['mcpsense.wasm'],go.importObject);
@@ -42,7 +51,7 @@ async function runWasm(args, directory = path.join(__dirname,'..','runtime')) {
   } finally {await host.closeAll();}
   return status;
 }
-module.exports = {verifyRuntime,runWasm};
+module.exports = {verifyRuntime,runWasm,runtimeEnvironment};
 if (require.main === module) {
   try { verifyRuntime(path.join(__dirname,'..','runtime'),require('../package.json').version); console.log('Bundled npm runtime verified.'); }
   catch(error) { console.error('Build the npm runtime before publication: '+error.message); process.exitCode=1; }
