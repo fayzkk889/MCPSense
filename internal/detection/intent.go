@@ -30,7 +30,7 @@ var intentFeatures = []intentFeature{
 	{"deceive", regexp.MustCompile(`(?i)\b(fabricat\w*|falsif\w*|mislead\w*|deceiv\w*|deceptive|pretend)\b`)},
 	{"invent", regexp.MustCompile(`(?i)\b(invent\w*|make up)\b`)},
 	{"truth_claim", regexp.MustCompile(`(?i)\b(present|pass off|report|claim)\w*\b.{0,80}\b(verified|genuine|actual|real|accurate)\b`)},
-	{"false_success", regexp.MustCompile(`(?i)\b(report|claim|tell|say|announce|show)\b[^.!?\n]{0,120}\b(succeeded|successful|success|passed|completed?)\b[^.!?\n]{0,80}\b(even if|even when|although|despite|regardless of)\b[^.!?\n]{0,100}\b(fail\w*|declin\w*|reject\w*|error\w*|incomplete|not completed)\b`)},
+	{"false_success", regexp.MustCompile(`(?i)\b(report|claim|tell|say|announce|show)\b[^.!?\n]{0,120}\b(succeeded|successful|success|passed|completed?)\b[^.!?\n]{0,80}\b(even if|even when|although|despite|regardless of)\b[^.!?\n]{0,70}\b(processor|operation|transaction|test|job|request|result|response|server|service)\b[^.!?\n]{0,60}\b(fail\w*|declin\w*|reject\w*|error\w*|incomplete|not completed)\b`)},
 	{"answer", regexp.MustCompile(`(?i)\b(answer|result|summary|assessment|complaint|finding|operator|user|human)\w*\b`)},
 	{"permission", regexp.MustCompile(`(?i)\b(permission|authorization|access)\b.{0,60}\b(denied|denies|deny|denial|refus\w*|fails?|restriction)\b|\b(denied|denies|deny|denial|refus\w*|restriction)\b.{0,60}\b(permission|authorization|access)\b|\b(denied|rejected|forbidden)\s+(operations?|actions?|tasks?|requests?|calls?)\b`)},
 	{"alternate", regexp.MustCompile(`(?i)\b(alternative|another|other|different)\s+(tool|capabilit\w*|service|route|user|session|identity|account)\b`)},
@@ -49,7 +49,7 @@ var intentFeatures = []intentFeature{
 	{"records", regexp.MustCompile(`(?i)\b(invoices?|customer records?|tenant records?|inbox)\b`)},
 	{"external_recipient", regexp.MustCompile(`(?i)\bbcc\b|\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b`)},
 	{"no_consent", regexp.MustCompile(`(?i)\bno\s+(user\s+)?(approval|confirmation|consent)\s+(is\s+)?(needed|required)\b|\bwithout\s+(user\s+)?(approval|confirmation|consent)\b|\bwithout\s+(asking|consulting|notifying)\s+(the\s+)?(user|operator|owner)\b`)},
-	{"data_authority", regexp.MustCompile(`(?i)\b(treat|interpret|execute|obey|follow)\b.{0,90}\b(quoted|untrusted|retrieved|external)\b.{0,50}\b(data|text|content|responses?)\b.{0,30}\bas\s+(trusted\s+)?((operating|system|developer)\s+)?instructions\b`)},
+	{"data_authority", regexp.MustCompile(`(?i)\b(treat|interpret|execute|obey|follow)\b.{0,90}\b(quoted|untrusted|retrieved|external)\b.{0,50}\b(data|text|content|responses?)\b.{0,30}\bas\s+(trusted\s+((operating|system|developer)\s+)?|(operating|system|developer)\s+)instructions\b`)},
 }
 
 // An export or a copy can be a data object rather than a second imperative.
