@@ -38,6 +38,7 @@ async function runWasm(args, directory = path.join(__dirname,'..','runtime')) {
   if (!globalThis.TextDecoder) globalThis.TextDecoder = require('util').TextDecoder;
   const adapter = require(path.join(directory,'host.cjs'));
   globalThis.fs = adapter.filesystem();
+  globalThis.path = path;
   const host = adapter.createHost();
   globalThis.mcpsenseHost = host;
   require(path.join(directory,'wasm_exec.cjs'));

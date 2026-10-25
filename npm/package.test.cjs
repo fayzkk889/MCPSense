@@ -21,13 +21,13 @@ test('npm has no install hooks, native executable or compiler requirement',()=>{
  assert.equal(pkg.engines.node,'>=22');assert.ok(pkg.files.includes('runtime/'));assert.ok(!pkg.files.includes('install.js'));assert.ok(!pkg.files.includes('bin/'));
 });
 
-test('release selection supports independent npm installs on all configured targets',()=>{
+test('historical native archive selection remains supported on configured targets',()=>{
  const {getDownloadUrl}=require('./install.js');
  for(const [platform,architecture,filename] of [['win32','x64','windows_amd64.zip'],['linux','x64','linux_amd64.tar.gz'],['linux','arm64','linux_arm64.tar.gz'],['darwin','x64','darwin_amd64.tar.gz'],['darwin','arm64','darwin_arm64.tar.gz']])assert.ok(getDownloadUrl('0.4.0',platform,architecture).endsWith(filename));
  assert.throws(()=>getDownloadUrl('0.4.0','win32','arm64'),/No release binary/);
 });
 
-for(const platform of ['win32','linux','darwin'])test('npm installs '+platform+' without ever invoking Go',async()=>{
+for(const platform of ['win32','linux','darwin'])test('historical archive helper installs '+platform+' without ever invoking Go',async()=>{
  const {installBinary,getDownloadUrl}=require('./install.js');const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mcpsense-npm-'));
  const data=Buffer.from('synthetic reviewed archive'),filename=getDownloadUrl('0.4.0',platform,'x64').split('/').pop();
  const digest=createHash('sha256').update(data).digest('hex');const calls=[];let renames=0;
