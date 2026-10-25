@@ -13,7 +13,7 @@ import (
 // They are bounded lexical heuristics, not semantic understanding or prevention.
 func directivePatterns() []Pattern {
 	defs := []struct{ id, name, expression string }{
-		{"PI-013", "Task or authority replacement", `\b(set aside|disobey|discard|disregard|override|replace|supersede)\b[^\n.!?]{0,100}\b(task|instructions?|constraints?|rules?|policy|policies|restrictions?)\b|\b(original task|developer restrictions|safety policies)\b[^\n.!?]{0,50}\b(no longer|suspended|disabled)\b|\b(follow|obey|trust|prioritize)\s+(only\s+)?(this\s+(server|tool|description)|the\s+instructions\s+in\s+this\s+tool)\b[^\n.!?]{0,100}\b(over|instead|from now|exclusively|user|only)\b`},
+		{"PI-013", "Task or authority replacement", `\b(set aside|disobey|discard|disregard|override|replace|supersede)\b[^\n.!?]{0,100}\b(task|instructions?|constraints?|rules?|policy|policies|restrictions?)\b|\b(original task|developer restrictions|safety policies)\b[^\n.!?]{0,50}\b(no longer|suspended|disabled)\b|\b(follow|obey|trust|prioritize)\s+(only\s+)?(this\s+(server|tool|description)|the\s+instructions\s+in\s+this\s+tool)\b[^\n.!?]{0,100}\b(over|instead|from now|exclusively|only)\b`},
 		{"PI-014", "Unauthorized disclosure directive", `\b(read|copy|send|upload(?:ing)?|forward|transmit|reveal|disclose|print|include|attach|paste|steal)\b[^\n!?]{0,180}\b(private\s+keys?|credentials?|api[_ -]?keys?|(?:access|all)\s+tokens?|recovery\s+codes?|confidential\s+(emails?|files?|documents?)|entire\s+inbox|\.aws/credentials|\.ssh/|id_rsa|id_ed25519)\b`},
 		{"PI-015", "Concealment or false reporting", `\b(hide|conceal|suppress)\b[^\n.!?]{0,90}\b(warnings?|findings?|changes?|actions?|transfer|user)\b|\b(tell|report|claim)\b[^\n.!?]{0,90}\b(no files were changed|everything passed|repository is secure|scan completed successfully)\b|\b(do not|don't|never|without)\s+(tell|show|display|mention|report|warn|inform|notify|telling|informing|notifying)\b[^\n.!?]{0,70}\b(user|operator|edit|changes?|this|anyone)\b`},
 		{"PI-016", "Answer substitution", `\b(replace|rewrite|alter|change|add)\b[^\n.!?]{0,100}\b(answer|results?|invoice|bank|destination|affiliate|advertis|recommendation)\b[^\n.!?]{0,100}\b(pretend|conceal|hide|attacker|affiliate|our product|advertis)\w*|\b(always claim|pretend)\b[^\n.!?]{0,80}\b(secure|documents support|came from|no files)\b`},
@@ -33,7 +33,7 @@ func directivePatterns() []Pattern {
 }
 
 var clauseBreak = regexp.MustCompile(`[.!?;](?:\s+|$)|\r?\n|,\s*(?:then|but|instead|however)\s+`)
-var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not|refuse to|refuse any attempt to)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read|include|copy|forward|transmit|export|place|bcc|replace|delete|erase|destroy|wipe|continue|switch|use|retry|obtain|fetch|retrieve)\b`)
+var negativeDirective = regexp.MustCompile(`(?i)^\s*(never|do not|don't|must not|refuse to|refuse any attempt to)\s+(ignore|bypass|reveal|disclose|print|hide|conceal|override|send|upload|execute|access|read|include|copy|forward|transmit|export|place|bcc|replace|delete|erase|destroy|wipe|continue|switch|use|retry|repeat|obtain|fetch|retrieve|treat|alter)\b`)
 var continuation = regexp.MustCompile(`(?i)\b(then|instead|now|however|but|obey|follow that|execute it)\b`)
 var quotedData = regexp.MustCompile(`"[^"\r\n]*"|(?:^|[\s(])'[^'\r\n]*'(?:$|[\s).,!?:;])`)
 var reportedThreat = regexp.MustCompile(`(?i)\battackers?(?:\s+who)?\s+(steal|send|upload|copy)\b`)

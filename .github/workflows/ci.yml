@@ -27,7 +27,7 @@ jobs:
       - run: node --test scripts/action.test.mjs npm/package.test.cjs npm/runtime.test.cjs internal/nodebridge/node.test.cjs
       - run: npm pack ./npm --dry-run --json --ignore-scripts
       - run: node scripts/release-verify.mjs
-      - run: go build -ldflags="-X main.version=0.4.0" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
+      - run: go build -ldflags="-X main.version=0.4.1" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
       - run: node --test npm/package.test.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
@@ -77,6 +77,12 @@ jobs:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
           MCPSENSE_FRESH_DIR: bin/fresh-product-ci
           MCPSENSE_FRESH_ENFORCE: '1'
+      - name: User-labelled trust-boundary and benign-context regression
+        run: node scripts/user-product-retest.mjs
+        env:
+          MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
+          MCPSENSE_USER_RETEST_DIR: bin/user-retest-ci
+          MCPSENSE_USER_RETEST_ENFORCE: '1'
   npm-runtime:
     strategy:
       fail-fast: false
@@ -146,7 +152,7 @@ jobs:
           version: v2.18.3
           args: release --snapshot --skip=publish,announce,sign,sbom --timeout=10m
         env:
-          GORELEASER_CURRENT_TAG: v0.4.0
+          GORELEASER_CURRENT_TAG: v0.4.1
       - name: Verify snapshot archives and exercise remediation evidence
         run: |
           (cd dist && sha256sum -c checksums.txt)

@@ -8,7 +8,7 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 [![npm latest](https://img.shields.io/npm/v/mcpsense?label=npm%20latest)](https://www.npmjs.com/package/mcpsense)
 [![GitHub release](https://img.shields.io/github/v/release/fayzkk889/MCPSense?label=GitHub%20release)](https://github.com/fayzkk889/MCPSense/releases/latest)
 
-This checkout describes the **0.4.0 candidate**. The linked npm/GitHub badges show the published versions; changes on main are delivered by package commands only after a release is published. Run `mcpsense version` after installing. The candidate also supports `mcpsense version --check` to compare both public channels explicitly; older versions may not have that flag.
+This checkout prepares the **0.4.1 follow-up**. Version 0.4.0 is published with independent npm WebAssembly and Go installation routes. A fresh user test found additional hostile descriptions missed by 0.4.0; see the [user-test record](docs/engineering/user-test-2026-10-25.md). The linked npm/GitHub badges show public versions; source changes reach package commands only after publication. Run `mcpsense version` after installing and `mcpsense version --check` to compare both public channels.
 
 **Release readiness:** the [beginner/expert retest](docs/engineering/persona-retest-2026-10-23.md) exposed first-run gaps, missed attack paraphrases, unexamined metadata fields and source-analysis false alarms. Follow-up fixes and their measured limits are tracked in the [release-blocker report](docs/engineering/release-blockers-2026-10-23.md). Earlier corpus scores do not establish general detection reliability. Public installation receives these changes only after publication.
 
