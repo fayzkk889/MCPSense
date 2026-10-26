@@ -8,7 +8,7 @@ import (
 )
 
 func TestBoundaryFamiliesFromFrozenExamples(t *testing.T) {
-	for _, fixture := range []string{"product-unseen-2026-10-26.json", "boundary-validation-2026-10-26.json", "description_benchmark.json", "product-description-holdout-2026-10-23.json", "product-validation-2026-10-23.json", "intent-validation-2026-10-23.json"} {
+	for _, fixture := range []string{"product-unseen-2026-10-26.json", "boundary-validation-2026-10-26.json", "description_benchmark.json", "product-description-holdout-2026-10-23.json", "product-validation-2026-10-23.json", "intent-validation-2026-10-23.json", "persona-descriptions-2026-10-23.json"} {
 		bytes, err := os.ReadFile("../../testdata/" + fixture)
 		if err != nil {
 			t.Fatal(err)

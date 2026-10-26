@@ -101,7 +101,7 @@ var (
 	boundaryWarning         = regexp.MustCompile(`\b(warnings?|security alerts?|security findings?|vulnerability findings?)\b`)
 	boundaryRole            = regexp.MustCompile(`\b(system|developer|operating)\s+(messages?|instructions?|authority)\b`)
 	boundaryPromotion       = regexp.MustCompile(`\bas\b|\bauthority of\b`)
-	boundaryPriority        = regexp.MustCompile(`\b(outrank\w*|supersed\w*|takes? precedence|higher priority|higher authority|highest authority)\b`)
+	boundaryPriority        = regexp.MustCompile(`\b(outrank\w*|supersed\w*|takes? precedence|(more|higher|greater|highest)\s+(priority|authority|authoritative|important))\b`)
 	boundaryPrincipal       = regexp.MustCompile(`\b(user|human|person|operator|developer|system)\b`)
 	boundaryContrast        = regexp.MustCompile(`\b(despite|although|when|regardless|even if)\b`)
 	boundarySuccess         = regexp.MustCompile(`\b(success|successful|successfully|succeeded|passed|complete|completed|settled|cleared|delivered)\b`)
