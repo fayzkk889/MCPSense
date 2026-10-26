@@ -8,13 +8,13 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 [![npm latest](https://img.shields.io/npm/v/mcpsense?label=npm%20latest)](https://www.npmjs.com/package/mcpsense)
 [![GitHub release](https://img.shields.io/github/v/release/fayzkk889/MCPSense?label=GitHub%20release)](https://github.com/fayzkk889/MCPSense/releases/latest)
 
-**Version 0.4.1 is published** on [npm](https://www.npmjs.com/package/mcpsense) and [GitHub/Go](https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.1), with independent npm WebAssembly and Go installation routes. It fixes additional hostile-description gaps reproduced in 0.4.0; see the [user-test record](docs/engineering/user-test-2026-10-25.md). The linked version badges track public releases. Run `mcpsense version` after installing and `mcpsense version --check` to compare both published channels.
+Install the latest published release from [npm](https://www.npmjs.com/package/mcpsense) or [GitHub/Go](https://github.com/fayzkk889/MCPSense/releases/latest), using either independent route below. The linked version badges and `mcpsense version --check` report public availability. A source checkout or pull request can contain newer unreleased work; a source push does not update `@latest`. See the [release-readiness record](docs/engineering/release-readiness.md) for candidate status.
 
 **Verification history:** the [beginner/expert retest](docs/engineering/persona-retest-2026-10-23.md) exposed first-run gaps, missed attack paraphrases, unexamined metadata fields and source-analysis false alarms. Follow-up fixes and their measured limits are tracked in the [release-blocker report](docs/engineering/release-blockers-2026-10-23.md). The [published-version user retest](docs/engineering/user-test-2026-10-26.md) records fresh installation and complete product journeys. Earlier corpus scores and corrected regressions do not establish general detection reliability.
 
-**Known 0.4.1 detection gaps:** the fresh retest reproduced five additional hostile-description misses on both tool-description and server-instructions surfaces through public npm and Go. Affected server-instructions examples returned no findings and score100. They include approval bypass, false payment success, promotion of search data to developer authority, suppression of security warnings and removal of policy confirmation. These remain unresolved; the linked retest preserves the labelled inputs and results. A clean scan must not be treated as authorization to trust a server.
+**Known 0.4.1 detection gaps:** the fresh retest reproduced five additional hostile-description misses on both tool-description and server-instructions surfaces through public npm and Go. Affected server-instructions examples returned no findings and score100. They include approval bypass, false payment success, promotion of search data to developer authority, suppression of security warnings and removal of policy confirmation. They remain unresolved in 0.4.1; the linked retest preserves the labelled inputs and results. A clean scan must not be treated as authorization to trust a server.
 
-**Unpublished 0.4.2 fix candidate:** this branch replaces phrase-specific rules for these families with a shared, clause-scoped action/object/polarity model, makes the original misses and pre-implementation validation cases mandatory native/npm gates, and adds an explicit machine-readable security assessment separate from the finding score. Public `@latest` remains 0.4.1 until an approved release; it does not receive these changes from a source push. See the [root-cause investigation](docs/engineering/detection-root-cause-2026-10-26.md) for measured results and remaining limits.
+**Fixes prepared for 0.4.2:** this source replaces phrase-specific rules for these families with a shared, clause-scoped action/object/polarity model, makes the original misses and pre-implementation validation cases mandatory native/npm gates, and adds an explicit machine-readable security assessment separate from the finding score. Confirm your installed version and its public availability before relying on these changes; an older package does not receive them from a source push. See the [root-cause investigation](docs/engineering/detection-root-cause-2026-10-26.md) for measured results and remaining limits.
 
 ## Start safely
 
@@ -60,7 +60,7 @@ go build -o bin/mcpsense.exe ./cmd/mcpsense
 .\bin\mcpsense.exe scan .\manifest.json --offline --no-baseline
 ```
 
-Since 0.4.0, the npm package bundles the same Go scanning engine compiled to WebAssembly. It runs inside Node.js 22+ on Windows, Linux and macOS. Installing it needs no Go compiler, platform archive utility, postinstall download or MCPSense native executable. Go users keep the independent native source-install route. To select the tested 0.4.1 release explicitly, use `npm install -g mcpsense@0.4.1` or `go install github.com/fayzkk889/MCPSense/cmd/mcpsense@v0.4.1`.
+Since 0.4.0, the npm package bundles the same Go scanning engine compiled to WebAssembly. It runs inside Node.js 22+ on Windows, Linux and macOS. Installing it needs no Go compiler, platform archive utility, postinstall download or MCPSense native executable. Go users keep the independent native source-install route. Use `@latest` for the newest published version. If reproducibility requires an exact version, select one from the public release list and confirm it with `mcpsense version`.
 
 ### Windows installation
 
@@ -73,15 +73,13 @@ From a downloaded or cloned checkout:
 ```powershell
 # Latest published version
 .\install.ps1
-# Select a published release explicitly
-.\install.ps1 -Version 0.4.1
 # Preview an authorized exact commit without changing PATH
 .\install.ps1 -Version <full-40-character-commit> -InstallDir C:\dev\mcpsense-preview -NoPathUpdate
 ```
 
 Update the npm installation with `npm install -g mcpsense@latest`, or update the Go installation by rerunning the Go install command. Package users do not need an npm account. The npm package supports Windows/Linux/macOS x64/arm64 where Node.js 22+ is available. Existing npm users on Node.js 14–21 must update Node.js for this package. NVM is optional; npm never installs a second language toolchain.
 
-On Linux/macOS, `sh install.sh` installs the latest published release into `~/.local/bin`, verifies its SHA-256 manifest before installation and checks startup. `MCPSENSE_VERSION=0.4.1` selects a published version; `MCPSENSE_INSTALL_DIR` selects a writable directory. Add that directory to PATH when instructed. No automatic sudo or Windows-binary fallback is used.
+On Linux/macOS, `sh install.sh` installs the latest published release into `~/.local/bin`, verifies its SHA-256 manifest before installation and checks startup. Set `MCPSENSE_VERSION` only when selecting a specific published version; `MCPSENSE_INSTALL_DIR` selects a writable directory. Add that directory to PATH when instructed. No automatic sudo or Windows-binary fallback is used. Go1.22 is the source language-compatibility floor; use a current patched Go compiler for native installations.
 
 ## Scope and permissions
 

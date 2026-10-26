@@ -1,3 +1,66 @@
+# Release readiness — 0.4.2 candidate
+
+Updated 26 October 2026. Publication is on hold while the maintainer makes over the Cloudflare website. No 0.4.2 tag, npm upload or public release has been created. PR 16 remains the review boundary; this document does not authorize merging or publishing.
+
+## Release contract and current delivery
+
+MCPSense is a local inspection tool for recognized MCP metadata/configurations, supported source/skill files and explicitly selected dependency inventories. It provides findings and an optional deterministic metadata-reference check. It does not promise that every hostile description is detected or that any MCP server is protected from every historical/future attack. Runtime permissions, initial trust decisions, unknown extensions and tool-result contents remain outside this CLI's guarantees.
+
+Public npm/GitHub latest is 0.4.1. The tested fix candidate is 0.4.2. A source push does not update public package installation. Until 0.4.2 is approved and verified after publication, do not advertise its fixes as available through @latest.
+
+## Customer requirements and evidence
+
+| Requirement | Evidence/status |
+| --- | --- |
+| npm installation without Go or an MCPSense executable | PASS: actual candidate install/upgrade; Node.js 22+ only, no install hooks or executable download |
+| Independent Go installation without Node/npm | PASS: native Windows/Linux Go 1.22/1.27 CI; Go 1.22 is a language-compatibility floor, use a current patched compiler |
+| First-user onboarding, spaces, errors and upgrade from public 0.4.1 | PASS: 13 normal anonymous Windows command journeys on the tested tarball |
+| Scan, explain, fix, rescan, compare and export | PASS: complete installed-package suite, including JSON/SARIF agreement and detector-identity verification |
+| Local-process/network permissions, offline behavior and privacy checks | PASS in controlled workflows; authorized processes are not sandboxed |
+| Reproduced hostile-description misses | PASS in candidate: 104 strict original/validation observations, TP52/FN0/FP0/TN52; 232 texts also receive fast case/prefix tests |
+| Unknown changes cannot rely on classifier wording | PASS: 12 optional required-metadata-baseline journeys; reference must be reviewed/protected externally |
+| Cross-platform package behavior | PASS: Windows/Linux/macOS with Node 22/24; native Windows/Linux matrices and five-target archive snapshot |
+| Every native architecture executed | NOT ESTABLISHED: cross-building/checksums do not constitute native runtime tests on every architecture |
+| No known reachable Go dependency vulnerabilities | PASS in fresh source audits of all five native targets plus js/wasm and a symbol-preserving Windows binary counterpart; see the advisory triage below |
+| Unchanged MIT and runtime licensing/integrity | PASS: matching MIT files, bundled Go BSD license and runtime component checksums |
+| Current, accurate website and release announcement | OPEN: maintainer's site makeover; use the supported scope and live version information below |
+| Public0.4.2 installation and channel agreement | PENDING: can only be checked after approved publication |
+
+Implementation 219ce9132eb1173dde9779902a6faa02ff71924e passed all 13 jobs in [CI40275363831](https://github.com/fayzkk889/MCPSense/actions/runs/40275363831). [PR 16](https://github.com/fayzkk889/MCPSense/pull/16) also carries release-preparation documentation and a new mandatory vulnerability job; inspect the exact final head's checks. No detector expectation or hostility label was relaxed. Corrected authored examples are regression evidence, not field accuracy.
+
+## Dependency advisory triage
+
+The 26 October audit used official govulncheck v1.9.0, the production Go 1.27.3 compiler and the official vulnerability database. All six source targets and an unstripped Windows counterpart reported no reachable affected symbols. The js/wasm target had no advisory finding. These results do not assert absence of unknown vulnerabilities.
+
+The indirect x/sys v0.25.0 dependency has [GO-2026-5024 / CVE-2026-39824](https://pkg.go.dev/vuln/GO-2026-5024), affecting windows.NewNTUnicodeString. Source analysis found it uncalled, the linked symbol inventory contained no such function, and the symbol-preserving binary check reported zero affected vulnerabilities. A stripped-PE scan conservatively reported it; [govulncheck documents](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck) that missing binary symbol information can produce dependency-wide reports. Both outcomes are retained in audit evidence rather than suppressing the advisory.
+
+The upstream fixed module version0.44.0 requires Go 1.25. The module's Go 1.22 floor is preserved instead of silently changing the supported compiler requirement for an unused function. This is not a clean-module-inventory claim. Mandatory source/symbol audits fail on affected reachable code and are refreshed before publication. A future stricter policy requiring zero module-level advisories would require a deliberate compatibility decision.
+
+## Website handoff
+
+The website can accurately describe local MCP security inspection, metadata/skill/config/source review, supported advisory checks, reports and drift/reference checks. Use these constraints during the makeover:
+
+- Provide npm and Go as independent installation choices. npm needs Node.js 22+ and no Go compiler; Go users do not need npm. Installing the public package requires no npm login.
+- Use live release badges/links or version checks. Prepare0.4.2 copy privately, and announce availability only when public npm and GitHub both serve0.4.2.
+- Explain findings as review signals. Avoid promises of all attacks blocked, full attack-surface protection, automatic runtime enforcement, zero false positives or universally warning-free Windows execution.
+- The registry has32 inspection checks plus13 drift IDs; counts are not coverage guarantees. New boundary families are within SEC-001, not extra registered checks.
+- Advisory inventory is explicit and bounded. Do not claim automatic inspection of every installed/transitive package.
+- Windows npm delivers WebAssembly/JavaScript. Optional native Windows archives remain unsigned and subject to policy; no route disables protection settings.
+
+## Concrete release sequence after the site is ready
+
+1. Review PR 16 and the exact final head's passing checks, including the new pinned six-target source and Windows-symbol audit. Confirm source/version/licenses and preserve user-owned local changes.
+2. Merge only under maintainer authorization, then verify final main CI. Select the npm artifact from that approved source; verify its hashes and actual installed workflows. Rebuilding from a different Git revision can change artifact bytes even when production source is unchanged.
+3. Finish the website's accurate copy and obtain explicit approval for the concrete0.4.2 commit/artifacts/publication. A tag push triggers public native-archive publication; do not push it early.
+4. Publish approved GitHub/Go and npm artifacts. npm may require account confirmation and registry processing time; command success alone is not public availability proof.
+5. From the released tag run scripts/release-verify.mjs --public; verify npm/GitHub/tag agreement, five public archives/checksums and actual anonymous public npm install/upgrade plus Go install. Verify installed version --check before announcing the release.
+6. Record final public artifact identities and update release status. Keep the site and documentation aligned with what the public channels actually deliver.
+
+Prepared [release notes](release-notes-0.4.2.md), [root-cause report](detection-root-cause-2026-10-26.md), and [preserved public 0.4.1 failures](user-test-2026-10-26.md) provide the review context. Local receipts are under ignored bin/root-cause-* and bin/launch-audit-*; no credentials or generated binaries are committed.
+
+<details>
+<summary>Historical preparation records — superseded; not current delivery status</summary>
+
 # Release readiness — proposed 0.4.0
 
 ## Current follow-up
@@ -65,3 +128,5 @@ CI additionally builds a fresh, publication-disabled snapshot with `GORELEASER_C
 Implementation PRs have been merged under the user's standing review/merge authorization. No 0.4.0 version tag, public GitHub release or npm publication has occurred. The tag-triggered release workflow would publish native archives if a version tag were pushed, so **do not push one without explicit maintainer approval**. After review and green final checks, obtain approval for the exact commit, version and publication process; then verify public artifact/checksum URLs and npm package contents. Until then, this is tested release preparation, not a completed public release.
 
 Final review also requires the same approved-baseline digest when drift evidence is compared. Reapproval is a policy change, not a remediation. Schema digests preserve arbitrary JSON numeric constraints without float rounding, and Unicode offset tests include dotted-I compatibility. These are covered by focused regressions.
+
+</details>
