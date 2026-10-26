@@ -28,7 +28,7 @@ write('manifest.json',manifest(ordinary));
 r=await run('fixed-report',['scan',target,'--offline','--no-baseline','--format','json','--output',after,'--sarif-output',sarif]);
 const a=JSON.parse(fs.readFileSync(after));const s=JSON.parse(fs.readFileSync(sarif));
 check('Fix and rescan',r.exit===0&&!a.findings.some(f=>f.id==='SEC-001'),'Ordinary replacement removes the injection finding; remaining findings='+a.findings.length);
-check('Export usable reports',a.coverage.state==='completed'&&s.version==='2.1.0'&&s.runs[0].results.length===a.findings.length,'JSON and SARIF agree, including completed coverage');
+check('Export usable reports',a.coverage.state==='completed'&&s.version==='2.1.0'&&s.runs[0].results.length===a.findings.length&&a.security_assessment?.state==='not_established'&&a.security_assessment?.authorization_enforced===false&&JSON.stringify(a.security_assessment)===JSON.stringify(s.runs[0].properties.securityAssessment),'JSON and SARIF agree, including completed coverage and no implied safety/authorization');
 r=await run('verify-fix',['verify',before,after]);const v=JSON.parse(r.stdout);
 check('Confirm remediation',r.exit===0&&v.resolved.length>0&&v.new.length===0,`resolved=${v.resolved.length}, persistent=${v.persistent.length}, new=${v.new.length}`);
 const baseline=path.join(workspace,'approved-baseline.json');

@@ -58,7 +58,7 @@ func coreInjectionPatterns() []Pattern {
 		compilePattern(
 			"PI-005",
 			"System Prompt Extraction",
-			`(repeat\s+(your\s+)?(system\s+prompt|instructions?)|show\s+(me\s+)?(your\s+)?(instructions?|rules?|prompt)|print\s+(your\s+)?prompt|what\s+are\s+your\s+(rules?|instructions?))`,
+			`(repeat\s+(system\s+prompt|your\s+(system\s+prompt|instructions?))|show\s+(me\s+)?((your|hidden|internal|original)\s+(instructions?|rules?|prompt)|system\s+(prompt|instructions?))|print\s+(your|hidden|internal|original)\s+prompt|what\s+are\s+your\s+(rules?|instructions?))`,
 			models.SeverityHigh,
 			"Content attempts to extract the model's system prompt or internal instructions.",
 			"injection",

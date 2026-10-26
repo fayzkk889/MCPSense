@@ -1,0 +1,38 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {spawnSync} from './cli-process.cjs';
+const binary=process.env.MCPSENSE_TEST_BINARY;
+assert.ok(binary,'MCPSENSE_TEST_BINARY required');
+const root=path.resolve(process.env.MCPSENSE_GATE_DIR||'bin/metadata-gate');fs.mkdirSync(root,{recursive:true});
+const workspace=fs.mkdtempSync(path.join(root,'Operator project with spaces-'));
+const target=path.join(workspace,'manifest.json'),baseline=path.join(workspace,'operator-baseline.json');
+const original=fs.readFileSync('testdata/compliant_server/manifest.json');fs.writeFileSync(target,original);
+const records=[];
+function run(name,extra,exit){
+ const r=spawnSync(binary,['scan',target,'--offline',...extra],{encoding:'utf8',timeout:30000,windowsHide:true,maxBuffer:8<<20});
+ records.push({name,exit:r.status,stdout:r.stdout,stderr:r.stderr,error:r.error?.message});
+ fs.writeFileSync(path.join(workspace,'results.json'),JSON.stringify({binary,records},null,2));
+ assert.equal(r.error,undefined,name);assert.equal(r.status,exit,name+': '+r.stderr);console.log('PASS '+name);return r;
+}
+const gate=['--baseline',baseline,'--require-metadata-baseline'];
+run('missing baseline cannot auto-approve',gate,2);assert.ok(!fs.existsSync(baseline));
+run('separate operator baseline capture',['--baseline',baseline,'--update-baseline'],0);
+const saved=fs.readFileSync(baseline);
+const matched=JSON.parse(run('unchanged captured metadata matches',[...gate,'--format','json'],0).stdout);
+assert.equal(matched.coverage.baseline,'required_match');assert.equal(matched.security_assessment.authorization_enforced,false);
+let manifest=JSON.parse(original);manifest.instructions='zeta-7 opaque new guidance outside the example catalog';fs.writeFileSync(target,JSON.stringify(manifest));
+run('ordinary inspection does not reject unknown text',['--no-baseline'],0);
+assert.match(run('new text fails independent of classifier',gate,2).stderr,/metadata baseline mismatch/);
+run('severity cannot suppress metadata gate',[...gate,'--severity','critical'],2);
+run('rule selection cannot suppress metadata gate',[...gate,'--checks','QUAL-005'],2);
+fs.writeFileSync(target,original);manifest=JSON.parse(original);manifest.tools=[];fs.writeFileSync(target,JSON.stringify(manifest));
+run('removed tool fails exact inventory gate',gate,2);
+run('scan gate cannot simultaneously approve',[...gate,'--update-baseline'],2);
+run('scan gate cannot skip baseline',[...gate,'--no-baseline'],2);
+assert.ok(saved.equals(fs.readFileSync(baseline)),'gate changed operator trust input');
+const partial=JSON.parse(saved);delete partial.metadata;fs.writeFileSync(baseline,JSON.stringify(partial));
+run('partial historical baseline fails closed',gate,2);
+fs.writeFileSync(baseline,saved);fs.writeFileSync(target,original);
+run('original metadata still works after failures',gate,0);
+console.log('PASS: 12 deterministic metadata-gate journeys; runtime authorization remains external.');

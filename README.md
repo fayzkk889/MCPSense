@@ -14,6 +14,8 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 
 **Known 0.4.1 detection gaps:** the fresh retest reproduced five additional hostile-description misses on both tool-description and server-instructions surfaces through public npm and Go. Affected server-instructions examples returned no findings and score100. They include approval bypass, false payment success, promotion of search data to developer authority, suppression of security warnings and removal of policy confirmation. These remain unresolved; the linked retest preserves the labelled inputs and results. A clean scan must not be treated as authorization to trust a server.
 
+**Unpublished 0.4.2 fix candidate:** this branch replaces phrase-specific rules for these families with a shared, clause-scoped action/object/polarity model, makes the original misses and pre-implementation validation cases mandatory native/npm gates, and adds an explicit machine-readable security assessment separate from the finding score. Public `@latest` remains 0.4.1 until an approved release; it does not receive these changes from a source push. See the [root-cause investigation](docs/engineering/detection-root-cause-2026-10-26.md) for measured results and remaining limits.
+
 ## Start safely
 
 Choose one installation route for a published release:

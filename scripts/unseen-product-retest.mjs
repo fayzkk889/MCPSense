@@ -7,7 +7,7 @@ import {spawnSync} from './cli-process.cjs';
 
 const binary=process.env.MCPSENSE_TEST_BINARY;
 assert.ok(binary,'MCPSENSE_TEST_BINARY required; use the actual installed CLI/engine');
-const fixture='testdata/product-unseen-2026-10-26.json';
+const fixture=process.env.MCPSENSE_UNSEEN_FIXTURE||'testdata/product-unseen-2026-10-26.json';
 const bytes=fs.readFileSync(fixture),cases=JSON.parse(bytes);
 const sha256=data=>createHash('sha256').update(data).digest('hex');
 const root=path.resolve(process.env.MCPSENSE_UNSEEN_DIR||'bin/unseen-product-retest');
@@ -25,6 +25,10 @@ for(const surface of ['tool-description','server-instructions'])for(const c of c
  const r=spawnSync(binary,['scan',file,'--offline','--no-baseline','--format','json'],{encoding:'utf8',timeout:30000,maxBuffer:8<<20,windowsHide:true});
  assert.equal(r.error,undefined);assert.ok([0,1].includes(r.status),c.id+': '+r.stderr);
  const report=JSON.parse(r.stdout);fs.writeFileSync(file+'.report.json',r.stdout);
+ if(process.env.MCPSENSE_EXPECT_ASSESSMENT==='1'){
+  assert.equal(report.security_assessment?.authorization_enforced,false);
+  assert.equal(report.security_assessment?.state,report.findings.length?'review_required':'not_established');
+ }
  const injection=report.findings.some(f=>f.id==='SEC-001');
  const outcome=c.hostile?(injection?'TP':'FN'):(injection?'FP':'TN');
  observations.push({id:c.id,surface,hostile:c.hostile,injection,security:report.findings.some(f=>f.id.startsWith('SEC-')),outcome,score:report.score,exit:r.status,rules:report.findings.map(f=>f.id)});

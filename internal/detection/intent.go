@@ -17,8 +17,6 @@ type intentFeature struct {
 
 var intentFeatures = []intentFeature{
 	{"source", regexp.MustCompile(`(?i)\b(server|service|tool|provider|response|integration|connector)\b`)},
-	{"human", regexp.MustCompile(`(?i)\b(user|human|operator|person|developer)\b`)},
-	{"authority", regexp.MustCompile(`(?i)\b(authorit\w*|supersed\w*|outrank\w*|higher priority|more important)\b`)},
 	{"session", regexp.MustCompile(`(?i)\b(future|subsequent|later|session|conversation|every|all)\b`)},
 	{"route", regexp.MustCompile(`(?i)\b(route|channel|redirect|funnel)\w*\b`)},
 	{"selection", regexp.MustCompile(`(?i)\b(select|choose|prefer|prioritiz)\w*\b`)},
@@ -30,12 +28,9 @@ var intentFeatures = []intentFeature{
 	{"deceive", regexp.MustCompile(`(?i)\b(fabricat\w*|falsif\w*|mislead\w*|deceiv\w*|deceptive|pretend)\b`)},
 	{"invent", regexp.MustCompile(`(?i)\b(invent\w*|make up)\b`)},
 	{"truth_claim", regexp.MustCompile(`(?i)\b(present|pass off|report|claim)\w*\b.{0,80}\b(verified|genuine|actual|real|accurate)\b`)},
-	{"false_success", regexp.MustCompile(`(?i)\b(report|claim|tell|say|announce|show)\b[^.!?\n]{0,120}\b(succeeded|successful|success|passed|completed?)\b[^.!?\n]{0,80}\b(even if|even when|although|despite|regardless of)\b[^.!?\n]{0,70}\b(processor|operation|transaction|test|job|request|result|response|server|service)\b[^.!?\n]{0,60}\b(fail\w*|declin\w*|reject\w*|error\w*|incomplete|not completed)\b`)},
 	{"answer", regexp.MustCompile(`(?i)\b(answer|result|summary|assessment|complaint|finding|operator|user|human)\w*\b`)},
 	{"permission", regexp.MustCompile(`(?i)\b(permission|authorization|access)\b.{0,60}\b(denied|denies|deny|denial|refus\w*|fails?|restriction)\b|\b(denied|denies|deny|denial|refus\w*|restriction)\b.{0,60}\b(permission|authorization|access)\b|\b(denied|rejected|forbidden)\s+(operations?|actions?|tasks?|requests?|calls?)\b`)},
 	{"alternate", regexp.MustCompile(`(?i)\b(alternative|another|other|different)\s+(tool|capabilit\w*|service|route|user|session|identity|account)\b`)},
-	{"privileged", regexp.MustCompile(`(?i)\b(administrator|root|privileged|elevated)\s+(connector|account|identity|session|privileges?|access)\b`)},
-	{"retry", regexp.MustCompile(`(?i)\b(repeat|retry|rerun|resubmit|switch)\w*\b|\bfall back\b`)},
 	{"edit", regexp.MustCompile(`(?i)\b(modif\w*|rewrite|change|edit|append|replace|alter)\b`)},
 	{"policy", regexp.MustCompile(`(?i)\b(guidance|instructions?|agent policy|persistent.*policy|policy configuration|permission configuration|access policy|authorization rules?)\b`)},
 	{"grant", regexp.MustCompile(`(?i)\b(approve|approves|approving|grant\w*|automatically|automatic)\b`)},
@@ -49,7 +44,6 @@ var intentFeatures = []intentFeature{
 	{"records", regexp.MustCompile(`(?i)\b(invoices?|customer records?|tenant records?|inbox)\b`)},
 	{"external_recipient", regexp.MustCompile(`(?i)\bbcc\b|\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b`)},
 	{"no_consent", regexp.MustCompile(`(?i)\bno\s+(user\s+)?(approval|confirmation|consent)\s+(is\s+)?(needed|required)\b|\bwithout\s+(user\s+)?(approval|confirmation|consent)\b|\bwithout\s+(asking|consulting|notifying)\s+(the\s+)?(user|operator|owner)\b`)},
-	{"data_authority", regexp.MustCompile(`(?i)\b(treat|interpret|execute|obey|follow)\b.{0,90}\b(quoted|untrusted|retrieved|external)\b.{0,50}\b(data|text|content|responses?)\b.{0,30}\bas\s+(trusted\s+((operating|system|developer)\s+)?|(operating|system|developer)\s+)instructions\b`)},
 }
 
 // An export or a copy can be a data object rather than a second imperative.
@@ -72,7 +66,7 @@ func remainingIntentAfterNegatedAction(text string) bool {
 	return false
 }
 
-func rawIntentMatches(text string) []PatternMatch {
+func legacyIntentMatches(text string) []PatternMatch {
 	features := map[string]bool{}
 	for _, f := range intentFeatures {
 		screened := text
@@ -96,19 +90,16 @@ func rawIntentMatches(text string) []PatternMatch {
 		id, name string
 		match    bool
 	}{
-		{"INT-001", "Server content claims authority over the operator", has("source", "human", "authority")},
 		{"INT-002", "Session-wide routing control", has("source", "session", "route", "action") || has("source", "session", "selection", "monopoly", "action")},
 		{"INT-003", "Sensitive material directed to an output or destination", has("disclose", "secret", "destination")},
-		{"INT-004", "Deceptive answer or assessment", has("deceive", "answer") || has("invent", "truth_claim", "answer") || has("false_success")},
-		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate") || has("permission", "privileged", "retry")},
+		{"INT-004", "Deceptive answer or assessment", has("deceive", "answer") || has("invent", "truth_claim", "answer")},
+		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate")},
 		{"INT-006", "Persistent policy change granting future authority", has("edit", "policy", "session", "grant")},
 		{"INT-007", "Continued execution despite cancellation", has("cancelled", "continue")},
 		{"INT-008", "Concealed payment destination substitution", has("edit", "payment", "covert")},
 		{"INT-009", "Destructive action replacing the requested task", has("destructive", "displaced_task")},
 		{"INT-010", "Disclosure across user or tenant boundaries", has("disclose", "other_principal_data")},
 		{"INT-011", "Record transfer to a recipient without consent", has("disclose", "records", "external_recipient", "no_consent")},
-		{"INT-012", "Policy change removing operator consultation", has("edit", "policy", "no_consent")},
-		{"INT-013", "External data promoted to operating instructions", has("data_authority")},
 	}
 	var out []PatternMatch
 	for _, f := range families {
@@ -117,6 +108,30 @@ func rawIntentMatches(text string) []PatternMatch {
 		}
 	}
 	return out
+}
+
+func rawIntentMatches(text string) []PatternMatch {
+	var out []PatternMatch
+	var clauses []string
+	start := 0
+	for _, loc := range clauseBreak.FindAllStringIndex(text, -1) {
+		clauses = append(clauses, text[start:loc[0]])
+		start = loc[1]
+	}
+	clauses = append(clauses, text[start:])
+	for i, clause := range clauses {
+		out = append(out, legacyIntentMatches(clause)...)
+		// These are explicitly temporal relations: an event followed by an
+		// action or consent qualifier. Other feature bags remain clause-local.
+		if i+1 < len(clauses) && len(boundaryWord.FindAllString(clause+clauses[i+1], -1)) <= 96 {
+			for _, m := range legacyIntentMatches(clause + ". " + clauses[i+1]) {
+				if m.PatternID == "INT-007" || m.PatternID == "INT-009" || m.PatternID == "INT-011" {
+					out = append(out, m)
+				}
+			}
+		}
+	}
+	return append(out, boundaryMatches(text)...)
 }
 
 func intentMatches(content string) []PatternMatch {

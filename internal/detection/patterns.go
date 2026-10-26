@@ -64,7 +64,7 @@ var documentQuery = regexp.MustCompile(`(?is)^\s*(?:search(?:es)?|retriev(?:e|es
 
 func (e *PatternEngine) ScanToolDescription(content string) []PatternMatch {
 	screened := InstructionText(content)
-	matches := e.ScanDescriptions(screened)
+	matches := e.scanMetadataClauses(screened)
 	for i := range matches {
 		m := &matches[i]
 		m.MatchedText = content[m.Offset : m.Offset+len(m.MatchedText)]
@@ -77,7 +77,7 @@ func (e *PatternEngine) ScanToolDescription(content string) []PatternMatch {
 		for _, m := range matches {
 			seen[m.PatternID] = true
 		}
-		for _, m := range e.ScanDescriptions(normalized) {
+		for _, m := range e.scanMetadataClauses(normalized) {
 			if !seen[m.PatternID] {
 				m.MatchedText = content
 				m.Offset = 0
@@ -98,6 +98,25 @@ func (e *PatternEngine) ScanToolDescription(content string) []PatternMatch {
 		filtered = append(filtered, m)
 	}
 	return append(filtered, intentMatches(content)...)
+}
+
+// Literal patterns cannot borrow an action from a different sentence. Paths
+// such as .aws/credentials stay intact because clauseBreak needs punctuation
+// followed by whitespace. Skill/source policies keep their existing scanning.
+func (e *PatternEngine) scanMetadataClauses(text string) []PatternMatch {
+	var out []PatternMatch
+	start := 0
+	spans := clauseBreak.FindAllStringIndex(text, -1)
+	spans = append(spans, []int{len(text), len(text)})
+	for _, span := range spans {
+		matches := e.ScanDescriptions(text[start:span[0]])
+		for i := range matches {
+			matches[i].Offset += start
+		}
+		out = append(out, matches...)
+		start = span[1]
+	}
+	return out
 }
 
 // ScanSource runs only source-targeted patterns against the given content.
