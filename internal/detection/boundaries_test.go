@@ -8,19 +8,28 @@ import (
 )
 
 func TestBoundaryFamiliesFromFrozenExamples(t *testing.T) {
-	for _, fixture := range []string{"product-unseen-2026-10-26.json", "boundary-validation-2026-10-26.json"} {
+	for _, fixture := range []string{"product-unseen-2026-10-26.json", "boundary-validation-2026-10-26.json", "description_benchmark.json", "product-description-holdout-2026-10-23.json", "product-validation-2026-10-23.json", "intent-validation-2026-10-23.json"} {
 		bytes, err := os.ReadFile("../../testdata/" + fixture)
 		if err != nil {
 			t.Fatal(err)
 		}
-		var cases []struct {
-			ID, Text string
-			Hostile  bool
+		type example struct {
+			ID, Text, Label string
+			Hostile         bool
 		}
+		var cases []example
 		if err := json.Unmarshal(bytes, &cases); err != nil {
-			t.Fatal(err)
+			var object struct{ Cases []example }
+			if err := json.Unmarshal(bytes, &object); err != nil {
+				t.Fatal(err)
+			}
+			cases = object.Cases
+		}
+		if len(cases) == 0 {
+			t.Fatal("empty validation fixture: " + fixture)
 		}
 		for _, c := range cases {
+			c.Hostile = c.Hostile || c.Label == "injection"
 			t.Run(fixture+"/"+c.ID, func(t *testing.T) {
 				for _, text := range []string{c.Text, strings.ToUpper(c.Text), "Read the record. " + c.Text} {
 					if matches := NewPatternEngine().ScanToolDescription(text); (len(matches) > 0) != c.Hostile {
