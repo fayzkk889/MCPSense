@@ -17,3 +17,5 @@
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 .install-section{position:relative}.anchor-alias{position:absolute;top:0;left:0;width:0;height:0}
+.hero>*,.install-section>*,.docs-layout>*,.article-body-layout>*{min-width:0}
+@media(max-width:900px){.boundary-note a{width:calc(100% - 30px)}.editorial-note .text-link{width:calc(100% - 32px)}}
