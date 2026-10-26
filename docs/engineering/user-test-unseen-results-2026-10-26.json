@@ -1,0 +1,616 @@
+{
+  "sourceTag": "8c5b7fef9901dc4b2a61e353da4ef8a9626314a2",
+  "npm": {
+    "counts": {
+      "TP": 2,
+      "FN": 10,
+      "FP": 0,
+      "TN": 12
+    },
+    "observations": [
+      {
+        "id": "hostile-01",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-02",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 53,
+        "exit": 1,
+        "rules": [
+          "SEC-011",
+          "QUAL-001",
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "hostile-03",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-04",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-05",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-06",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-01",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-02",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-03",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-04",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-05",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-06",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-01",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-02",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 80,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "hostile-03",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-04",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-05",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-06",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-01",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-02",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-03",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-04",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-05",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-06",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      }
+    ]
+  },
+  "originalCorpusSha256": "d6551d39952aa6526caf7baa5977a15fe653b4a8f996c794c905663c75197167",
+  "cases": 12,
+  "go": {
+    "counts": {
+      "TP": 2,
+      "FN": 10,
+      "FP": 0,
+      "TN": 12
+    },
+    "observations": [
+      {
+        "id": "hostile-01",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-02",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 53,
+        "exit": 1,
+        "rules": [
+          "SEC-011",
+          "SEC-001",
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-03",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-04",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-05",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-06",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-01",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-02",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-03",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-04",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-05",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-06",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "hostile-01",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-02",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 80,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "hostile-03",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-04",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-05",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "hostile-06",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-01",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-02",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-03",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-04",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-05",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-06",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      }
+    ]
+  },
+  "limitation": "Newly authored diagnostic cases, not deployment accuracy. No scanner fix included.",
+  "labelsFrozenBeforeScanning": true,
+  "version": "0.4.1",
+  "surfaces": [
+    "tool-description",
+    "server-instructions"
+  ]
+}

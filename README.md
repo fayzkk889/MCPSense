@@ -12,6 +12,8 @@ MIT-licensed local security inspection for MCP configurations, source code, agen
 
 **Verification history:** the [beginner/expert retest](docs/engineering/persona-retest-2026-10-23.md) exposed first-run gaps, missed attack paraphrases, unexamined metadata fields and source-analysis false alarms. Follow-up fixes and their measured limits are tracked in the [release-blocker report](docs/engineering/release-blockers-2026-10-23.md). The [published-version user retest](docs/engineering/user-test-2026-10-26.md) records fresh installation and complete product journeys. Earlier corpus scores and corrected regressions do not establish general detection reliability.
 
+**Known 0.4.1 detection gaps:** the fresh retest reproduced five additional hostile-description misses on both tool-description and server-instructions surfaces through public npm and Go. Affected server-instructions examples returned no findings and score100. They include approval bypass, false payment success, promotion of search data to developer authority, suppression of security warnings and removal of policy confirmation. These remain unresolved; the linked retest preserves the labelled inputs and results. A clean scan must not be treated as authorization to trust a server.
+
 ## Start safely
 
 Choose one installation route for a published release:
