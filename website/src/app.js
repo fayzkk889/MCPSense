@@ -1,4 +1,5 @@
 import { compareVersions, releaseState } from './releases.js';
+import { setupInspectionMotion } from './motion.js';
 
 document.documentElement.classList.add('js');
 const toast = document.querySelector('.toast');
@@ -127,8 +128,20 @@ async function refreshReleases() {
     }
   } catch {
     document.querySelectorAll('[data-release-status]').forEach(label => {
-      label.textContent = `Live verification unavailable. Dated release snapshot: v${snapshot?.stable || '0.4.1'} (26 October 2026). Check npm and GitHub for current availability.`;
+      const verified = snapshot?.verified ? new Date(`${snapshot.verified}T12:00:00Z`).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}) : 'date unavailable';
+      label.textContent = `Live verification unavailable. Dated release snapshot: v${snapshot?.stable || '0.4.1'} (${verified}). Check npm and GitHub for current availability.`;
     });
   }
 }
+document.querySelectorAll('[data-drift]').forEach(view => {
+  view.querySelectorAll('[data-drift-choice]').forEach(button => button.addEventListener('click', () => {
+    const changed = button.dataset.driftChoice === 'changed';
+    view.querySelectorAll('[data-drift-choice]').forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+    view.querySelector('[data-drift-added]').hidden = !changed;
+    view.querySelector('[data-drift-line]').classList.toggle('is-changed', changed);
+    view.querySelector('[data-drift-status]').textContent = changed ? 'Description changed' : 'Reference matches';
+    view.querySelector('[data-drift-conclusion]').textContent = changed ? 'Changed metadata needs a fresh review.' : 'The recognized description matches this reference. That does not establish safety.';
+  }));
+});
+setupInspectionMotion(document.querySelector('[data-engine]'));
 refreshReleases();

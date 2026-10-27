@@ -3,7 +3,7 @@ export const product = {
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
   stable: '0.4.1',
-  verified: '2026-10-26',
+  verified: '2026-10-27',
   candidate: '0.4.2',
 };
 
