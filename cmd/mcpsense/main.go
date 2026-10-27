@@ -166,6 +166,23 @@ CLI flags override config file values.`,
 			noCVE, _ := cmd.Flags().GetBool("no-cve")
 			sarifOutput, _ := cmd.Flags().GetString("sarif-output")
 			baselineArg, _ := cmd.Flags().GetString("baseline")
+			requireMetadata, _ := cmd.Flags().GetBool("require-metadata-baseline")
+			var requiredSnapshot *drift.Snapshot
+			if requireMetadata {
+				skip, _ := cmd.Flags().GetBool("no-baseline")
+				update, _ := cmd.Flags().GetBool("update-baseline")
+				if skip || update || baselineArg == "" {
+					return fmt.Errorf("--require-metadata-baseline needs an explicit existing --baseline and cannot be combined with --no-baseline or --update-baseline")
+				}
+				var err error
+				requiredSnapshot, err = drift.Load(baselineArg)
+				if err != nil {
+					return fmt.Errorf("required metadata baseline unavailable: %w", err)
+				}
+				if requiredSnapshot.Metadata == nil || requiredSnapshot.Metadata.CatalogHash == "" {
+					return fmt.Errorf("required metadata baseline lacks full metadata coverage")
+				}
+			}
 			dependencyFile, _ := cmd.Flags().GetString("dependencies")
 			if format != "cli" && format != "json" && format != "sarif" {
 				return fmt.Errorf("unknown output format")
@@ -234,6 +251,9 @@ CLI flags override config file values.`,
 
 			// Drift applies to modes that have a tool/config surface (not static source scanning).
 			driftApplies := ctx.Manifest != nil || ctx.ClientConfig != nil
+			if requireMetadata && (ctx.Manifest == nil || ctx.ClientConfig != nil) {
+				return fmt.Errorf("required metadata baseline supports advertised manifest/live metadata only, not client configuration or source-only scans")
+			}
 			rep.Coverage.Baseline = "not_applicable"
 			if noBaseline {
 				rep.Coverage.Baseline = "skipped"
@@ -253,7 +273,18 @@ CLI flags override config file values.`,
 				}
 
 				if baselinePath != "" {
-					if updateBaseline {
+					if requireMetadata {
+						if err := drift.RequireMetadataMatch(requiredSnapshot, current); err != nil {
+							return err
+						}
+						rep.Coverage.Baseline = "required_match"
+						baselineData, err := drift.MarshalSnapshot(requiredSnapshot)
+						if err != nil {
+							return err
+						}
+						rep.Coverage.BaselineHash = models.HashIdentity(string(baselineData))
+						rep.Coverage.BaselineFields, rep.Coverage.BaselineWarning = drift.ComparisonCoverage(requiredSnapshot, current)
+					} else if updateBaseline {
 						rep.Coverage.Baseline = "updated"
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not update baseline: %w", err)
@@ -372,6 +403,7 @@ CLI flags override config file values.`,
 	cmd.Flags().String("baseline", "", "Path to a baseline snapshot file for drift detection (default: ~/.mcpsense/snapshots/)")
 	cmd.Flags().Bool("update-baseline", false, "Accept the current server state as the new drift baseline")
 	cmd.Flags().Bool("no-baseline", false, "Skip drift detection for this scan")
+	cmd.Flags().Bool("require-metadata-baseline", false, "Require an explicit existing metadata baseline and reject any captured metadata change; never create/update it")
 	cmd.Flags().Bool("show-diff", false, "Compatibility flag; protected baselines do not retain raw before/after text")
 
 	cmd.Flags().Bool("no-cve", false, "Skip CVE cross-referencing against OSV.dev")

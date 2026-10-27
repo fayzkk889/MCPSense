@@ -1,11 +1,16 @@
 package drift
 
-import "github.com/fayzkk889/MCPSense/internal/models"
+import (
+	"encoding/json"
+	"github.com/fayzkk889/MCPSense/internal/models"
+	"sort"
+)
 
 // MetadataSnap is an additive extension of format 2. Its absence means these
 // fields were never captured, not that their original values were empty.
 type MetadataSnap struct {
 	Version        int               `json:"version"`
+	CatalogHash    string            `json:"catalog_hash,omitempty"`
 	ServerTextHash string            `json:"server_text_hash"`
 	Tools          map[string]string `json:"tools"`
 	Prompts        map[string]string `json:"prompts"`
@@ -13,6 +18,19 @@ type MetadataSnap struct {
 
 func buildMetadata(m *models.MCPManifest) *MetadataSnap {
 	s := &MetadataSnap{Version: 1, ServerTextHash: digest([]string{m.Description, m.Instructions}), Tools: map[string]string{}, Prompts: map[string]string{}}
+	// Additional full recognized-catalog digest for the opt-in gate. Keep
+	// ordinary historical comparisons compatible; old snapshots lack this
+	// digest and cannot satisfy strict matching. Unknown extensions are not
+	// represented by MCPManifest and remain explicitly out of scope.
+	catalog := *m
+	catalog.Tools = append([]models.MCPTool{}, m.Tools...)
+	catalog.Resources = append([]models.MCPResource{}, m.Resources...)
+	catalog.Prompts = append([]models.MCPPrompt{}, m.Prompts...)
+	sort.Slice(catalog.Tools, func(i, j int) bool { return catalog.Tools[i].Name < catalog.Tools[j].Name })
+	sort.Slice(catalog.Resources, func(i, j int) bool { return catalog.Resources[i].URI < catalog.Resources[j].URI })
+	sort.Slice(catalog.Prompts, func(i, j int) bool { return catalog.Prompts[i].Name < catalog.Prompts[j].Name })
+	encoded, _ := json.Marshal(catalog)
+	s.CatalogHash = digest(canonicalJSON(encoded))
 	for _, tool := range m.Tools {
 		s.Tools[hash(tool.Name)] = digest([]interface{}{tool.Title, canonicalJSON(tool.OutputSchema)})
 	}

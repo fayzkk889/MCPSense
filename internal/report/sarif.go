@@ -216,7 +216,7 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 		Version: "2.1.0",
 		Runs: []sarifRun{
 			{
-				Properties: map[string]interface{}{"coverage": report.Coverage, "schemaVersion": report.SchemaVersion, "dependencies": report.Dependencies},
+				Properties: map[string]interface{}{"coverage": report.Coverage, "schemaVersion": report.SchemaVersion, "dependencies": report.Dependencies, "securityAssessment": report.Assessment},
 				Tool: sarifTool{
 					Driver: sarifDriver{
 						Name:           "MCPSense",

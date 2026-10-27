@@ -67,6 +67,7 @@ func (r *CLIReporter) writeHeader(w io.Writer, report *models.Report) {
 	fmt.Fprintf(w, "  Version: %s\n", AppVersion)
 	fmt.Fprintln(w, "  Score summarizes detected findings; it is not a probability of safety.")
 	fmt.Fprintln(w, "  Metadata screening cannot prove that an integration is safe.")
+	fmt.Fprintf(w, "  Security: %s; host authorization is not enforced by this scan.\n", report.Assessment.State)
 	if len(report.Coverage.MetadataFields) > 0 {
 		fmt.Fprintln(w, "  Inspected text: server instructions, tools and schema text, resources and prompt metadata.")
 	}

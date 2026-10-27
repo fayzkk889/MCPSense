@@ -31,6 +31,7 @@ func RedactText(s string) string {
 // pattern redaction, e.g. credentials supplied through client config environment.
 func (r *Report) ProtectedCopy(known []string) *Report {
 	out := *r
+	out.Assessment = r.SecurityAssessment()
 	out.Findings = append(make([]Finding, 0, len(r.Findings)), r.Findings...)
 	protect := func(s string) string {
 		for _, v := range known {

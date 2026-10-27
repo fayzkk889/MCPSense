@@ -34,6 +34,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
+      - name: Refresh known-vulnerability audit before publication
+        run: sh scripts/audit-go-vulnerabilities.sh
       - name: Prepare and verify the independent npm artifact
         run: |
           node scripts/build-npm-runtime.cjs

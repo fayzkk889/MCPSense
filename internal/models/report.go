@@ -12,6 +12,7 @@ type Summary struct {
 
 // Report aggregates all findings from a scan.
 type Report struct {
+	Assessment    SecurityAssessment   `json:"security_assessment"`
 	TargetHash    string               `json:"target_hash"`
 	MinSeverity   string               `json:"min_severity"`
 	SchemaVersion int                  `json:"schema_version"`
@@ -46,9 +47,27 @@ func NewReport(target, scanMode string, findings []Finding) *Report {
 		Findings:      findings,
 	}
 	r.computeSummary()
+	r.Assessment = r.SecurityAssessment()
 	r.CalculateScore()
 	r.FinalizeEvidence()
 	return r
+}
+
+// SecurityAssessment never turns a zero-finding heuristic scan into trust or
+// authorization. It is separate from completion, finding score and exit status.
+type SecurityAssessment struct {
+	State                 string `json:"state"`
+	AuthorizationEnforced bool   `json:"authorization_enforced"`
+	Basis                 string `json:"basis"`
+	Limitation            string `json:"limitation"`
+}
+
+func (r *Report) SecurityAssessment() SecurityAssessment {
+	state := "not_established"
+	if len(r.Findings) > 0 {
+		state = "review_required"
+	}
+	return SecurityAssessment{State: state, Basis: "selected_checks_only", Limitation: "No safety or authorization verdict is established. Unknown phrasing and runtime behavior may be unassessed; enforce permissions in the host."}
 }
 
 func (r *Report) computeSummary() {
