@@ -1,25 +1,25 @@
-# Website verification — 26 October 2026
+# Website verification — 27 October 2026
 
-## Scope
+## Revision and scope
 
-The website uses the “Read the fine print” inspection-desk concept, with static HTML/CSS/JavaScript. It does not change the CLI, MIT license, npm package or release-candidate publication state.
+The signal-inspection revision replaces the rejected paper/serif direction. Research covers eight first-party security sites and a direct Lore comparison. Static delivery, blog, changelog, independent npm/Go installation guidance and MIT project licensing remain. IBM Plex Sans is self-hosted with its original SIL Open Font License.
 
-## Completed before deployment
+This is website work. CLI source, npm/Go packages and the 0.4.2 release approval state are unchanged. Public npm/GitHub stable 0.4.1 was rechecked on 27 October; 0.4.2 remains a candidate.
 
-- Five automated checks pass: page semantics; every internal link, fragment and asset; release-channel validation; stable/candidate separation; and static-package/content-security constraints.
-- All seven content routes render at desktop width 1280 and phone width 390 without horizontal overflow. The 320-pixel phone checks include the homepage, guide, blog, changelog and long-command article.
-- The blog filters by topic, combines search with the topic filter, displays an empty state, and opens complete articles with sources.
-- Mobile menu opens and dismisses with Escape. Headings and skip navigation remain available.
-- npm/Go selection works. The Go install command was copied using the actual page button and pasted into another field: the text matched exactly.
-- The live public-release badge successfully checks npm and GitHub and shows stable 0.4.1. Malformed, draft, prerelease and disagreeing channels receive dedicated automated checks; network outages retain a dated snapshot.
-- Shared min-width rules and indented-link widths corrected the mobile overflow discovered during browser testing; the affected routes were rechecked.
-- No browser script errors were reported in the local content-page checks.
-- The upload folder contains 17 static files, approximately 131 KB uncompressed. No source repository, credentials, runtime binaries, test receipts or node_modules are uploaded.
+## Predeployment evidence
 
-## Deployment record
+- Nine automated checks pass: page semantics; internal routes/fragments/assets; public release-channel validation; candidate separation; static content/security constraints; font/license integrity; finite motion; pause/resume/completion; reduced-motion changes; and queued-start cancellation.
+- All eight HTML pages received 32 browser render checks at widths 1280, 768, 390 and 320. Every observation had one main heading and no horizontal page overflow. These are Chromium viewport checks, not physical-device or all-browser certification.
+- Actual browser controls pause and resume the sweep; computed animation state changes between paused and running. Replay and metadata-reference/changed-description controls work.
+- The phone menu opens and dismisses with Escape. Blog topic filtering and the empty search state work. Articles contain complete text and source links.
+- npm/Go choices and copy-button feedback were checked. The npm button confirms a clipboard write with the correct command. The automation paste bridge reported an empty virtual clipboard on this retest, so a new paste result is not claimed. The unchanged copy handler passed a real copy/paste journey in the earlier design test.
+- Local content-page checks reported no browser script errors. Essential content remains in the HTML, without hidden entrance reveals. CSS and the motion controller respect reduced-motion preference; no infinite animation is defined.
+- RSS and sitemap parse as XML. The upload contains 20 static files, 199,945 bytes uncompressed. No source repository, credentials, tests, node_modules or CLI executable is included.
 
-Existing Cloudflare assets-only Worker: **mcpsense**. Existing public domain: **mcpsense.site**. Prior production version shown in the dashboard: **6df46433**. Preserve it as the rollback point. No domain or audience migration is required.
+## Hosting and public verification
 
-Cloudflare Web Analytics is injected by the existing hosting setup. The redesign adds no analytics code; the security policy permits that existing integration, and the footer does not claim analytics are absent.
+Existing assets-only Cloudflare Worker: **mcpsense**, serving **mcpsense.site**. The preceding paper-design deployment is **28d92e6e**; the older original deployment is **6df46433**. Preserve both for rollback. Domain, audience and existing Web Analytics settings stay intact.
 
-Production upload, real response-header verification and post-publication browser checks are pending. This record does not claim that a local preview is a deployment.
+Cloudflare prepends its managed crawler/content-signal policy to robots.txt. Inspection confirmed that the original Allow rule and sitemap remain at the end. This explains the earlier strict byte-comparison failure; the policy is preserved. Other assets still require exact-byte matches.
+
+Run `node website/verify-public.mjs` after uploading the tested dist folder. It checks actual headings, resource bytes, real security/cache headers, the preserved crawler rules and the custom 404. The new signal-design production receipt is pending at this checkpoint; record its deployment version and results after publication.

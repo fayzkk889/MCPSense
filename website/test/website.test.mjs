@@ -96,3 +96,15 @@ test('static package has no inline executables, install scripts, trackers or ext
   assert.match(headers,/frame-ancestors 'none'/);
   assert.doesNotMatch(headers,/unsafe-inline|unsafe-eval/);
 });
+
+test('the local font retains its license and motion remains finite with reduced-motion support', async () => {
+  const font = await readFile(join(dist,'assets/fonts/ibm-plex-sans-latin.woff2'));
+  assert.equal(font.subarray(0,4).toString('ascii'),'wOF2');
+  const license = await readFile(join(dist,'assets/fonts/OFL.txt'),'utf8');
+  assert.match(license,/SIL OPEN FONT LICENSE Version 1\.1/);
+  assert.match(license,/IBM Corp/);
+  const css = await readFile(join(dist,'assets/site.css'),'utf8');
+  assert.match(css,/prefers-reduced-motion:\s*reduce/);
+  assert.doesNotMatch(css,/\binfinite\b/);
+  assert.doesNotMatch(css,/url\(["']?https?:/);
+});
