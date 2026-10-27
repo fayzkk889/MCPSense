@@ -2,13 +2,14 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.4.1',
+  stable: '0.4.2',
   verified: '2026-10-27',
-  candidate: '0.4.2',
+  candidate: null,
 };
 
 export const articles = [
   {
+    update: '27 October 2026 update: 0.4.2 is now published on npm and GitHub, including the required metadata reference check. The dated discussion below records its preparation; see the changelog for current availability.',
     slug: 'the-mcp-trust-boundary', category: 'Security', date: '2026-10-26', minutes: 5,
     title: 'MCP security starts at the trust boundary.',
     excerpt: 'A tool description is data. When it starts making decisions for your agent, something has crossed a boundary.',
@@ -43,6 +44,7 @@ export const articles = [
     ],
   },
   {
+    update: '27 October 2026 update: 0.4.2 is now published on npm and GitHub. Its reproduced-case corrections and separate security assessment are available. The development results and limits below remain historical regression evidence.',
     slug: 'a-clean-scan-is-not-a-trust-decision', category: 'Engineering', date: '2026-10-26', minutes: 6,
     title: 'A clean scan is not a trust decision.',
     excerpt: 'What fresh user tests taught us about missed descriptions, regression evidence and the limits of a security score.',
@@ -64,15 +66,15 @@ export const articles = [
 
 export const releases = [
   {
-    version: '0.4.2', status: 'In review', date: null, title: 'Stronger review boundaries.',
-    intro: 'Prepared and tested. Not yet available through the public latest install commands.',
+    version: '0.4.2', status: 'Released', date: '2026-10-27', title: 'Stronger review boundaries.',
+    intro: 'Available through npm and Go. Update with your preferred installation command.',
     items: [
       'Shared clause-scoped detection for five newly reproduced hostile-description families, with benign counterexamples.',
       'An optional required metadata baseline that rejects unreviewed catalog changes independently of wording.',
       'A separate machine-readable security assessment, so a finding score cannot stand in for a trust decision.',
       'Mandatory native/npm regression journeys and six-target Go vulnerability checks.',
     ],
-    link: 'https://github.com/fayzkk889/MCPSense/pull/16', label: 'Review the candidate',
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.2', label: 'Read the release notes',
   },
   {
     version: '0.4.1', status: 'Released', date: '2026-10-25', title: 'Corrections from real user journeys.',
@@ -82,7 +84,7 @@ export const releases = [
       'Benign counterexamples preserve defensive refusals, actual failure reporting and approval-preserving instructions.',
       'Independent npm WebAssembly and native Go installation paths remain supported.',
     ],
-    note: 'Fresh testing later found five additional missed families in 0.4.1. Their fixes are prepared for 0.4.2; a clean 0.4.1 scan does not establish trust.',
+    note: 'Fresh testing later found five additional missed families in 0.4.1. Those reproduced cases are corrected in 0.4.2; a clean scan does not establish trust.',
     link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.1', label: 'Read the release notes',
   },
   {

@@ -1,6 +1,4 @@
-# MCPSense 0.4.2 — prepared release notes
-
-**Not published.** These notes describe the tested candidate. Public npm/GitHub latest remains 0.4.1 until an approved release. Publication is on hold while the maintainer updates the website.
+# MCPSense 0.4.2
 
 ## Security inspection changes
 
@@ -32,7 +30,7 @@ JSON adds `security_assessment`; SARIF carries the equivalent `securityAssessmen
 
 Detector identity changes. Generate both remediation reports with the same reviewed scanner version and equivalent coverage; upgrading the detector alone is not proof that a target was fixed.
 
-## Installation after publication
+## Installation and update
 
 Choose one route:
 
@@ -50,8 +48,18 @@ Requires Go 1.22+ for language compatibility, without Node/npm; use a current pa
 
 ## Verification and limits
 
-The implementation revision passed all 13 original CI jobs, the full installed npm product suite, normal anonymous installation/upgrade and the original/new security examples. Launch preparation also adds a pinned official Go vulnerability audit across all five native release targets and js/wasm, refreshed again before publication. Consult [release readiness](release-readiness.md) and the exact revision's checks for final status.
+Final main `14a8b957d90fbd321c20f09fbcd7e3178df68031` passed all 14 [release CI jobs](https://github.com/fayzkk889/MCPSense/actions/runs/40452217107): native Windows/Linux tests and race checks, npm Windows/Linux/macOS on Node 22/24, lint, GitHub Action execution, five-target archive dry run, and fresh six-target Go vulnerability analysis. The complete installed npm product suite also passed locally, including 104 authored boundary observations and 12 required-reference journeys. The exact Ubuntu/Node 22 artifact passed 13 anonymous Windows installation/upgrade checks without Go or archive tools. The tag-triggered [publication workflow](https://github.com/fayzkk889/MCPSense/actions/runs/40452848413) repeats the audit and installed product suite before publishing native archives. These are bounded test results, not field-accuracy estimates.
 
 The dependency audit retains a documented indirect advisory, GO-2026-5024, in golang.org/x/sys/windows. Source reachability and symbol-preserving binary checks found no call to the affected NewNTUnicodeString function; it is absent from the linked symbol inventory. The npm js/wasm target had no advisory finding. This is a triaged non-reachable dependency warning, not a claim that the dependency version contains no advisories. CI and publication gates repeat both checks. Details and the stripped-binary scanner limitation are recorded in release readiness.
 
-Metadata inspection can miss hostile language and flag benign content. It does not provide universal attack prevention, authenticate servers or enforce runtime permissions. See the [root-cause investigation](detection-root-cause-2026-10-26.md) and preserved [public 0.4.1 test failures](user-test-2026-10-26.md).
+Metadata inspection can miss hostile language and flag benign content. It does not provide universal attack prevention, authenticate servers or enforce runtime permissions. See the [root-cause investigation](https://github.com/fayzkk889/MCPSense/blob/v0.4.2/docs/engineering/detection-root-cause-2026-10-26.md) and preserved [public 0.4.1 test failures](https://github.com/fayzkk889/MCPSense/blob/v0.4.2/docs/engineering/user-test-2026-10-26.md).
+
+
+## npm artifact identity
+
+The public npm tarball is the tested final-main Ubuntu/Node 22 CI artifact:
+
+- SHA256: `36271c978477042fd71669aee15fc5e4f9c2b0fe97fa36ce9bad752039d4db2e`
+- Integrity: `sha512-b/4CAGizLAWdHYN7rcTBnmbUz4WvuHxQaH8jnJ7s5IgFrYnRljMzvtMzFetU/DF/3IdgDIHAg3MFh5Kj3JpA/A==`
+
+Public download, installation and channel-verification results are recorded in the [release record](https://github.com/fayzkk889/MCPSense/blob/main/docs/engineering/release-0.4.2-2026-10-27.md). The tagged preparation documents retain their original pre-publication status.

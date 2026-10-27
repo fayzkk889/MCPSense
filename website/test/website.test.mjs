@@ -70,15 +70,23 @@ test('release display requires two valid, matching public release channels', () 
   assert.equal(compareVersions('0.4.1','v0.4.1'),0);
 });
 
-test('release snapshot separates published versions and the review candidate', async () => {
+test('the published 0.4.2 snapshot retires the candidate and documents its public features', async () => {
   const changelog = await readFile(join(dist,'changelog/index.html'),'utf8');
-  assert.match(changelog,/data-candidate-entry/);
-  assert.match(changelog,/Unreleased candidate/);
-  assert.match(changelog,/Not yet available through the public latest install commands/);
+  assert.doesNotMatch(changelog,/data-candidate-entry|Unreleased candidate/);
+  assert.doesNotMatch(changelog,/Not yet available through the public latest install commands/);
+  assert.match(changelog,/releases\/tag\/v0\.4\.2/);
   const snapshot = JSON.parse(await readFile(join(dist,'assets/release.json'),'utf8'));
-  assert.equal(snapshot.stable,'0.4.1');
-  assert.equal(snapshot.candidate,'0.4.2');
-  assert.match(changelog,/Release snapshot · v0\.4\.1/);
+  assert.equal(snapshot.stable,'0.4.2');
+  assert.equal(snapshot.candidate,null);
+  assert.match(changelog,/Release snapshot · v0\.4\.2/);
+  const docs = await readFile(join(dist,'docs/index.html'),'utf8');
+  assert.match(docs,/--require-metadata-baseline/);
+  assert.match(docs,/security_assessment/);
+  assert.doesNotMatch(docs,/fixes are under review|corrections are prepared/);
+  for (const slug of ['the-mcp-trust-boundary','a-clean-scan-is-not-a-trust-decision']) {
+    const article = await readFile(join(dist,'blog',slug,'index.html'),'utf8');
+    assert.match(article,/27 October 2026 update: 0\.4\.2 is now published/);
+  }
 });
 
 test('static package has no inline executables, install scripts, trackers or external assets', async () => {
