@@ -1,3 +1,25 @@
+# Release readiness — 0.4.2 published
+
+Updated 27 October 2026. The maintainer approved PRs 17 and 16 and npm/GitHub/Go publication after checks. Both PRs are merged; public npm latest, GitHub latest and a fresh Go @latest installation now deliver **0.4.2**. The tagged source is 14a8b957d90fbd321c20f09fbcd7e3178df68031.
+
+The [public release record](release-0.4.2-2026-10-27.md) contains artifact identities, test scope, retained propagation failures and the deployed website receipt. [Final main CI](https://github.com/fayzkk889/MCPSense/actions/runs/40452217107) passed all 14 jobs; the [publication workflow](https://github.com/fayzkk889/MCPSense/actions/runs/40452848413) passed its repeated audit and product gates. The public archive/checksum gate also passed.
+
+| Customer requirement | Current evidence |
+| --- | --- |
+| npm installation without Go | Actual public package: fresh anonymous Windows install, upgrade from 0.4.1 and 13 onboarding checks passed; no Go/archive tools on PATH; Node.js 22+ only |
+| Independent Go installation without Node/npm | Fresh public Go @latest install and first-use/reference/version checks passed on Linux without Node/npm; native Windows/Linux source matrices passed in CI |
+| Product workflows and original misses | Complete actual public npm product suite passed, including 104 authored boundary observations and 12 required-reference workflows; no labels or assertions relaxed |
+| Published versions and package identity | npm/GitHub/Go identify 0.4.2; actual npm download matches the tested final-main artifact; all five public native archive checksums verified |
+| Website and current onboarding | Existing Cloudflare site updated to 0.4.2; eight public pages, static assets, headers and 404 verified; updated phone/desktop guides checked |
+| Licensing and delivery format | MIT preserved, bundled Go runtime license/integrity verified; npm and Go remain independent |
+
+MCPSense remains a local inspection tool, not universal attack prevention or runtime authorization. Authored regression results are not field accuracy. Operators review/protect initial metadata references; unknown wording, runtime results and unsupported surfaces remain outside the guarantee. Optional Windows native archives remain unsigned and may be restricted by device policy. No protection setting was changed.
+
+The [dependency audit](dependency-audit-2026-10-26.md) retains the indirect x/sys advisory and its non-reachable-symbol triage. Final CI and publication refreshed the six source-target and symbol-preserving Windows audits. The Go 1.22 compatibility floor is unchanged; use a current patched compiler. Every native architecture was not executed locally.
+
+<details>
+<summary>Historical release preparation — superseded; not the current delivery state</summary>
+
 # Release readiness — 0.4.2 candidate
 
 Updated 26 October 2026. Publication is on hold while the maintainer makes over the Cloudflare website. No 0.4.2 tag, npm upload or public release has been created. PR 16 remains the review boundary; this document does not authorize merging or publishing.
@@ -128,5 +150,7 @@ CI additionally builds a fresh, publication-disabled snapshot with `GORELEASER_C
 Implementation PRs have been merged under the user's standing review/merge authorization. No 0.4.0 version tag, public GitHub release or npm publication has occurred. The tag-triggered release workflow would publish native archives if a version tag were pushed, so **do not push one without explicit maintainer approval**. After review and green final checks, obtain approval for the exact commit, version and publication process; then verify public artifact/checksum URLs and npm package contents. Until then, this is tested release preparation, not a completed public release.
 
 Final review also requires the same approved-baseline digest when drift evidence is compared. Reapproval is a policy change, not a remediation. Schema digests preserve arbitrary JSON numeric constraints without float rounding, and Unicode offset tests include dotted-I compatibility. These are covered by focused regressions.
+
+</details>
 
 </details>
