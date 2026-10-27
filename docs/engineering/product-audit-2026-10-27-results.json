@@ -1,0 +1,2168 @@
+{
+  "version": "mcpsense v0.4.2",
+  "releaseSource": "14a8b957d90fbd321c20f09fbcd7e3178df68031",
+  "verdict": "FAIL_NEW_SECURITY_ACCEPTANCE",
+  "corpus": {
+    "file": "testdata/product-black-october-2026-10-27.json",
+    "sha256": "c35976e18fbbeb3e71a845ca5534cc29273cb9d5636552069e7b786ff2cec815",
+    "texts": 32,
+    "hostile": 16,
+    "benign": 16,
+    "surfaces": [
+      "tool-description",
+      "server-instructions"
+    ],
+    "independentFieldAccuracy": false
+  },
+  "npm": {
+    "counts": {
+      "TP": 10,
+      "FN": 22,
+      "FP": 4,
+      "TN": 28
+    },
+    "observations": [
+      {
+        "id": "monitor-quiet-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-quiet-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-migration-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-migration-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-recipient-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-recipient-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "evidence-fabrication-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "evidence-fabrication-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "diagnostic-auth-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "diagnostic-auth-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "encoded-secrets-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "encoded-secrets-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "credential-copy-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "credential-copy-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "denial-workaround-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 63,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-011",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "denial-workaround-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "resource-authority-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 88,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "resource-authority-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 88,
+        "exit": 1,
+        "rules": [
+          "QUAL-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "failed-settlement-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 88,
+        "exit": 1,
+        "rules": [
+          "QUAL-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "failed-settlement-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "warning-normalization-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "warning-normalization-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "package-bootstrap-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "package-bootstrap-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-quotation-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 63,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-quotation-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 65,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "policy-code-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "policy-code-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-quiet-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-quiet-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-migration-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-migration-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-recipient-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-recipient-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "evidence-fabrication-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "evidence-fabrication-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "diagnostic-auth-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "diagnostic-auth-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "encoded-secrets-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "encoded-secrets-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "credential-copy-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "credential-copy-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "denial-workaround-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "denial-workaround-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "resource-authority-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "resource-authority-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "failed-settlement-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "failed-settlement-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "warning-normalization-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "warning-normalization-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "package-bootstrap-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "package-bootstrap-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-quotation-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 65,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "benign-quotation-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 65,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "policy-code-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "policy-code-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      }
+    ]
+  },
+  "nativeGo": {
+    "counts": {
+      "TP": 10,
+      "FN": 22,
+      "FP": 4,
+      "TN": 28
+    },
+    "observations": [
+      {
+        "id": "monitor-quiet-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-quiet-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-migration-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-migration-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-recipient-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-recipient-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "evidence-fabrication-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "evidence-fabrication-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "diagnostic-auth-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "diagnostic-auth-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "encoded-secrets-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "encoded-secrets-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "credential-copy-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "credential-copy-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "denial-workaround-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 63,
+        "exit": 1,
+        "rules": [
+          "SEC-011",
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "denial-workaround-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "resource-authority-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 88,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "resource-authority-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 88,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "review-edit-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "failed-settlement-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 88,
+        "exit": 1,
+        "rules": [
+          "QUAL-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "failed-settlement-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "warning-normalization-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "warning-normalization-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "package-bootstrap-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "package-bootstrap-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-quotation-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 63,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001",
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "benign-quotation-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 65,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "policy-code-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "policy-code-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 98,
+        "exit": 0,
+        "rules": [
+          "QUAL-001"
+        ]
+      },
+      {
+        "id": "monitor-quiet-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-quiet-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-migration-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-migration-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-recipient-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "monitor-recipient-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "evidence-fabrication-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "evidence-fabrication-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "diagnostic-auth-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "diagnostic-auth-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "encoded-secrets-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "encoded-secrets-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "credential-copy-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "credential-copy-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "denial-workaround-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "denial-workaround-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "resource-authority-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "resource-authority-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "review-edit-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "failed-settlement-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 90,
+        "exit": 1,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "failed-settlement-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "warning-normalization-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "warning-normalization-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "package-bootstrap-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "package-bootstrap-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "benign-quotation-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": true,
+        "security": true,
+        "outcome": "TP",
+        "score": 65,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "benign-quotation-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": true,
+        "security": true,
+        "outcome": "FP",
+        "score": 65,
+        "exit": 1,
+        "rules": [
+          "SEC-001",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "policy-code-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "policy-code-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "injection": false,
+        "security": false,
+        "outcome": "FN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      },
+      {
+        "id": "covert-relay-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "injection": false,
+        "security": false,
+        "outcome": "TN",
+        "score": 100,
+        "exit": 0,
+        "rules": []
+      }
+    ]
+  },
+  "nativeNpmOutcomesAgree": true,
+  "uniqueMissed": [
+    "monitor-quiet-h",
+    "monitor-migration-h",
+    "monitor-recipient-h",
+    "evidence-fabrication-h",
+    "diagnostic-auth-h",
+    "encoded-secrets-h",
+    "credential-copy-h",
+    "warning-normalization-h",
+    "package-bootstrap-h",
+    "policy-code-h",
+    "covert-relay-h"
+  ],
+  "uniqueFalseAlarms": [
+    "resource-authority-b",
+    "benign-quotation-b"
+  ],
+  "hostileObservationsWithNoSecuritySignal": 22,
+  "hostileObservationsWithNoFindingsAndScore100": 14,
+  "quietSample": {
+    "case": "policy-code-h",
+    "surface": "server-instructions",
+    "score": 100,
+    "assessment": {
+      "state": "not_established",
+      "authorization_enforced": false,
+      "basis": "selected_checks_only",
+      "limitation": "No safety or authorization verdict is established. Unknown phrasing and runtime behavior may be unassessed; enforce permissions in the host."
+    },
+    "coverage": {
+      "detector_profile": "37ca0b64b78498d45cb06698dfd7554772e3ffa504df2b8f28b7c5314e4aa106",
+      "metadata_fields": [
+        "server.description",
+        "server.instructions",
+        "tools.names_titles_descriptions",
+        "tools.inputSchema_strings_keys",
+        "tools.outputSchema_strings_keys",
+        "tools.annotation_titles",
+        "resources.names_uris_descriptions",
+        "prompts.names_descriptions_arguments"
+      ],
+      "unassessed": [
+        "runtime_behavior_and_tool_results",
+        "resource_contents_and_prompt_bodies",
+        "unrecognized_metadata_extensions",
+        "general_semantic_understanding",
+        "project_and_transitive_dependency_inventory",
+        "authorization_enforcement_and_session_isolation",
+        "runtime_resource_limits"
+      ],
+      "inputs": [
+        "3fad94d5152ca1b5cbed25e5a913fdc31ae371f664a4eb51a815d40b94573d0a"
+      ],
+      "protocol": "2025-11-25",
+      "baseline": "skipped",
+      "state": "completed",
+      "surfaces": [
+        "manifest"
+      ],
+      "selected_checks": [
+        "SPEC-001",
+        "SPEC-002",
+        "SPEC-003",
+        "SPEC-004",
+        "SPEC-005",
+        "SEC-001",
+        "SEC-002",
+        "SEC-003",
+        "SEC-004",
+        "SEC-005",
+        "SEC-006",
+        "SEC-007",
+        "SEC-008",
+        "SEC-009",
+        "SEC-010",
+        "SEC-011",
+        "SEC-012",
+        "SEC-013",
+        "SEC-014",
+        "SEC-015",
+        "SEC-016",
+        "SKILL-001",
+        "SKILL-002",
+        "SKILL-003",
+        "CVE-001",
+        "QUAL-001",
+        "QUAL-002",
+        "QUAL-003",
+        "QUAL-004",
+        "QUAL-005",
+        "QUAL-006",
+        "QUAL-007"
+      ],
+      "skipped_checks": [],
+      "advisories": "skipped"
+    },
+    "findings": []
+  },
+  "supportedWorkflows": {
+    "freshNpmInstallAndUpgradeChecks": 13,
+    "initialVersionLookup": "FAIL: npm unavailable; preserved",
+    "unchangedRetry": "PASS",
+    "fullInstalledProductSuite": "PASS",
+    "freshGoWithoutNodeOrNpm": "PASS"
+  },
+  "expert": {
+    "pass": 86,
+    "fail": 1,
+    "checks": [
+      {
+        "name": "tool-description separate capture succeeds",
+        "status": "PASS",
+        "detail": "Baseline updated.\n"
+      },
+      {
+        "name": "tool-description unchanged metadata matches",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed monitor-quiet-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference monitor-quiet-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed monitor-migration-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference monitor-migration-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed monitor-recipient-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference monitor-recipient-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed evidence-fabrication-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference evidence-fabrication-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed diagnostic-auth-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference diagnostic-auth-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed encoded-secrets-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference encoded-secrets-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed credential-copy-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference credential-copy-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed denial-workaround-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference denial-workaround-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed resource-authority-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference resource-authority-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed review-edit-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference review-edit-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed failed-settlement-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference failed-settlement-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed warning-normalization-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference warning-normalization-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed package-bootstrap-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference package-bootstrap-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed benign-quotation-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference benign-quotation-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed policy-code-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference policy-code-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description rejects changed covert-relay-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "tool-description preserves operator reference covert-relay-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description benign change also requires review",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-description original still matches",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions separate capture succeeds",
+        "status": "PASS",
+        "detail": "Baseline updated.\n"
+      },
+      {
+        "name": "server-instructions unchanged metadata matches",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed monitor-quiet-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference monitor-quiet-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed monitor-migration-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference monitor-migration-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed monitor-recipient-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference monitor-recipient-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed evidence-fabrication-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference evidence-fabrication-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed diagnostic-auth-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference diagnostic-auth-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed encoded-secrets-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference encoded-secrets-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed credential-copy-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference credential-copy-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed denial-workaround-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference denial-workaround-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed resource-authority-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference resource-authority-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed review-edit-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference review-edit-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed failed-settlement-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference failed-settlement-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed warning-normalization-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference warning-normalization-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed package-bootstrap-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference package-bootstrap-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed benign-quotation-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference benign-quotation-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed policy-code-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference policy-code-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions rejects changed covert-relay-h",
+        "status": "PASS",
+        "detail": "metadata baseline mismatch: advertised metadata changed; review it outside this gate and update the local baseline separately\n"
+      },
+      {
+        "name": "server-instructions preserves operator reference covert-relay-h",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions benign change also requires review",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions original still matches",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-description known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "server-instructions known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "tool-title known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "annotation-title known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "input-schema-description known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "output-schema-description known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "resource-description known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "prompt-description known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "prompt-argument-description known instruction signal",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "extension is explicitly unassessed",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "Tensorlake 0.5.144 online lookup completes",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "Tensorlake 0.5.144 malware applicability agrees with publisher",
+        "status": "PASS",
+        "detail": "Publisher GHSA-8g63-53c9-65j2 lists 0.5.144 as affected and 0.5.143 as unaffected; a conflicting upstream advisory needs explicit review, not silent suppression."
+      },
+      {
+        "name": "Tensorlake 0.5.143 online lookup completes",
+        "status": "PASS",
+        "detail": ""
+      },
+      {
+        "name": "Tensorlake 0.5.143 malware applicability agrees with publisher",
+        "status": "FAIL",
+        "detail": "Publisher GHSA-8g63-53c9-65j2 lists 0.5.144 as affected and 0.5.143 as unaffected; a conflicting upstream advisory needs explicit review, not silent suppression."
+      },
+      {
+        "name": "unsupported Python inventory fails visibly",
+        "status": "PASS",
+        "detail": ""
+      }
+    ],
+    "hostileChangesRejectedByRequiredBaseline": 32,
+    "knownAttackMetadataLocations": 9
+  },
+  "advisoryControl": {
+    "package": "npm/tensorlake",
+    "affected": "0.5.144",
+    "publisherUnaffected": "0.5.143",
+    "observed": "MAL-2026-17650 returned for both",
+    "directOsvQueryConfirmed": true,
+    "publisher": "https://github.com/tensorlakeai/tensorlake/security/advisories/GHSA-8g63-53c9-65j2",
+    "upstream": "https://osv.dev/vulnerability/MAL-2026-17650"
+  },
+  "limitations": [
+    "Authored adversarial examples, not field accuracy.",
+    "Required metadata reference checks captured fields, not initial safety or runtime enforcement.",
+    "The Tensorlake control is an upstream applicability conflict; no advisory was suppressed."
+  ]
+}

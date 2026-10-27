@@ -1,5 +1,7 @@
 # Release readiness — 0.4.2 published
 
+**Subsequent product audit:** the [27 October fresh audit](product-audit-2026-10-27.md) reproduces new hostile-description misses, benign false alarms and an upstream advisory-applicability conflict in public 0.4.2. The installation/release receipts below remain historical delivery evidence; they do not establish broad security acceptance. This audit branch adds a failing 168-observation gate for a future fix. No follow-up release is approved by this document.
+
 Updated 27 October 2026. The maintainer approved PRs 17 and 16 and npm/GitHub/Go publication after checks. Both PRs are merged; public npm latest, GitHub latest and a fresh Go @latest installation now deliver **0.4.2**. The tagged source is 14a8b957d90fbd321c20f09fbcd7e3178df68031.
 
 The [public release record](release-0.4.2-2026-10-27.md) contains artifact identities, test scope, retained propagation failures and the deployed website receipt. [Final main CI](https://github.com/fayzkk889/MCPSense/actions/runs/40452217107) passed all 14 jobs; the [publication workflow](https://github.com/fayzkk889/MCPSense/actions/runs/40452848413) passed its repeated audit and product gates. The public archive/checksum gate also passed.
