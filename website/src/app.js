@@ -105,7 +105,7 @@ async function refreshReleases() {
       label.textContent = state.agrees ? `Verified against npm and GitHub. npm: v${state.npmVersion} · GitHub: v${state.githubVersion}.` : `npm: v${state.npmVersion} · GitHub: v${state.githubVersion}. Check both channels before updating.`;
     });
     if (!state.agrees) return;
-    if (compareVersions(state.npmVersion, snapshot.candidate) >= 0) {
+    if (snapshot.candidate && compareVersions(state.npmVersion, snapshot.candidate) >= 0) {
       document.querySelectorAll('[data-candidate-entry]').forEach(entry => { entry.hidden = true; });
       document.querySelectorAll('[data-candidate-notice]').forEach(notice => {
         notice.textContent = `The current public version is v${state.npmVersion}. Some notes below describe the earlier v${snapshot.stable} snapshot; consult the published release notes for current availability.`;
@@ -129,7 +129,7 @@ async function refreshReleases() {
   } catch {
     document.querySelectorAll('[data-release-status]').forEach(label => {
       const verified = snapshot?.verified ? new Date(`${snapshot.verified}T12:00:00Z`).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}) : 'date unavailable';
-      label.textContent = `Live verification unavailable. Dated release snapshot: v${snapshot?.stable || '0.4.1'} (${verified}). Check npm and GitHub for current availability.`;
+      label.textContent = `Live verification unavailable. Dated release snapshot: v${snapshot?.stable || 'unknown'} (${verified}). Check npm and GitHub for current availability.`;
     });
   }
 }
