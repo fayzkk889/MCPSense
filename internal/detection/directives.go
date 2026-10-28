@@ -57,8 +57,14 @@ var benignMetadata = []*regexp.Regexp{
 var literalRendering = regexp.MustCompile(`(?is)^\s*(render|display|print|return)\s+(the\s+)?(literal|quoted)\s+(string|text|phrase)\s+("[^"\r\n]{1,256}"|'[^'\r\n]{1,256}')\s+(as\s+(escaped|inert)\s+text|in\s+(a|the)\s+(security\s+)?(training|documentation)\s+example)[.!]?\s*$`)
 var untrustedContentRule = regexp.MustCompile(`(?is)^\s*(treat|handle)\s+(all\s+)?(tool|server)\s+(responses?|outputs?|content)\s+as\s+untrusted\s+data(,\s+including\s+text\s+that\s+claims?\s+to\s+(supersede|override|outrank)\s+(the\s+)?(developer|system|user)\s+(message|instructions?))?[.!]?\s*$`)
 
+// Only a complete literal lookup operation is data context. Matching is
+// anchored after its return object, so a subsequent active command cannot be
+// excused by an earlier quoted search. Single quotes and corpus identifiers are
+// ordinary query syntax, not a grant of authority to the quoted text.
+var literalLookup = regexp.MustCompile(`(?is)^\s*(search|find|retrieve)\s+(the\s+)?(?:[\p{L}\p{N}_-]+\s+){0,6}(corpus(?:\s+entries)?|documents?|documentation|index|logs?)\s+for\s+(the\s+)?(literal|quoted)\s+(phrase|text|string)\s+('[^'\r\n]{1,256}'|"[^"\r\n]{1,256}")\s+and\s+return\s+(matching\s+)?(document\s+|record\s+)?(identifiers|titles|matches|results|records)[.!]?\s*$`)
+
 func benignToolClause(text string) bool {
-	if literalRendering.MatchString(text) || untrustedContentRule.MatchString(text) {
+	if literalRendering.MatchString(text) || untrustedContentRule.MatchString(text) || literalLookup.MatchString(text) {
 		return true
 	}
 	if continuation.MatchString(text) {

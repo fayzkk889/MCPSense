@@ -131,7 +131,8 @@ func rawIntentMatches(text string) []PatternMatch {
 			}
 		}
 	}
-	return append(out, boundaryMatches(text)...)
+	out = append(out, boundaryMatches(text)...)
+	return append(out, effectMatches(text)...)
 }
 
 func intentMatches(content string) []PatternMatch {
