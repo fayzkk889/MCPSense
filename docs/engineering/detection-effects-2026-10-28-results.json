@@ -1,0 +1,3375 @@
+{
+  "date": "2026-10-28",
+  "sourceCommit": "cbcc4b4bc60166b9f789a8f692355bbdac7b2988",
+  "publication": "Unreleased source candidate; version strings remain 0.4.2. This is not the published 0.4.2 artifact.",
+  "runtime": {
+    "version": "0.4.2",
+    "toolchain": "go version go1.27.3 windows/amd64",
+    "format": "go-js-wasm-v1",
+    "files": {
+      "mcpsense.wasm": "996404d56a851919b8c19f9502ab27a07c5f8889efd31ec2aa4fe5e27bb843e6",
+      "wasm_exec.cjs": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
+      "host.cjs": "0bb96ce5386e390d592902fa0a18060c91894d9f31b006d84f017443ca73492b",
+      "LICENSE.Go": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+    }
+  },
+  "installedPackage": {
+    "version": "0.4.2",
+    "node": "v22.23.4",
+    "platform": "win32",
+    "noGo": true,
+    "noArchiveTools": true,
+    "offlineInstall": true,
+    "installScripts": false,
+    "integrity": "sha512-/Oxfdwwron2qgt2NL6g4FiUdk1yUUVYCjZEnkZ7yV8rlxYU5OcFtcdVsr6chccoDVgC46F/ueule9HnqtbwX9g==",
+    "tarballSha256": "cce0e61d64fc5ed7ecf31edd78ed8e6873c0a466be69df3f5e02655fe26c6123"
+  },
+  "nativeSha256": "1cbe0681a2f2a5f855dcb486b82757e6a1549ca93724b24382ee61d8bfdee684",
+  "suites": {
+    "original": {
+      "nativeAndNpmAgree": true,
+      "corpusSha256": "d6551d39952aa6526caf7baa5977a15fe653b4a8f996c794c905663c75197167",
+      "counts": {
+        "TP": 12,
+        "FN": 0,
+        "FP": 0,
+        "TN": 12
+      },
+      "observations": [
+        {
+          "id": "hostile-01",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-02",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 53,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "hostile-03",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-04",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-05",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-06",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-01",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-02",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-03",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-04",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-05",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-06",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "hostile-01",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-02",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-03",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-04",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-05",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-06",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-01",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-02",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-03",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-04",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-05",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-06",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    "validation": {
+      "nativeAndNpmAgree": true,
+      "corpusSha256": "2027914f6a38e4c6349b793bcfbab1adc3c494c8bc505c18fdac62c945630683",
+      "counts": {
+        "TP": 40,
+        "FN": 0,
+        "FP": 0,
+        "TN": 40
+      },
+      "observations": [
+        {
+          "id": "permission-h1",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "permission-h2",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h3",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h4",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 78,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-b1",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-b2",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-b3",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-b4",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-h1",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h2",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h3",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h4",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-b1",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-b2",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-b3",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-b4",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-h1",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h2",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h3",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h4",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-b1",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-b2",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-b3",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-b4",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-h1",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h2",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h3",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h4",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-b1",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-b2",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-b3",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-b4",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-h1",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h2",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h3",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h4",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-b1",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "policy-b2",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b3",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b4",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-h1",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h2",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h3",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h4",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-b1",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "permission-b2",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "permission-b3",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "permission-b4",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-h1",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h2",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h3",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h4",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-b1",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-b2",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-b3",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-b4",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-h1",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h2",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h3",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h4",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-b1",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-b2",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-b3",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-b4",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-h1",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h2",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h3",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h4",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-b1",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-b2",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-b3",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-b4",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-h1",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h2",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h3",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h4",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-b1",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b2",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b3",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b4",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    "incident-audit": {
+      "nativeAndNpmAgree": true,
+      "corpusSha256": "c35976e18fbbeb3e71a845ca5534cc29273cb9d5636552069e7b786ff2cec815",
+      "counts": {
+        "TP": 32,
+        "FN": 0,
+        "FP": 0,
+        "TN": 32
+      },
+      "observations": [
+        {
+          "id": "monitor-quiet-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-quiet-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-migration-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 78,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-migration-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-recipient-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-recipient-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "evidence-fabrication-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "evidence-fabrication-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "diagnostic-auth-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "diagnostic-auth-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "encoded-secrets-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "encoded-secrets-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "credential-copy-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "credential-copy-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "denial-workaround-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "denial-workaround-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "resource-authority-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-authority-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "review-edit-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "review-edit-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "failed-settlement-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-settlement-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-normalization-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-normalization-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "package-bootstrap-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "package-bootstrap-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-quotation-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-quotation-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-code-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-code-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "covert-relay-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "covert-relay-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-quiet-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-quiet-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-migration-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-migration-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-recipient-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-recipient-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "evidence-fabrication-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "evidence-fabrication-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "diagnostic-auth-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "diagnostic-auth-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "encoded-secrets-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "encoded-secrets-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-copy-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "credential-copy-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "denial-workaround-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "denial-workaround-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "resource-authority-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-authority-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "review-edit-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "review-edit-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failed-settlement-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-settlement-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-normalization-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-normalization-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "package-bootstrap-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "package-bootstrap-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-quotation-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-quotation-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-code-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-code-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "covert-relay-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "covert-relay-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    "effects": {
+      "nativeAndNpmAgree": true,
+      "corpusSha256": "8e4e48f56dba8c47becddb07d159d996682b7068cc95ed7d9663deb8c9764ce3",
+      "counts": {
+        "TP": 26,
+        "FN": 0,
+        "FP": 0,
+        "TN": 38
+      },
+      "observations": [
+        {
+          "id": "header-source-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "header-source-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "staged-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "staged-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "transform-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "transform-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "encoding-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "encoding-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "routing-off-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-off-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "routing-empty-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-empty-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "noop-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "noop-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "downgrade-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "downgrade-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "pipe-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "pipe-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negated-flow-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "negated-monitor-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "quote-data-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-command-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-negation-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-after-negation-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "scope-h",
+          "surface": "tool-description",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "scope-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "distant-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "diagnostic-names-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "public-key-b",
+          "surface": "tool-description",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "header-source-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "header-source-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staged-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "staged-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "transform-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "transform-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "encoding-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "encoding-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "routing-off-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-off-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "routing-empty-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-empty-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "noop-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "noop-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "downgrade-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "downgrade-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "pipe-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "pipe-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negated-flow-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negated-monitor-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-data-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-command-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-negation-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-after-negation-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "scope-h",
+          "surface": "server-instructions",
+          "hostile": true,
+          "injection": true,
+          "security": true,
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "scope-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "distant-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "diagnostic-names-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "public-key-b",
+          "surface": "server-instructions",
+          "hostile": false,
+          "injection": false,
+          "security": false,
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    }
+  },
+  "expert": {
+    "pass": 86,
+    "fail": 1,
+    "online": true,
+    "checks": [
+      {
+        "name": "tool-description separate capture succeeds",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description unchanged metadata matches",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed monitor-quiet-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference monitor-quiet-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed monitor-migration-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference monitor-migration-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed monitor-recipient-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference monitor-recipient-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed evidence-fabrication-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference evidence-fabrication-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed diagnostic-auth-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference diagnostic-auth-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed encoded-secrets-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference encoded-secrets-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed credential-copy-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference credential-copy-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed denial-workaround-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference denial-workaround-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed resource-authority-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference resource-authority-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed review-edit-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference review-edit-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed failed-settlement-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference failed-settlement-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed warning-normalization-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference warning-normalization-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed package-bootstrap-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference package-bootstrap-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed benign-quotation-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference benign-quotation-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed policy-code-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference policy-code-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description rejects changed covert-relay-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description preserves operator reference covert-relay-h",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description benign change also requires review",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-description original still matches",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions separate capture succeeds",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions unchanged metadata matches",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed monitor-quiet-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference monitor-quiet-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed monitor-migration-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference monitor-migration-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed monitor-recipient-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference monitor-recipient-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed evidence-fabrication-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference evidence-fabrication-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed diagnostic-auth-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference diagnostic-auth-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed encoded-secrets-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference encoded-secrets-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed credential-copy-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference credential-copy-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed denial-workaround-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference denial-workaround-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed resource-authority-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference resource-authority-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed review-edit-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference review-edit-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed failed-settlement-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference failed-settlement-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed warning-normalization-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference warning-normalization-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed package-bootstrap-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference package-bootstrap-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed benign-quotation-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference benign-quotation-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed policy-code-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference policy-code-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions rejects changed covert-relay-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions preserves operator reference covert-relay-h",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions benign change also requires review",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions original still matches",
+        "status": "PASS"
+      },
+      {
+        "name": "server-description known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "server-instructions known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "tool-title known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "annotation-title known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "input-schema-description known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "output-schema-description known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "resource-description known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "prompt-description known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "prompt-argument-description known instruction signal",
+        "status": "PASS"
+      },
+      {
+        "name": "extension is explicitly unassessed",
+        "status": "PASS"
+      },
+      {
+        "name": "Tensorlake 0.5.144 online lookup completes",
+        "status": "PASS"
+      },
+      {
+        "name": "Tensorlake 0.5.144 malware applicability agrees with publisher",
+        "status": "PASS"
+      },
+      {
+        "name": "Tensorlake 0.5.143 online lookup completes",
+        "status": "PASS"
+      },
+      {
+        "name": "Tensorlake 0.5.143 malware applicability agrees with publisher",
+        "status": "FAIL"
+      },
+      {
+        "name": "unsupported Python inventory fails visibly",
+        "status": "PASS"
+      }
+    ]
+  },
+  "limitations": "Repeated authored cases and surfaces; zero observed misses here is not field accuracy or exhaustive detection. Runtime authorization and initial trust remain external. Tensorlake advisory applicability conflict remains unresolved.",
+  "descriptionModuleProfile": "9a4980a342f3b9873e4c6e2c5ef6d30c155e530b87a671391b89639f5dcab4c1",
+  "detectorProfiles": {
+    "npm": "36bb5a86443d10d065e1fc3edea0045fee7e67e546805b3366855daac9ed6bf5",
+    "native": "6c4ce3d031279aea0dc882a47ce77807a552325dc5de5ee0c94b256591c45dbe"
+  },
+  "moduleProfiles": {
+    "detection": "9a4980a342f3b9873e4c6e2c5ef6d30c155e530b87a671391b89639f5dcab4c1",
+    "drift": "afbd3e3379e917f4b49ceaf2d5728801dc538b2632bdb686dce304b5b898b8bc",
+    "cve": "680ccaaf914c87fa209eeb2276896fc8d32156d555eb62ed4a3fee74bbd9ea91",
+    "inventory": "d01ac295dd330205fc4aa834186de9d5a001f54b9ef61d2777cac189d062c521",
+    "nodebridge": "22dc7bd7a01df599e49cba0023e98d99e87547a7f1b2cefdef13bd0fe52f3f42",
+    "netpolicy": "a057b1ab2005c4769f9f6d01666c9178316960c515df059f3917a0ae2aba191a",
+    "checks": "328da7da67cecb23840b8b08d39dfa6827ae35aaa5d804e4c5f536e5e3449722"
+  },
+  "comparison": "Outcomes, scores, exits and rule multisets agree. Rule arrival order is normalized; runtime-dependent whole-scanner identities are checked separately against the source formula."
+}

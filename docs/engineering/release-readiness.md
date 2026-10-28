@@ -1,6 +1,8 @@
 # Release readiness — 0.4.2 published
 
-**Subsequent product audit:** the [27 October fresh audit](product-audit-2026-10-27.md) reproduces new hostile-description misses, benign false alarms and an upstream advisory-applicability conflict in public 0.4.2. The installation/release receipts below remain historical delivery evidence; they do not establish broad security acceptance. This audit branch adds a failing 168-observation gate for a future fix. No follow-up release is approved by this document.
+**Subsequent product audit:** the [27 October fresh audit](product-audit-2026-10-27.md) reproduces new hostile-description misses, benign false alarms and an upstream advisory-applicability conflict in public 0.4.2. The installation/release receipts below remain historical delivery evidence; they do not establish broad security acceptance.
+
+**Unreleased fix, 28 October:** the [effect-analysis follow-up](detection-effects-2026-10-28.md) addresses the reproduced description failures and additional composed negation cases. Native Go and the actual installed npm candidate pass the stronger 232-observation gate and required-reference journeys; exact source/runtime/artifact receipts are linked in the report. The online expert retest still fails the Tensorlake publisher/feed applicability control (86 pass, 1 fail). This remains release triage, not an all-clear launch verdict. No follow-up release or PR merge is approved by this document, and the public 0.4.2 bytes are unchanged.
 
 Updated 27 October 2026. The maintainer approved PRs 17 and 16 and npm/GitHub/Go publication after checks. Both PRs are merged; public npm latest, GitHub latest and a fresh Go @latest installation now deliver **0.4.2**. The tagged source is 14a8b957d90fbd321c20f09fbcd7e3178df68031.
 
