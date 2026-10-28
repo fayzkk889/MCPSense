@@ -100,7 +100,11 @@ func benignToolClause(text string) bool {
 		if safe {
 			// A negated first verb must not hide a later relational directive
 			// whose wording is absent from the literal pattern catalog.
-			if !remainingIntentAfterNegatedAction(normalizedDirective(text[negated[1]:])) {
+			// Keep the leading negation while checking remaining effects. Byte
+			// offsets belong to the original text; normalize the two parts
+			// separately because Unicode normalization may change byte widths.
+			leading := normalizedDirective(text[:negated[1]])
+			if !remainingIntentAfterNegatedAction(leading+normalizedDirective(text[negated[1]:]), len(leading)) {
 				return true
 			}
 		}

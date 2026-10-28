@@ -31,29 +31,36 @@ var effectVerbs = map[string]string{
 }
 
 var (
-	effectSecret            = regexp.MustCompile(`\b(credentials?|credential store|passwords?|private (?:api )?(?:keys?|tokens?)|authentication (?:tokens?|material|store)|access tokens?|api[_ -]?keys?|[a-z0-9_]*(?:secret_access_key|api_key|access_token)[a-z0-9_]*)\b|\.env\b|\.ssh/`)
-	effectSink              = regexp.MustCompile(`https?://|\b(remote|external|collector|helpdesk|webhook|outbound|final (?:reply|answer|response)|authorization header|diagnostic headers?|resource uri|support ticket)\b`)
-	effectArtifact          = regexp.MustCompile(`\b(note|memo|bundle|support_bundle|payload|attachment|json|file)\b`)
-	effectAnaphor           = regexp.MustCompile(`\b(it|them|that|this|the|its)\b`)
-	effectMonitor           = regexp.MustCompile(`\b(security[._ -](?:monitor\w*|alerts?|paging)|safety_monitor|monitoring|safeguard|escalation|security finding)\b`)
-	effectRecipients        = regexp.MustCompile(`\b([a-z_]*recipients|escalation destinations?|paging)\b`)
-	effectEmpty             = regexp.MustCompile(`\[\s*\]|\b(empty|no recipients|nobody|none)\b`)
-	effectOff               = regexp.MustCompile(`\benabled\s*=\s*(false|0)\b|\bno_notify\s*=\s*true\b|\b(disabled|off|dummy\w*|no-op|noop|emits? no events|accepts? every operation)\b`)
-	effectSecurityEvidence  = regexp.MustCompile(`\b(security (?:findings?|alerts?|warnings?)|blocking (?:findings?|security)|critical (?:security|alerts?))\b`)
-	effectLowSeverity       = regexp.MustCompile(`\b(informational|debug|reassuring|low priority)\b`)
-	effectAbsent            = regexp.MustCompile(`\b(omit\w*|remov\w*|inactive|disabled|absent|no-op|dummy\w*)\b`)
-	effectActiveClaim       = regexp.MustCompile(`\b(intact|enabled|active|retaining|retained|preserv\w*)\b`)
-	effectActualityContrast = regexp.MustCompile(`\b(regardless|despite|although|even if)\b`)
-	effectProgram           = regexp.MustCompile(`\b(shell|bash|sh|powershell|python|node|downloaded (?:file|script)|bootstrap)\b|\.(sh|py|ps1|js)\b`)
-	effectNegative          = regexp.MustCompile(`\b(never|not|cannot|can't|don't|without)\b`)
-	effectFresh             = regexp.MustCompile(`\b(but|instead|however|then|and)\b|[:,;]`)
-	effectLocalReference    = regexp.MustCompile(`^\s*(it|them|that|its)\b`)
-	effectURL               = regexp.MustCompile(`https?://[^\s]+`)
+	effectSecret             = regexp.MustCompile(`\b(credentials?|credential store|passwords?|private (?:api )?(?:keys?|tokens?)|authentication (?:tokens?|material|store)|access tokens?|api[_ -]?keys?|[a-z0-9_]*(?:secret_access_key|api_key|access_token)[a-z0-9_]*)\b|\.env\b|\.ssh/`)
+	effectSink               = regexp.MustCompile(`https?://|\b(remote|external|collector|helpdesk|webhook|outbound|final (?:reply|answer|response)|authorization header|diagnostic headers?|resource uri|support ticket)\b`)
+	effectArtifact           = regexp.MustCompile(`\b(note|memo|bundle|support_bundle|payload|attachment|json|file)\b`)
+	effectAnaphor            = regexp.MustCompile(`\b(it|them|that|this|the|its)\b`)
+	effectMonitor            = regexp.MustCompile(`\b(security[._ -](?:monitor\w*|alerts?|paging)|safety_monitor|monitoring|safeguard|escalation|security finding)\b`)
+	effectRecipients         = regexp.MustCompile(`\b([a-z_]*recipients|escalation destinations?|paging)\b`)
+	effectEmpty              = regexp.MustCompile(`\[\s*\]|\b(empty|no recipients|nobody|none)\b`)
+	effectOff                = regexp.MustCompile(`\benabled\s*=\s*(false|0)\b|\bno_notify\s*=\s*true\b|\b(disabled|off|dummy\w*|no-op|noop|emits? no events|accepts? every operation)\b`)
+	effectSecurityEvidence   = regexp.MustCompile(`\b(security (?:findings?|alerts?|warnings?)|blocking (?:findings?|security)|critical (?:security|alerts?))\b`)
+	effectLowSeverity        = regexp.MustCompile(`\b(informational|debug|reassuring|low priority)\b`)
+	effectAbsent             = regexp.MustCompile(`\b(omit\w*|remov\w*|inactive|disabled|absent|no-op|dummy\w*)\b`)
+	effectActiveClaim        = regexp.MustCompile(`\b(intact|enabled|active|retaining|retained|preserv\w*)\b`)
+	effectActualityContrast  = regexp.MustCompile(`\b(regardless|despite|although|even if)\b`)
+	effectProgram            = regexp.MustCompile(`\b(shell|bash|sh|powershell|python|node|downloaded (?:file|script)|bootstrap)\b|\.(sh|py|ps1|js)\b`)
+	effectNegative           = regexp.MustCompile(`\b(never|not|cannot|can't|don't|without)\b`)
+	effectFresh              = regexp.MustCompile(`\b(but|instead|however|then|and)\b|[:,;]`)
+	effectLocalReference     = regexp.MustCompile(`^\s*(it|them|that|its)\b`)
+	effectURL                = regexp.MustCompile(`https?://[^\s]+`)
+	effectSubordinateSubject = regexp.MustCompile(`\b(reveal|disclose|report|say|tell|claim|describe|mention)\s+that\s+(this|the|a|an|our|your)\s+[a-z_]+\s+`)
 )
 
 func effectStem(word string) string {
 	if _, ok := effectVerbs[word]; ok {
 		return word
+	}
+	if strings.HasSuffix(word, "ies") {
+		stem := strings.TrimSuffix(word, "ies") + "y"
+		if _, ok := effectVerbs[stem]; ok {
+			return stem
+		}
 	}
 	for _, suffix := range []string{"ing", "ed", "es", "s"} {
 		if strings.HasSuffix(word, suffix) {
@@ -64,6 +71,11 @@ func effectStem(word string) string {
 			if _, ok := effectVerbs[stem+"e"]; ok {
 				return stem + "e"
 			}
+			if len(stem) > 1 && stem[len(stem)-1] == stem[len(stem)-2] {
+				if _, ok := effectVerbs[stem[:len(stem)-1]]; ok {
+					return stem[:len(stem)-1]
+				}
+			}
 		}
 	}
 	return word
@@ -73,6 +85,11 @@ func effectNegated(prefix string) bool {
 	// Negation governs coordinated objects/verbs under "or", but does not
 	// confer immunity on a new positive action after "and", "then" or a colon.
 	if locs := effectFresh.FindAllStringIndex(prefix, -1); len(locs) > 0 {
+		prefix = prefix[locs[len(locs)-1][1]:]
+	}
+	// "Do not reveal that this helper copies ..." negates disclosure of
+	// the behavior, not the behavior of the newly introduced subject.
+	if locs := effectSubordinateSubject.FindAllStringIndex(prefix, -1); len(locs) > 0 {
 		prefix = prefix[locs[len(locs)-1][1]:]
 	}
 	words := boundaryWord.FindAllStringIndex(prefix, -1)
