@@ -13,6 +13,14 @@ import (
 // Changing this production source also changes the detector identity.
 const vendorAdvisoryDate = "2026-10-23"
 const postgresAdvisory = "https://github.com/awslabs/mcp/security/advisories/GHSA-fph8-pg5w-78fv"
+const tensorlakeAdvisory = "https://github.com/tensorlakeai/tensorlake/security/advisories/GHSA-8g63-53c9-65j2"
+
+// Exact reviewed disagreement, not an allowlist or a claim about other
+// versions/advisories. The feed warning is retained at its original severity.
+func reviewedApplicabilityConflict(pkg cve.Package, id string) bool {
+	return pkg.Ecosystem == "npm" && pkg.Name == "tensorlake" && pkg.Version == "0.5.143" &&
+		(id == "MAL-2026-17650" || id == "GHSA-rqxj-g25x-4v9v")
+}
 
 var pypiNameSeparators = regexp.MustCompile(`[._-]+`)
 

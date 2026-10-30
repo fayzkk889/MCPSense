@@ -3,6 +3,7 @@ package checks
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/fayzkk889/MCPSense/internal/cve"
@@ -77,32 +78,42 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 			location = models.Location{File: res.Package.File, ToolName: res.Package.Server}
 		}
 		for _, v := range res.Vulns {
-			sev := severityFromCVSS(v.CVSS)
-			pinNote := ""
-			if res.Package.Version == "" {
-				pinNote = " The installed version is unresolved; this is a package-level advisory candidate and may not apply. Resolve the installed version before deciding whether it is affected."
-			}
-			remediation := "Review this advisory's package-specific affected and patched branches, deployment prerequisites and required configuration. Resolve and pin an appropriate fixed version, apply the required settings, then retest. Upgrading alone may not remediate the issue."
-			summary := v.Summary
-			if summary == "" {
-				summary = "See the advisory for details."
-			}
-			source := "OSV"
-			if v.Source != "" {
-				source = v.Source + " (reviewed " + v.ReviewedAt + ")"
-			}
-			findings = append(findings, models.Finding{
-				ID:          "CVE-001",
-				Title:       fmt.Sprintf("%s in %q (%s)", v.ID, res.Package.Name, res.Package.Server),
-				Description: fmt.Sprintf("Component %q declares %s%s. Advisory %s from %s: %s%s", res.Package.Server, res.Package.Name, versionSuffix(res.Package.Version), v.ID, source, summary, pinNote),
-				Severity:    sev,
-				Category:    models.CategorySecurity,
-				Location:    location,
-				Remediation: remediation,
-			})
+			findings = append(findings, advisoryFinding(res.Package, v, location))
 		}
 	}
 	return findings
+}
+
+func advisoryFinding(pkg cve.Package, v cve.Vuln, location models.Location) models.Finding {
+	evidence := &models.AdvisoryEvidence{ID: v.ID, Applicability: "reported_affected", FeedURL: "https://osv.dev/vulnerability/" + url.PathEscape(v.ID)}
+	pinNote := ""
+	if pkg.Version == "" {
+		evidence.Applicability = "version_unresolved"
+		pinNote = " The installed version is unresolved; this is a package-level advisory candidate and may not apply. Resolve the installed version before deciding whether it is affected."
+	}
+	summary := v.Summary
+	if summary == "" {
+		summary = "See the advisory for details."
+	}
+	source := "OSV"
+	if v.Source != "" {
+		source = v.Source + " (reviewed " + v.ReviewedAt + ")"
+		evidence.FeedURL = v.Source
+	}
+	f := models.Finding{ID: "CVE-001", Title: fmt.Sprintf("%s in %q (%s)", v.ID, pkg.Name, pkg.Server),
+		Description: fmt.Sprintf("Component %q declares %s%s. Advisory %s from %s: %s%s", pkg.Server, pkg.Name, versionSuffix(pkg.Version), v.ID, source, summary, pinNote),
+		Severity:    severityFromCVSS(v.CVSS), Category: models.CategorySecurity, Location: location, Advisory: evidence,
+		Remediation: "Review this advisory's package-specific affected and patched branches, deployment prerequisites and required configuration. Resolve and pin an appropriate fixed version, apply the required settings, then retest. Upgrading alone may not remediate the issue."}
+	if reviewedApplicabilityConflict(pkg, v.ID) {
+		evidence.Applicability = "conflicting_sources"
+		evidence.ReviewedURL, evidence.ReviewedAt = tensorlakeAdvisory, "2026-10-30"
+		evidence.ReviewNote = "The publisher identifies 0.5.144 as compromised and states 0.5.143 is unaffected by that compromise. OSV reports this exact 0.5.143 declaration as affected. Applicability is unresolved; this is not confirmation of infection or proof of safety."
+		f.Confidence = "unresolved_applicability"
+		f.Title = fmt.Sprintf("Advisory applicability conflict: %s for %q (%s)", v.ID, pkg.Name, pkg.Server)
+		f.Description = fmt.Sprintf("Component %q declares %s%s. %s Publisher review: %s (reviewed %s). Feed evidence: %s. Feed summary: %s", pkg.Server, pkg.Name, versionSuffix(pkg.Version), evidence.ReviewNote, evidence.ReviewedURL, evidence.ReviewedAt, evidence.FeedURL, summary)
+		f.Remediation = "Review both cited sources and verify the installed artifact before making a trust decision. The warning and its severity are retained; no advisory or version was silently excluded. Do not infer that other versions or other advisories are cleared."
+	}
+	return f
 }
 
 func versionSuffix(version string) string {

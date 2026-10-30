@@ -183,6 +183,19 @@ func (r *SARIFReporter) Write(report *models.Report, w io.Writer) error {
 		if f.Confidence != "" {
 			result.Properties = map[string]string{"mcpsenseConfidence": f.Confidence}
 		}
+		if f.Advisory != nil {
+			if result.Properties == nil {
+				result.Properties = map[string]string{}
+			}
+			result.Properties["advisoryId"] = f.Advisory.ID
+			result.Properties["advisoryApplicability"] = f.Advisory.Applicability
+			result.Properties["advisoryFeedURL"] = f.Advisory.FeedURL
+			if f.Advisory.ReviewedURL != "" {
+				result.Properties["advisoryReviewedURL"] = f.Advisory.ReviewedURL
+				result.Properties["advisoryReviewedAt"] = f.Advisory.ReviewedAt
+				result.Properties["advisoryReviewNote"] = f.Advisory.ReviewNote
+			}
+		}
 
 		// Build location based on what info is available.
 		if f.Location.File != "" {

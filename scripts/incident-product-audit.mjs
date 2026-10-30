@@ -70,11 +70,17 @@ if(process.env.MCPSENSE_INCIDENT_ONLINE==='1') {
     const file=save('tensorlake-'+version+'.json',{lockfileVersion:3,packages:{'':{name:'synthetic-declaration',dependencies:{tensorlake:version}},'node_modules/tensorlake':{version,resolved:'https://registry.npmjs.org/tensorlake/-/tensorlake-'+version+'.tgz'}}});
     r=run('Tensorlake declaration '+version,['scan',file,'--mode','dependencies','--no-baseline','--format','json']);
     try{report=JSON.parse(r.stdout);}catch{report=null;}
-    const observed={version,exit:r.exit,coverage:report?.coverage?.advisories,findings:report?.findings?.map(f=>({id:f.id,title:f.title,description:f.description})),stderr:r.stderr};
+    const observed={version,exit:r.exit,coverage:report?.coverage?.advisories,findings:report?.findings?.map(f=>({id:f.id,title:f.title,description:f.description,severity:f.severity,confidence:f.confidence,advisory:f.advisory})),stderr:r.stderr};
     fs.writeFileSync(path.join(workspace,'tensorlake-'+version+'-observed.json'),JSON.stringify(observed,null,2));
     check('Tensorlake '+version+' online lookup completes',[0,1].includes(r.exit)&&report?.coverage?.advisories==='completed',r.stderr);
-    const malware=report?.findings?.some(f=>f.title.includes('MAL-2026-17650'));
-    check('Tensorlake '+version+' malware applicability agrees with publisher',version==='0.5.144'?malware===true:malware===false,'Publisher GHSA-8g63-53c9-65j2 lists 0.5.144 as affected and 0.5.143 as unaffected; a conflicting upstream advisory needs explicit review, not silent suppression.');
+    const matches=report?.findings?.filter(f=>f.advisory?.id==='MAL-2026-17650'||f.title.includes('MAL-2026-17650'))||[];
+    // The older audit asserted absence of this feed warning on 0.5.143. The
+    // release now requires truthful source disagreement instead: keep the
+    // warning and severity, expose both sources, and never claim applicability
+    // established. Historical failed results are preserved, not relabelled.
+    const reviewedConflict=f=>f.advisory?.applicability==='conflicting_sources'&&f.advisory.reviewed_url==='https://github.com/tensorlakeai/tensorlake/security/advisories/GHSA-8g63-53c9-65j2'&&f.advisory.feed_url==='https://osv.dev/vulnerability/MAL-2026-17650'&&f.advisory.reviewed_at==='2026-10-30'&&f.confidence==='unresolved_applicability'&&['high','critical'].includes(f.severity)&&/conflict/i.test(f.title)&&/unaffected/.test(f.description);
+    const accurate=version==='0.5.144'?r.exit===1&&matches.some(f=>f.advisory?.applicability==='reported_affected'&&['high','critical'].includes(f.severity)):matches.length===0||r.exit===1&&matches.every(reviewedConflict);
+    check('Tensorlake '+version+' applicability is accurate or explicitly unresolved',accurate,'Affected 0.5.144 must stay flagged. For 0.5.143 a still-conflicting feed warning must retain severity and machine-readable publisher/feed evidence; no inferred safety or silent suppression.');
   }
   const requirements=path.join(workspace,'requirements.txt');fs.writeFileSync(requirements,'litellm==1.107.0\n');
   r=run('unsupported Python inventory',['scan',requirements,'--mode','dependencies','--offline','--no-baseline']);
