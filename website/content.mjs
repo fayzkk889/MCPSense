@@ -4,7 +4,7 @@ export const product = {
   github: 'https://github.com/fayzkk889/MCPSense',
   stable: '0.4.2',
   verified: '2026-10-27',
-  candidate: null,
+  candidate: '0.4.3',
 };
 
 export const articles = [
@@ -65,6 +65,18 @@ export const articles = [
 ];
 
 export const releases = [
+  {
+    version: '0.4.3', status: 'Candidate', date: null, title: 'Trace the requested effect.',
+    intro: 'A tested follow-up for credential relays, monitoring changes and clearer advisory applicability. Check the public channels for availability.',
+    items: [
+      'Bounded source, transform and destination analysis for credential transfers through notes and encoded bundles.',
+      'Monitoring-state, escalation, reporting-integrity and downloaded-code signals, with benign and negation controls.',
+      '232 frozen native/npm description observations and deterministic metadata-reference workflows.',
+      'Explicit publisher/feed disagreement evidence without suppressing the advisory warning.',
+    ],
+    note: 'Regression evidence does not establish universal detection or runtime authorization.',
+    link: 'https://github.com/fayzkk889/MCPSense/pull/19', label: 'Review the candidate',
+  },
   {
     version: '0.4.2', status: 'Released', date: '2026-10-27', title: 'Stronger review boundaries.',
     intro: 'Available through npm and Go. Update with your preferred installation command.',
