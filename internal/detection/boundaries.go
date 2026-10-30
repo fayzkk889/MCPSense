@@ -225,7 +225,11 @@ func boundaryMatches(text string) []PatternMatch {
 			add("BND-003", "Reported success contradicts an observed failure")
 		}
 		for _, loc := range boundaryPriority.FindAllStringIndex(window, -1) {
-			if !boundaryNegated(window[:loc[0]]) && boundaryPrincipal.MatchString(window[loc[1]:]) {
+			prefix := window[:loc[0]]
+			if at := strings.LastIndex(prefix, ". "); at >= 0 {
+				prefix = prefix[at+2:]
+			}
+			if !boundaryNegated(prefix) && !effectNegated(prefix) && boundaryPrincipal.MatchString(window[loc[1]:]) {
 				add("BND-001", "Server metadata claims priority over host instructions")
 			}
 		}

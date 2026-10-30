@@ -56,14 +56,22 @@ var publicKeyMaterial = regexp.MustCompile(`(?i)\bpublic\s+(?:(?:signing|verific
 // Only the negated-leading-action check needs to distinguish a fresh rerouting
 // verb from the remaining object of "never retry". The ordinary permission
 // relation stays broad so uncatalogued verbs do not weaken existing coverage.
-func remainingIntentAfterNegatedAction(text string) bool {
-	for _, m := range rawIntentMatches(text) {
-		if m.PatternID == "INT-005" && !permissionReroute.MatchString(text) {
+func remainingIntentAfterNegatedAction(text string, negatedEnd int) bool {
+	activeDisclosure := false
+	for _, m := range legacyIntentMatches(text) {
+		activeDisclosure = activeDisclosure || m.PatternID == "INT-003"
+	}
+	for _, m := range legacyIntentMatches(text[negatedEnd:]) {
+		if m.PatternID == "INT-003" && !activeDisclosure {
+			continue
+		}
+		if m.PatternID == "INT-005" && !permissionReroute.MatchString(text[negatedEnd:]) {
 			continue
 		}
 		return true
 	}
-	return false
+	// Effect/event analyses retain the original negation and object scope.
+	return len(boundaryMatches(text))+len(effectMatches(text)) > 0
 }
 
 func legacyIntentMatches(text string) []PatternMatch {
@@ -77,6 +85,18 @@ func legacyIntentMatches(text string) []PatternMatch {
 			screened = publicKeyMaterial.ReplaceAllString(text, "")
 		}
 		features[f.name] = f.pattern.MatchString(screened)
+		if f.name == "disclose" {
+			// An object/source and destination cannot turn a coordinated
+			// prohibition into an active disclosure. Preserve polarity before
+			// combining this action with the other relational features.
+			features[f.name] = false
+			for _, loc := range f.pattern.FindAllStringIndex(screened, -1) {
+				if !effectNegated(screened[:loc[0]]) {
+					features[f.name] = true
+					break
+				}
+			}
+		}
 	}
 	has := func(keys ...string) bool {
 		for _, k := range keys {
@@ -131,7 +151,8 @@ func rawIntentMatches(text string) []PatternMatch {
 			}
 		}
 	}
-	return append(out, boundaryMatches(text)...)
+	out = append(out, boundaryMatches(text)...)
+	return append(out, effectMatches(text)...)
 }
 
 func intentMatches(content string) []PatternMatch {

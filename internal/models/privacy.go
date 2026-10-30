@@ -54,6 +54,12 @@ func (r *Report) ProtectedCopy(known []string) *Report {
 	}
 	for i := range out.Findings {
 		f := &out.Findings[i]
+		if f.Advisory != nil {
+			a := *f.Advisory
+			a.ID, a.Applicability, a.FeedURL = protect(a.ID), protect(a.Applicability), protect(a.FeedURL)
+			a.ReviewedURL, a.ReviewedAt, a.ReviewNote = protect(a.ReviewedURL), protect(a.ReviewedAt), protect(a.ReviewNote)
+			f.Advisory = &a
+		}
 		f.Title = protect(f.Title)
 		f.Description = protect(f.Description)
 		f.Remediation = protect(f.Remediation)

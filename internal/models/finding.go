@@ -19,18 +19,30 @@ type Location struct {
 
 // Finding represents a single vulnerability or issue discovered during scanning.
 type Finding struct {
-	Fingerprint string   `json:"fingerprint,omitempty"`
-	Confidence  string   `json:"confidence,omitempty"`
-	ID          string   `json:"id"`
-	Title       string   `json:"title"`
-	Description string   `json:"description"`
-	Severity    Severity `json:"severity"`
-	Category    Category `json:"category"`
-	OWASP       string   `json:"owasp,omitempty"`
-	Location    Location `json:"location"`
-	Remediation string   `json:"remediation"`
-	DiffOld     string   `json:"diff_old,omitempty"`
-	DiffNew     string   `json:"diff_new,omitempty"`
+	Advisory    *AdvisoryEvidence `json:"advisory,omitempty"`
+	Fingerprint string            `json:"fingerprint,omitempty"`
+	Confidence  string            `json:"confidence,omitempty"`
+	ID          string            `json:"id"`
+	Title       string            `json:"title"`
+	Description string            `json:"description"`
+	Severity    Severity          `json:"severity"`
+	Category    Category          `json:"category"`
+	OWASP       string            `json:"owasp,omitempty"`
+	Location    Location          `json:"location"`
+	Remediation string            `json:"remediation"`
+	DiffOld     string            `json:"diff_old,omitempty"`
+	DiffNew     string            `json:"diff_new,omitempty"`
+}
+
+// AdvisoryEvidence separates a feed match from a confirmed applicability
+// decision. Conflicts retain both sources and require operator review.
+type AdvisoryEvidence struct {
+	ID            string `json:"id"`
+	Applicability string `json:"applicability"`
+	FeedURL       string `json:"feed_url"`
+	ReviewedURL   string `json:"reviewed_url,omitempty"`
+	ReviewedAt    string `json:"reviewed_at,omitempty"`
+	ReviewNote    string `json:"review_note,omitempty"`
 }
 
 // AllCategories returns all finding categories.

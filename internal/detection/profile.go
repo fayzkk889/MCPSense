@@ -10,7 +10,7 @@ import (
 // Source identity is an equivalence guard, not a signature or proof that a
 // report is authentic. Keep this list in sync with production detection files.
 //
-//go:embed patterns.go injection.go mcp_vectors.go directives.go profile.go intent.go boundaries.go
+//go:embed patterns.go injection.go mcp_vectors.go directives.go profile.go intent.go boundaries.go effects.go
 var detectorSources embed.FS
 
 var sourceProfile = SourceDigest(detectorSources)

@@ -5,6 +5,7 @@ import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { releaseState, compareVersions, versionParts } from '../src/releases.js';
+import { product } from '../content.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 execFileSync(process.execPath, [join(root,'build.mjs')]);
@@ -70,15 +71,21 @@ test('release display requires two valid, matching public release channels', () 
   assert.equal(compareVersions('0.4.1','v0.4.1'),0);
 });
 
-test('the published 0.4.2 snapshot retires the candidate and documents its public features', async () => {
+test('the published snapshot and separate candidate accurately reflect release state', async () => {
   const changelog = await readFile(join(dist,'changelog/index.html'),'utf8');
-  assert.doesNotMatch(changelog,/data-candidate-entry|Unreleased candidate/);
-  assert.doesNotMatch(changelog,/Not yet available through the public latest install commands/);
-  assert.match(changelog,/releases\/tag\/v0\.4\.2/);
+  if (product.candidate) {
+    assert.ok(compareVersions(product.candidate,product.stable)>0);
+    assert.match(changelog,/data-candidate-entry/);
+    assert.match(changelog,/Unreleased candidate/);
+  } else {
+    assert.doesNotMatch(changelog,/data-candidate-entry|Unreleased candidate/);
+    assert.doesNotMatch(changelog,/Not yet available through the public latest install commands/);
+  }
+  assert.ok(changelog.includes('releases/tag/v'+product.stable));
   const snapshot = JSON.parse(await readFile(join(dist,'assets/release.json'),'utf8'));
-  assert.equal(snapshot.stable,'0.4.2');
-  assert.equal(snapshot.candidate,null);
-  assert.match(changelog,/Release snapshot · v0\.4\.2/);
+  assert.equal(snapshot.stable,product.stable);
+  assert.equal(snapshot.candidate,product.candidate);
+  assert.ok(changelog.includes('Release snapshot · v'+product.stable));
   const docs = await readFile(join(dist,'docs/index.html'),'utf8');
   assert.match(docs,/--require-metadata-baseline/);
   assert.match(docs,/security_assessment/);
