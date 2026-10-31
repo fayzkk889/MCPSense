@@ -1,5 +1,7 @@
 # Release readiness — 0.4.3 published
 
+**Fresh product-test verdict, 31 October:** the [0.4.3 user audit](product-use-audit-2026-10-31.md) passes existing product workflows but fails fresh hostile/benign metadata acceptance, identically through npm and native Go. Representative misses and false alarms also reproduce through live discovery. The historical publication receipts below establish delivery, not general detection reliability or a new security-acceptance all-clear.
+
 Verified 31 October 2026. PR #19 is merged and public npm, GitHub and Go now deliver **0.4.3** from tagged source `09f8022f300880244c4f91a961fbd59c243506c9`. The [0.4.3 release record](release-0.4.3-2026-10-30.md) contains canonical artifact identity, hosted checks, actual public installation and product evidence. MIT and the independent npm/Go installation routes remain unchanged.
 
 The [27 October public 0.4.2 failures](product-audit-2026-10-27.md) and [28 October investigation](detection-effects-2026-10-28.md) remain historical evidence. Version 0.4.3 corrects those reproduced description failures and passes all 232 frozen observations and 12 required-reference journeys through native Go and the exact installed npm artifact. The Tensorlake control now requires explicit retained source-conflict evidence rather than suppressing the feed warning; all 87 expert checks pass. These bounded regressions do not establish universal detection or runtime authorization.
