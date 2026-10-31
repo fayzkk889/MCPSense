@@ -2,9 +2,9 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.4.2',
-  verified: '2026-10-27',
-  candidate: '0.4.3',
+  stable: '0.4.3',
+  verified: '2026-10-31',
+  candidate: null,
 };
 
 export const articles = [
@@ -66,8 +66,8 @@ export const articles = [
 
 export const releases = [
   {
-    version: '0.4.3', status: 'Candidate', date: null, title: 'Trace the requested effect.',
-    intro: 'A tested follow-up for credential relays, monitoring changes and clearer advisory applicability. Check the public channels for availability.',
+    version: '0.4.3', status: 'Released', date: '2026-10-31', title: 'Trace the requested effect.',
+    intro: 'Available through npm and Go. Stronger review of credential relays, monitoring changes and advisory applicability.',
     items: [
       'Bounded source, transform and destination analysis for credential transfers through notes and encoded bundles.',
       'Monitoring-state, escalation, reporting-integrity and downloaded-code signals, with benign and negation controls.',
@@ -75,7 +75,7 @@ export const releases = [
       'Explicit publisher/feed disagreement evidence without suppressing the advisory warning.',
     ],
     note: 'Regression evidence does not establish universal detection or runtime authorization.',
-    link: 'https://github.com/fayzkk889/MCPSense/pull/19', label: 'Review the candidate',
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.3', label: 'Read the release notes',
   },
   {
     version: '0.4.2', status: 'Released', date: '2026-10-27', title: 'Stronger review boundaries.',
