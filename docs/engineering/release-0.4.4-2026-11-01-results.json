@@ -1,0 +1,270 @@
+{
+  "version": "0.4.4",
+  "source": "7ae44654f6c2e7f6c578437610cd49f65b12ed9d",
+  "workflow": 41294901803,
+  "artifact": 13078828015,
+  "sha256": "975f91bf00b7f022e6d2e40e87d12d8a8696242d216444efe7f3ebacbe9233d4",
+  "integrity": "sha512-2fsM25eMHk3imxSsoQHbvRApR7f/5VBoYDWI8WPOWS9X+mhb0d154xP80GYJ7eN5TA9UH9aV1VMSaJI+K3oudA==",
+  "manifest": {
+    "version": "0.4.4",
+    "toolchain": "go version go1.27.3 linux/amd64",
+    "format": "go-js-wasm-v1",
+    "files": {
+      "mcpsense.wasm": "d2fb3440b1d132bd3bf8527153cd8997d2b0c43c42a73e8ba7fb7cfa87084a5a",
+      "wasm_exec.cjs": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
+      "host.cjs": "0bb96ce5386e390d592902fa0a18060c91894d9f31b006d84f017443ca73492b",
+      "LICENSE.Go": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+    }
+  },
+  "observationsPerRoute": 718,
+  "countsPerRoute": {
+    "TP": 353,
+    "FN": 0,
+    "FP": 0,
+    "TN": 365
+  },
+  "runtimeParity": true,
+  "corpora": [
+    {
+      "sha256": "8e4e48f56dba8c47becddb07d159d996682b7068cc95ed7d9663deb8c9764ce3",
+      "counts": {
+        "TP": 26,
+        "FN": 0,
+        "FP": 0,
+        "TN": 38
+      }
+    },
+    {
+      "sha256": "c35976e18fbbeb3e71a845ca5534cc29273cb9d5636552069e7b786ff2cec815",
+      "counts": {
+        "TP": 32,
+        "FN": 0,
+        "FP": 0,
+        "TN": 32
+      }
+    },
+    {
+      "sha256": "d6551d39952aa6526caf7baa5977a15fe653b4a8f996c794c905663c75197167",
+      "counts": {
+        "TP": 12,
+        "FN": 0,
+        "FP": 0,
+        "TN": 12
+      }
+    },
+    {
+      "sha256": "ed746a5ebb7900b4f9813f94704c13f1f18f85bf11bf099eaeb36cf245f068a4",
+      "counts": {
+        "TP": 36,
+        "FN": 0,
+        "FP": 0,
+        "TN": 36
+      }
+    },
+    {
+      "sha256": "5b761d6f78d8eb870f37e0200940ef542233d546bd560c55bab79afecf00c530",
+      "counts": {
+        "TP": 24,
+        "FN": 0,
+        "FP": 0,
+        "TN": 24
+      }
+    },
+    {
+      "sha256": "7235ceb6f342a80a9ae1e336a43aeeb490f5de913adee352147846b41eb026c8",
+      "counts": {
+        "TP": 51,
+        "FN": 0,
+        "FP": 0,
+        "TN": 51
+      }
+    },
+    {
+      "sha256": "8546a116b29bfddb1da920f17e63542f267e8ee731c72694992444e6a9b726f2",
+      "counts": {
+        "TP": 72,
+        "FN": 0,
+        "FP": 0,
+        "TN": 72
+      }
+    },
+    {
+      "sha256": "2027914f6a38e4c6349b793bcfbab1adc3c494c8bc505c18fdac62c945630683",
+      "counts": {
+        "TP": 40,
+        "FN": 0,
+        "FP": 0,
+        "TN": 40
+      }
+    },
+    {
+      "sha256": "1602234f0f3e33f833fdb9dbdc08c61d60b40204bfd5bea2e4529195c91195ea",
+      "counts": {
+        "TP": 60,
+        "FN": 0,
+        "FP": 0,
+        "TN": 60
+      }
+    }
+  ],
+  "live": {
+    "counts": {
+      "TP": 6,
+      "FN": 0,
+      "FP": 0,
+      "TN": 6
+    },
+    "noToolsCalled": true
+  },
+  "expert": {
+    "pass": 87,
+    "fail": 0,
+    "online": true
+  },
+  "publicGoSha256": "439acb2f0a6245730550b207643284a73efd9e00afb1aecf767d3b0b242ba786",
+  "scope": "Repeated authored regressions and real CLI journeys; not independent field accuracy or runtime enforcement.",
+  "reviewedHead": "a761250a799591164d51b9d7800a2893f50a7d78",
+  "reviewedAndMergedTreesIdentical": true,
+  "published": true,
+  "github": {
+    "url": "https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.4",
+    "publishedAt": "2026-11-01T10:03:26Z",
+    "releaseWorkflowPassed": true,
+    "mergedSourceCIPassed": true,
+    "publicArchiveGatePassed": true
+  },
+  "publicNpm": {
+    "version": "0.4.4",
+    "sha256": "975f91bf00b7f022e6d2e40e87d12d8a8696242d216444efe7f3ebacbe9233d4",
+    "integrity": "sha512-2fsM25eMHk3imxSsoQHbvRApR7f/5VBoYDWI8WPOWS9X+mhb0d154xP80GYJ7eN5TA9UH9aV1VMSaJI+K3oudA==",
+    "byteExactCanonical": true,
+    "anonymousInstall": true,
+    "normalInstallScripts": true,
+    "commands": 5,
+    "versionCheck": "mcpsense v0.4.4\nLatest published GitHub release: 0.4.4\nLatest npm version: 0.4.4\nInstalled version matches both published channels.\n",
+    "checkedAt": "2026-11-01T14:01:26.608Z"
+  },
+  "website": {
+    "productionVersion": "350457f5",
+    "previousVersion": "8848580b",
+    "readyPercent": 100,
+    "files": 20,
+    "uncompressedBytes": 205270,
+    "publicPhoneChecks": {
+      "width": 390,
+      "pages": 2,
+      "horizontalOverflow": false,
+      "oneMainHeading": true,
+      "navigationClosedAfterLink": true
+    },
+    "origin": "https://mcpsense.site",
+    "checked_at": "2026-11-01T14:02:48.779Z",
+    "pages": [
+      {
+        "path": "/404.html",
+        "status": 200,
+        "heading": "This page isn’t in the picture."
+      },
+      {
+        "path": "/blog/a-clean-scan-is-not-a-trust-decision/",
+        "status": 200,
+        "heading": "A clean scan is not a trust decision."
+      },
+      {
+        "path": "/blog/",
+        "status": 200,
+        "heading": "Notes from the trust boundary."
+      },
+      {
+        "path": "/blog/npm-without-go/",
+        "status": 200,
+        "heading": "One command. Your choice of toolchain."
+      },
+      {
+        "path": "/blog/the-mcp-trust-boundary/",
+        "status": 200,
+        "heading": "MCP security starts at the trust boundary."
+      },
+      {
+        "path": "/changelog/",
+        "status": 200,
+        "heading": "A record of what changed."
+      },
+      {
+        "path": "/docs/",
+        "status": 200,
+        "heading": "Your first MCP security inspection."
+      },
+      {
+        "path": "/",
+        "status": 200,
+        "heading": "Inspect the tools. Question the trust."
+      }
+    ],
+    "assets": [
+      {
+        "path": "/assets/app.js",
+        "comparison": "exact",
+        "sha256": "0adef1c5da73cf8f4872f53b682f774b9fd636597553677ab36f374f5bc66342"
+      },
+      {
+        "path": "/assets/favicon.svg",
+        "comparison": "exact",
+        "sha256": "70a460805cef60fefec0f8cba514a60cfc6a3a6a67e20551801527bd4a696072"
+      },
+      {
+        "path": "/assets/fonts/ibm-plex-sans-latin.woff2",
+        "comparison": "exact",
+        "sha256": "e2291e842cf5af167122a22881a740c7f2dda7716f1e8cd76680264f4a859470"
+      },
+      {
+        "path": "/assets/fonts/OFL.txt",
+        "comparison": "exact",
+        "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+      },
+      {
+        "path": "/assets/motion.js",
+        "comparison": "exact",
+        "sha256": "0c1bd9da4075577b260190b460b2525ad6be72117cd70efd54a47ceef1f0688a"
+      },
+      {
+        "path": "/assets/release.json",
+        "comparison": "exact",
+        "sha256": "f095143a139940863aafac9edb7d1cb44b0214b42333e97a89b4b6071f9ad9f5"
+      },
+      {
+        "path": "/assets/releases.js",
+        "comparison": "exact",
+        "sha256": "124ed6dab0c078afaf326e61936efcd3fc99ca19b10cae067557976fa2620ae8"
+      },
+      {
+        "path": "/assets/site.css",
+        "comparison": "exact",
+        "sha256": "489b3807c4ef44f7340f5b73f4cb4829559fa7eab173b991ab7e456045c179b4"
+      },
+      {
+        "path": "/feed.xml",
+        "comparison": "exact",
+        "sha256": "0d9c2b538a0f132311277a1c26dd522a2617d560aa21f9d6b0b9903746a96027"
+      },
+      {
+        "path": "/robots.txt",
+        "comparison": "original rules preserved after Cloudflare managed prefix",
+        "sha256": "9b092074167b071a5b0c1871c331d039025dd7f16a312c0a57727b22dc5a2bc3"
+      },
+      {
+        "path": "/sitemap.xml",
+        "comparison": "exact",
+        "sha256": "3ded5750e21e341debfaf764075eb16a84e6010f6e1b09abcea2e2bbe2461046"
+      }
+    ],
+    "headers": {
+      "content-security-policy": "default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com https://registry.npmjs.org https://cloudflareinsights.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "permissions-policy": "camera=(), microphone=(), geolocation=()"
+    },
+    "missing": 404
+  }
+}

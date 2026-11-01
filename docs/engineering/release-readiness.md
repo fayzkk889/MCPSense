@@ -1,6 +1,8 @@
-# Release readiness — 0.4.3 published
+# Release readiness — 0.4.4 published
 
-**Unpublished 0.4.4 candidate, 1 November:** the [root-cause contract](metadata-trust-model-2026-11-01.md) and [candidate verification](metadata-trust-verification-2026-11-01.md) cover shared context, value identity, control effects and explicit incomplete-analysis errors. PR #21 prepares these changes with mandatory native/npm product gates. The public version remains 0.4.3; candidate testing and a branch push are not release approval or publication.
+**Published 0.4.4, 1 November:** [PR #21](https://github.com/fayzkk889/MCPSense/pull/21) is merged and the approved npm/GitHub/Go release delivers shared metadata context, value provenance, control effects and explicit incomplete-analysis errors. The [release record](release-0.4.4-2026-11-01.md) contains publication identities and actual public verification; the [root-cause contract](metadata-trust-model-2026-11-01.md) and [candidate verification](metadata-trust-verification-2026-11-01.md) preserve development evidence and limitations. MIT and the independent installation routes remain unchanged.
+
+## Historical 0.4.3 status and receipts
 
 **Fresh product-test verdict, 31 October:** the [0.4.3 user audit](product-use-audit-2026-10-31.md) passes existing product workflows but fails fresh hostile/benign metadata acceptance, identically through npm and native Go. Representative misses and false alarms also reproduce through live discovery. The historical publication receipts below establish delivery, not general detection reliability or a new security-acceptance all-clear.
 

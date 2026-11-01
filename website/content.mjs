@@ -2,14 +2,14 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.4.3',
-  verified: '2026-10-31',
+  stable: '0.4.4',
+  verified: '2026-11-01',
   candidate: null,
 };
 
 export const articles = [
   {
-    update: '27 October 2026 update: 0.4.2 is now published on npm and GitHub, including the required metadata reference check. The dated discussion below records its preparation; see the changelog for current availability.',
+    update: '27 October 2026 update: 0.4.2 is now published on npm and GitHub, including the required metadata reference check. 1 November update: 0.4.4 adds shared context and value-provenance analysis. The dated discussion below records earlier preparation; see the changelog for current availability.',
     slug: 'the-mcp-trust-boundary', category: 'Security', date: '2026-10-26', minutes: 5,
     title: 'MCP security starts at the trust boundary.',
     excerpt: 'A tool description is data. When it starts making decisions for your agent, something has crossed a boundary.',
@@ -44,7 +44,7 @@ export const articles = [
     ],
   },
   {
-    update: '27 October 2026 update: 0.4.2 is now published on npm and GitHub. Its reproduced-case corrections and separate security assessment are available. The development results and limits below remain historical regression evidence.',
+    update: '27 October 2026 update: 0.4.2 is now published on npm and GitHub. 1 November update: the 0.4.4 release addresses subsequent 0.4.3 audit failures with shared metadata context and value provenance. The development results and limits below remain historical regression evidence.',
     slug: 'a-clean-scan-is-not-a-trust-decision', category: 'Engineering', date: '2026-10-26', minutes: 6,
     title: 'A clean scan is not a trust decision.',
     excerpt: 'What fresh user tests taught us about missed descriptions, regression evidence and the limits of a security score.',
@@ -66,6 +66,18 @@ export const articles = [
 
 export const releases = [
   {
+    version: '0.4.4', status: 'Released', date: '2026-11-01', title: 'Follow the value. Preserve the boundary.',
+    intro: 'Shared metadata context and value provenance address the reproduced misses and benign false alarms in 0.4.3.',
+    items: [
+      'Follow private values through renaming, encoding and reassignment without classifying harmless data by its variable name.',
+      'Distinguish active instructions from prohibitions, observed predicates, quoted operands and fixed placeholders.',
+      'Use shared exfiltration analysis across supported metadata fields and require manual review when analysis capacity is exceeded.',
+      '718 frozen description observations per native/npm route, plus live discovery, required-reference and user workflows.',
+    ],
+    note: 'These authored regression results do not establish field accuracy, future zero misses or runtime authorization.',
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.4', label: 'Read the release notes',
+  },
+  {
     version: '0.4.3', status: 'Released', date: '2026-10-31', title: 'Trace the requested effect.',
     intro: 'Available through npm and Go. Stronger review of credential relays, monitoring changes and advisory applicability.',
     items: [
@@ -74,7 +86,7 @@ export const releases = [
       '232 frozen native/npm description observations and deterministic metadata-reference workflows.',
       'Explicit publisher/feed disagreement evidence without suppressing the advisory warning.',
     ],
-    note: 'Regression evidence does not establish universal detection or runtime authorization.',
+    note: 'A subsequent 0.4.3 audit exposed additional misses and benign false alarms addressed in 0.4.4. Regression evidence does not establish universal detection or runtime authorization.',
     link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.3', label: 'Read the release notes',
   },
   {
