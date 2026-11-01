@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 function managesUpdate(args) {
   const command = args.find(a => !/^--no-update-check(?:=(?:true|false))?$/.test(a));
-  return command === 'update' && !args.some(a => ['--plan-json','--help','-h','--check','--check=true'].includes(a));
+  return command === 'update' && !args.some(a => ['--plan-json','--help','-h'].includes(a));
 }
 function runCLI(args, runtime = require('./wasm.js').runWasm) {
   if (runtime === require('./wasm.js').runWasm && managesUpdate(args)) {

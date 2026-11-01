@@ -25,10 +25,10 @@ if(process.platform!=='win32')fs.symlinkSync('/bin/sh',path.join(tools,'sh'));
 const env={...process.env,PATH:[goDir,npmBin,path.dirname(process.execPath),process.platform==='win32'?system:tools].join(path.delimiter),GOBIN:goDir,
   npm_config_prefix:prefix,npm_config_update_notifier:'false',MCPSENSE_NO_UPDATE_CHECK:'1'};
 assert.equal(spawnSync('go',['version'],{env}).error?.code,'ENOENT','npm installation must not have Go available');
-function commandVersion() {
+function commandVersion(commandEnv=env) {
   return process.platform==='win32'
-    ? run(path.join(system,'WindowsPowerShell/v1.0/powershell.exe'),['-NoProfile','-NonInteractive','-Command','mcpsense version'],{env}).trim()
-    : run('/bin/sh',['-c','mcpsense version'],{env}).trim();
+    ? run(path.join(system,'WindowsPowerShell/v1.0/powershell.exe'),['-NoProfile','-NonInteractive','-Command','mcpsense version'],{env:commandEnv}).trim()
+    : run('/bin/sh',['-c','mcpsense version'],{env:commandEnv}).trim();
 }
 assert.equal(commandVersion(),'mcpsense v0.3.0');
 const pack=JSON.parse(run(process.execPath,[npm,'pack',path.join(root,'npm'),'--json','--ignore-scripts','--pack-destination',stage]))[0];
@@ -41,6 +41,11 @@ assert.deepEqual(fs.readFileSync(path.join(goDir,backups[0])),before);
 assert.equal(fs.readFileSync(path.join(goDir,'unrelated-tool.txt'),'utf8'),'preserved');
 fs.writeFileSync(path.join(stage,'repeat-install.log'),install());assert.equal(commandVersion(),'mcpsense v'+pkg.version);
 assert.equal(fs.readdirSync(goDir).filter(n=>n.includes('.mcpsense-backup-')).length,1);
+// Also exercise a genuinely fresh global installation, without any Go command.
+const freshPrefix=path.join(stage,'fresh npm'),freshBin=process.platform==='win32'?freshPrefix:path.join(freshPrefix,'bin');
+const freshEnv={...env,npm_config_prefix:freshPrefix,PATH:[freshBin,path.dirname(process.execPath),process.platform==='win32'?system:tools].join(path.delimiter)};
+fs.writeFileSync(path.join(stage,'fresh-install.log'),run(process.execPath,[npm,'install','--global','--prefix',freshPrefix,tarball,'--foreground-scripts','--no-audit','--no-fund','--cache',path.join(stage,'cache')],{env:freshEnv}));
+assert.equal(commandVersion(freshEnv),'mcpsense v'+pkg.version);
 if(process.platform==='win32') {
   // Exercise the batch bridge with literal arguments and special characters in its target path.
   const special=path.join(stage,'arguments & percent % wow ! caret ^');fs.mkdirSync(special);
@@ -50,7 +55,7 @@ if(process.platform==='win32') {
   assert.deepEqual(JSON.parse(output),['space value','percent% literal','bang! literal','& literal']);
 }
 const evidence={version:pkg.version,node:process.version,platform:process.platform,plainCommandBefore:'0.3.0',plainCommandAfter:pkg.version,
-  oldBackupSHA256:createHash('sha256').update(before).digest('hex'),backup:backups[0],normalGlobalLifecycle:true,noGoDuringInstallation:true,repeatInstall:true,unrelatedToolPreserved:true,tarball,integrity:pack.integrity};
+  oldBackupSHA256:createHash('sha256').update(before).digest('hex'),backup:backups[0],normalGlobalLifecycle:true,freshGlobalInstall:true,noGoDuringInstallation:true,repeatInstall:true,unrelatedToolPreserved:true,tarball,integrity:pack.integrity};
 fs.writeFileSync(path.join(stage,'results.json'),JSON.stringify(evidence,null,2)+'\n');
 console.log('PASS: ordinary global npm installation replaces old command precedence, preserves backup and survives repeat installation.');
 console.log('Evidence: '+path.join(stage,'results.json'));

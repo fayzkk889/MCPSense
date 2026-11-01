@@ -23,11 +23,12 @@ Windows host: Node 22.23.4, npm 10.9.9, Go 1.27.3; actual command resolution tes
 | Normal global tarball install, copied real Go 0.3.0 first on PATH | Plain command changed from 0.3.0 to candidate 0.4.5 |
 | Installation with no Go on PATH | Passed, Node-only runtime verification and handoff |
 | Repeated installation | Still 0.4.5; exactly one preserved old backup |
+| Fresh global installation without a Go command | Normal lifecycle passed; plain command returned 0.4.5 |
 | Original executable and unrelated Go tools | Backup byte-for-byte identical; unrelated file unchanged |
 | Bridge path/argument quoting | Spaces, percent signs, ampersands, exclamation marks and carets handled |
 | Actual npm self-update in an isolated prefix | Private old-version fixture updated to real published 0.4.4; same prefix; plain command verified |
 | Native Go self-update of the running Windows executable | Private old-version fixture updated to real published 0.4.4; backup retained; plain command verified |
-| Check-only mode | Package/executable unchanged |
+| Check-only mode | Package/executable unchanged for `--check`, `--check=1`, `--check=True`, and repeated boolean flags |
 | Notice with a warm cache | Appeared on stderr; stdout remained the exact version line |
 | Quiet journeys | Eight scenarios passed: explicit flag, CI, environment opt-out, pipes, help, offline, JSON and SARIF |
 | Unknown/newer/equal/foreign-directory/hardlink/ambiguous/locked targets | Safe preservation or idempotent equal-version handling passed |
@@ -43,16 +44,18 @@ Evidence paths under ignored `bin/`:
 
 - `update-045-go-all.log`, `update-045-vet.log`, `update-045-linux-go.log`, `update-045-node-unit.log`.
 - `update-045-npm-product.log`, `npm-product/boundary/`, `update-045-package-smoke.log`, `npm-install-wasm/pack.json`.
-- `update-install-Hr0KPa/results.json`: actual older user binary copied into isolation, normal/repeated installs.
-- `update-command-HNvMUf/results.json`: real npm/native updates, eight quiet journeys and notices. The private fixture is explicitly versioned 0.3.0 for testing the new updater against public 0.4.4; it was not distributed or published.
+- `update-install-MIUxuY/results.json`: actual older user binary copied into isolation, normal/repeated and fresh installs.
+- `update-command-SUmkeu/results.json`: real npm/native updates, eight quiet journeys, four read-only flag forms and notices. The private fixture is explicitly versioned 0.3.0 for testing the new updater against public 0.4.4; it was not distributed or published.
 
-The locally tested archive has 11 explicit files, MIT license, SHA-256 `793c82c8fab6bb89d43c2950cb3663fdea8878bc88df43137357ae0f00ea9a02`, and npm integrity `sha512-62QCorPs68iPOjg8JNQcU7pAC1vUDTtLckqNV1PrUTs4LssXJkgYncsbZQrmmUPbyXgbCeuMI4Tsvq/T+NW6HA==`. This is a validation build, not a canonical released artifact. CI builds its own platform/toolchain-stamped archive.
+The final locally tested archive has 11 explicit files, MIT license, SHA-256 `f205efb5386b43ddb417d83e3720b1f178ffc2f119c25b549202d9283dce6d76`, and npm integrity `sha512-rtGkDnY/DgQcqNpvJXRPzM9mwZut4ZkIk+CVCXFci/SNQcxgaDh0lwn2YGlEJ+IFMmCN0Y4s6q6TvUnELf1Uvw==`. This is a validation build, not a canonical released artifact. CI builds its own platform/toolchain-stamped archive. The final artifact repeated package/user journeys and installation/update acceptance; the full local frozen suite preceded a check-only plan correction, and final CI reruns that suite against its own head build.
 
 ## Intermediate failures retained
 
 The first real self-update exposed verification using the new `--no-update-check` flag against old published 0.4.4, which lacks that flag. Child verification already pipes output, so it now uses the compatible plain `version` command. Another fixture exposed Go 1.27 VCS pseudo-versions: identity parsing now accepts the explicit stable linker version used by source/archive builds, matching the native Go reader, while rejecting unknown development versions.
 
 The initial Linux/macOS install acceptance fixture excluded the operating-system shell along with Go. npm could not launch its lifecycle hook (`spawn sh ENOENT`). The fixture now exposes only the existing OS shell through an isolated tools directory, continues to exclude Go, and leaves the normal lifecycle hook enabled. This was a fixture defect; no release check was weakened or bypassed.
+
+Review also found that duplicating boolean flag parsing in the npm wrapper could treat `--check=1` as an installation request. The validated machine plan now carries Cobra's parsed check-only decision; Node never reinterprets boolean spellings to authorize installation. Four real read-only variants preserved the private fixture before the explicit update. On the corrected Unix-fixture commit, all six Node/OS installation jobs reached their product suites, and all four native Go matrix jobs passed including their race checks. Final PR-head CI remains the release gate.
 
 ## Current user's repair
 

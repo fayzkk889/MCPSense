@@ -14,6 +14,7 @@ type updatePlan struct {
 	Schema    int    `json:"schema_version"`
 	Installed string `json:"installed_version"`
 	Latest    string `json:"latest_version"`
+	CheckOnly bool   `json:"check_only,omitempty"`
 }
 
 // Compare canonical stable components as decimal strings, without integer
@@ -60,7 +61,7 @@ func newUpdateCmd() *cobra.Command {
 		if _, err = compareStable(github, github); err != nil {
 			return err
 		}
-		plan := updatePlan{1, version, github}
+		plan := updatePlan{Schema: 1, Installed: version, Latest: github, CheckOnly: check}
 		if planJSON {
 			return json.NewEncoder(cmd.OutOrStdout()).Encode(plan)
 		}

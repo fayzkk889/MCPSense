@@ -45,7 +45,9 @@ for(const c of quietCases){
   if(c.args.includes('--format=json')||c.args.includes('--format=sarif'))JSON.parse(result.stdout);
 }
 // Check-only must not replace the package or the old Go executable.
-run(process.execPath,[runner,'update','--check'],{env});assert.equal(JSON.parse(fs.readFileSync(path.join(installed,'package.json'))).version,'0.3.0');
+for(const flags of [['--check'],['--check=1'],['--check=True'],['--check=false','--check=t']]){
+  run(process.execPath,[runner,'update',...flags],{env});assert.equal(JSON.parse(fs.readFileSync(path.join(installed,'package.json'))).version,'0.3.0');assert.ok(fs.existsSync(native));
+}
 const npmOutput=run(process.execPath,[runner,'update','--repair-path'],{env});fs.writeFileSync(path.join(stage,'npm-update.log'),npmOutput);
 assert.equal(JSON.parse(fs.readFileSync(path.join(installed,'package.json'))).version,plan.latest_version);
 assert.equal(run(process.execPath,[runner,'version'],{env}).trim(),'mcpsense v'+plan.latest_version);

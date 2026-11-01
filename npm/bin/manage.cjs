@@ -164,7 +164,14 @@ async function update(args) {
   console.error('Checking published MCPSense releases...');
   const plan = JSON.parse(runNode([path.join(root,'bin/run.js'),...args,'--plan-json','--no-update-check']));
   if (plan.schema_version !== 1 || plan.installed_version !== pkg.version) throw Error('Invalid update plan');
-  if (compare(pkg.version,plan.latest_version) > 0) throw Error('Refusing to downgrade a newer installation');
+  const order = compare(pkg.version,plan.latest_version);
+  // Cobra parses all supported boolean spellings and repeated flags. Carry its
+  // decision through the machine plan rather than reinterpreting CLI strings.
+  if (plan.check_only === true) {
+    console.log('Installed: ' + pkg.version + '\nLatest stable: ' + plan.latest_version);
+    return 0;
+  }
+  if (order > 0) throw Error('Refusing to downgrade a newer installation');
   const npm = npmCLI();
   const prefix = runNode([npm,'prefix','--global'],{cwd:os.homedir()}).trim();
   if (!prefix || !same(layout(prefix).root,root)) throw Error('This command is not in npm’s configured global prefix; select the owning npm installation first. No files changed.');
