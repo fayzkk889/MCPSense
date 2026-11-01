@@ -32,6 +32,19 @@ func blankContext(bytes []byte, start, end int) {
 }
 
 func metadataActiveText(content string) string {
+	return canonicalContextMask(content, canonicalActiveText)
+}
+
+func typedMetadataText(content string) string {
+	return canonicalContextMask(content, func(text string) string {
+		active := canonicalActiveText(text)
+		bytes := []byte(active)
+		walkValueFlow(active, func(start, end int) { blankContext(bytes, start, end) })
+		return string(bytes)
+	})
+}
+
+func canonicalContextMask(content string, transform func(string) string) string {
 	type boundary struct{ at, delta int }
 	var out strings.Builder
 	out.Grow(len(content))
@@ -47,7 +60,7 @@ func metadataActiveText(content string) string {
 		}
 	}
 	normalized := out.String()
-	active := canonicalActiveText(normalized)
+	active := transform(normalized)
 	if normalized == content {
 		return active
 	}

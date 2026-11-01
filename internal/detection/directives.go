@@ -173,12 +173,12 @@ func normalizedDirectiveRune(r rune) rune {
 	return r
 }
 
-// InstructionText removes only complete recognized benign metadata clauses.
-// Every subsequent clause is still scanned; quotation or "example" alone is
-// never an exemption. Literal skill rules still inspect the original text;
-// relational screening also uses this constrained context handling.
+// InstructionText preserves source positions while neutralizing recognized
+// prohibitions, data operands and proven public identifier references. Later
+// active effects remain inspectable. Literal skill rules retain original text;
+// metadata rules and relational screening share this context and value view.
 func InstructionText(content string) string {
-	content = metadataActiveText(content)
+	content = typedMetadataText(content)
 	bytes := []byte(content)
 	start := 0
 	for _, span := range clauseBreak.FindAllStringIndex(content, -1) {
