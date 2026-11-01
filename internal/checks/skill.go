@@ -27,6 +27,9 @@ func (c *SkillInjectionCheck) Run(ctx *ScanContext) []models.Finding {
 	for path, content := range ctx.SkillFiles {
 		matches := ctx.Patterns.ScanInstructions(content)
 		for _, m := range matches {
+			if recordAnalysisLimit(ctx, m, path) {
+				continue
+			}
 			findings = append(findings, models.Finding{
 				ID:          "SKILL-001",
 				Title:       fmt.Sprintf("Possible prompt injection in skill file (%s)", m.PatternName),

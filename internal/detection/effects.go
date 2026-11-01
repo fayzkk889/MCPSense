@@ -16,6 +16,7 @@ type metadataEffect struct {
 	kind, object string
 	start, end   int
 	negative     bool
+	observed     bool
 }
 
 var effectVerbs = map[string]string{
@@ -31,10 +32,6 @@ var effectVerbs = map[string]string{
 }
 
 var (
-	effectSecret             = regexp.MustCompile(`\b(credentials?|credential store|passwords?|private (?:api )?(?:keys?|tokens?)|authentication (?:tokens?|material|store)|access tokens?|api[_ -]?keys?|[a-z0-9_]*(?:secret_access_key|api_key|access_token)[a-z0-9_]*)\b|\.env\b|\.ssh/`)
-	effectSink               = regexp.MustCompile(`https?://|\b(remote|external|collector|helpdesk|webhook|outbound|final (?:reply|answer|response)|authorization header|diagnostic headers?|resource uri|support ticket)\b`)
-	effectArtifact           = regexp.MustCompile(`\b(note|memo|bundle|support_bundle|payload|attachment|json|file)\b`)
-	effectAnaphor            = regexp.MustCompile(`\b(it|them|that|this|the|its)\b`)
 	effectMonitor            = regexp.MustCompile(`\b(security[._ -](?:monitor\w*|alerts?|paging)|safety_monitor|monitoring|safeguard|escalation|security finding)\b`)
 	effectRecipients         = regexp.MustCompile(`\b([a-z_]*recipients|escalation destinations?|paging)\b`)
 	effectEmpty              = regexp.MustCompile(`\[\s*\]|\b(empty|no recipients|nobody|none)\b`)
@@ -47,7 +44,7 @@ var (
 	effectProgram            = regexp.MustCompile(`\b(shell|bash|sh|powershell|python|node|downloaded (?:file|script)|bootstrap)\b|\.(sh|py|ps1|js)\b`)
 	effectNegative           = regexp.MustCompile(`\b(never|not|cannot|can't|don't|without)\b`)
 	effectFresh              = regexp.MustCompile(`\b(but|instead|however|then|and)\b|[:,;]`)
-	effectLocalReference     = regexp.MustCompile(`^\s*(it|them|that|its)\b`)
+	effectLocalReference     = regexp.MustCompile(`^\s*(it|them|that|its|their|this|these|those)\b`)
 	effectURL                = regexp.MustCompile(`https?://[^\s]+`)
 	effectSubordinateSubject = regexp.MustCompile(`\b(reveal|disclose|report|say|tell|claim|describe|mention)\s+that\s+(this|the|a|an|our|your)\s+[a-z_]+\s+`)
 )
@@ -145,26 +142,6 @@ func metadataEffects(clause string) []metadataEffect {
 	return events
 }
 
-func effectAliases(object string) map[string]bool {
-	aliases := map[string]bool{}
-	for _, alias := range effectArtifact.FindAllString(object, -1) {
-		aliases[alias] = true
-	}
-	return aliases
-}
-
-func sharesEffectAlias(object string, aliases map[string]bool) bool {
-	if len(aliases) == 0 || !effectAnaphor.MatchString(object) {
-		return false
-	}
-	for _, alias := range effectArtifact.FindAllString(object, -1) {
-		if aliases[alias] {
-			return true
-		}
-	}
-	return strings.TrimSpace(object) == "it" || strings.HasPrefix(strings.TrimSpace(object), "it ")
-}
-
 func effectMatches(text string) []PatternMatch {
 	seen := map[string]bool{}
 	var out []PatternMatch
@@ -175,6 +152,16 @@ func effectMatches(text string) []PatternMatch {
 		seen[id] = true
 		out = append(out, PatternMatch{PatternID: id, PatternName: name, Severity: models.SeverityHigh, Category: "injection", Description: name + "; inferred from bounded action/object relations, not proof of execution or authorization.", Remediation: "Review the requested effect and keep credentials, safeguard configuration and code execution under explicit host authorization."})
 	}
+	detected, limited := traceValueFlow(text)
+	if detected {
+		add("EFF-001", "Sensitive data flows to an output or external destination")
+	}
+	if limited {
+		out = append(out, PatternMatch{PatternID: "CTX-002", PatternName: "Instruction analysis capacity exceeded", Severity: models.SeverityHigh, Category: "analysis_limit", Description: "Value definitions exceeded the bounded analysis capacity; no complete interpretation is established.", Remediation: "Review and simplify this metadata field before relying on the inspection."})
+	}
+	for _, match := range controlInvariantMatches(text) {
+		add(match.PatternID, match.PatternName)
+	}
 	var clauses []string
 	start := 0
 	for _, span := range clauseBreak.FindAllStringIndex(text, -1) {
@@ -183,37 +170,18 @@ func effectMatches(text string) []PatternMatch {
 	}
 	clauses = append(clauses, boundedBoundaryClauses(text[start:])...)
 	for i := range clauses {
-		// Local state is discarded after three adjacent bounded clauses. Only
-		// an explicit artifact reference propagates a source across clauses.
-		aliases := map[string]bool{}
+		// Control/download relations retain a short local window. Value
+		// identities are handled by the shared definition/reference analysis.
 		var downloaded bool
 		var missingMonitor bool
 		for j := i; j < len(clauses) && j < i+3; j++ {
 			current := clauses[j]
 			events := metadataEffects(current)
-			localSource := false
 			for _, event := range events {
 				if event.negative {
 					continue
 				}
 				object := publicKeyMaterial.ReplaceAllString(event.object, "")
-				secret := effectSecret.MatchString(object)
-				linked := sharesEffectAlias(object, aliases) || (localSource && effectLocalReference.MatchString(object))
-				if (event.kind == "acquire" || event.kind == "transform" || event.kind == "release") && secret {
-					localSource = true
-					aliases["$value"] = true
-					for alias := range effectAliases(object) {
-						aliases[alias] = true
-					}
-				}
-				if event.kind == "transform" && linked {
-					for alias := range effectAliases(object) {
-						aliases[alias] = true
-					}
-				}
-				if (event.kind == "release" || event.kind == "request" || event.kind == "transform") && (secret || linked) && effectSink.MatchString(object) {
-					add("EFF-001", "Sensitive data flows to an output or external destination")
-				}
 				monitor := effectMonitor.MatchString(object) || effectMonitor.MatchString(current[:event.start])
 				if event.kind == "configure" && monitor && ((effectOff.MatchString(object)) || (effectRecipients.MatchString(object) && effectEmpty.MatchString(object))) {
 					add("EFF-002", "Security monitoring or escalation is weakened")

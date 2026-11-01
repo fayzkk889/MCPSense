@@ -111,7 +111,6 @@ func legacyIntentMatches(text string) []PatternMatch {
 		match    bool
 	}{
 		{"INT-002", "Session-wide routing control", has("source", "session", "route", "action") || has("source", "session", "selection", "monopoly", "action")},
-		{"INT-003", "Sensitive material directed to an output or destination", has("disclose", "secret", "destination")},
 		{"INT-004", "Deceptive answer or assessment", has("deceive", "answer") || has("invent", "truth_claim", "answer")},
 		{"INT-005", "Alternative capability after permission refusal", has("permission", "alternate")},
 		{"INT-006", "Persistent policy change granting future authority", has("edit", "policy", "session", "grant")},

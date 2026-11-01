@@ -32,6 +32,9 @@ func (c *InjectionCheck) Run(ctx *ScanContext) []models.Finding {
 		matches := ctx.Patterns.ScanToolDescription(text.text)
 		seen := make(map[string]bool)
 		for _, m := range matches {
+			if recordAnalysisLimit(ctx, m, text.owner+" ("+text.field+")") {
+				continue
+			}
 			key := text.owner + ":" + text.field + ":" + m.PatternID
 			if seen[key] {
 				continue

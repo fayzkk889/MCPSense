@@ -10,3 +10,11 @@ for(const [name,fixture] of [['original','product-unseen-2026-10-26.json'],['val
 console.log('PASS: 232 frozen trust-boundary observations, strict native/npm acceptance.');
 const gate=spawnSync(process.execPath,['scripts/metadata-gate-acceptance.mjs'],{env:process.env,stdio:'inherit',windowsHide:true,timeout:120000});
 if(gate.error||gate.status!==0)process.exit(gate.status||1);
+for(const [name,fixture] of [['user-audit','product-use-audit-2026-10-31.json'],['trust-validation','metadata-trust-validation-2026-11-01.json'],['trust-fresh','metadata-trust-fresh-2026-11-01.json'],['trust-user-check','metadata-trust-user-check-2026-11-01.json'],['value-identity','metadata-value-identity-2026-11-01.json']]){
+ const env={...process.env,MCPSENSE_USE_AUDIT_FIXTURE:path.join('testdata',fixture),MCPSENSE_USE_AUDIT_DIR:path.join(process.env.MCPSENSE_BOUNDARY_DIR||'bin/boundary-acceptance',name)};
+ const result=spawnSync(process.execPath,['scripts/product-use-audit.mjs'],{env,stdio:'inherit',windowsHide:true,timeout:240000});
+ if(result.error||result.status!==0){console.error('Fresh metadata acceptance failed: '+name);process.exit(result.status||1);}
+}
+console.log('PASS: 486 additional observations in three metadata fields; frozen labels unchanged.');
+const live=spawnSync(process.execPath,['scripts/product-use-live-audit.mjs'],{env:{...process.env,MCPSENSE_USE_LIVE_DIR:path.join(process.env.MCPSENSE_BOUNDARY_DIR||'bin/boundary-acceptance','trust-live')},stdio:'inherit',windowsHide:true,timeout:120000});
+if(live.error||live.status!==0)process.exit(live.status||1);

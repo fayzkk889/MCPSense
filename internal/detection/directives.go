@@ -132,32 +132,9 @@ func benignToolClause(text string) bool {
 func normalizedDirective(text string) string {
 	var out strings.Builder
 	for _, r := range text {
-		if unicode.Is(unicode.Cf, r) {
-			continue
+		if r = normalizedDirectiveRune(r); r >= 0 {
+			out.WriteRune(r)
 		}
-		if r >= 0xff01 && r <= 0xff5e {
-			r -= 0xfee0
-		}
-		r = unicode.ToLower(r)
-		switch r {
-		case 'і', 'ι', 'ı':
-			r = 'i'
-		case 'о', 'ο':
-			r = 'o'
-		case 'а', 'α':
-			r = 'a'
-		case 'е', 'ε':
-			r = 'e'
-		case 'р', 'ρ':
-			r = 'p'
-		case 'с':
-			r = 'c'
-		case 'у':
-			r = 'y'
-		case 'х', 'χ':
-			r = 'x'
-		}
-		out.WriteRune(r)
 	}
 	normalized := out.String()
 	for _, word := range []string{"ignore", "disregard", "reveal", "bypass"} {
@@ -167,11 +144,41 @@ func normalizedDirective(text string) string {
 	return normalized
 }
 
-// InstructionText removes only complete recognized benign metadata clauses.
-// Every subsequent clause is still scanned; quotation or "example" alone is
-// never an exemption. Literal skill rules still inspect the original text;
-// relational screening also uses this constrained context handling.
+func normalizedDirectiveRune(r rune) rune {
+	if unicode.Is(unicode.Cf, r) {
+		return -1
+	}
+	if r >= 0xff01 && r <= 0xff5e {
+		r -= 0xfee0
+	}
+	r = unicode.ToLower(r)
+	switch r {
+	case 'і', 'ι', 'ı':
+		return 'i'
+	case 'о', 'ο':
+		return 'o'
+	case 'а', 'α':
+		return 'a'
+	case 'е', 'ε':
+		return 'e'
+	case 'р', 'ρ':
+		return 'p'
+	case 'с':
+		return 'c'
+	case 'у':
+		return 'y'
+	case 'х', 'χ':
+		return 'x'
+	}
+	return r
+}
+
+// InstructionText preserves source positions while neutralizing recognized
+// prohibitions, data operands and proven public identifier references. Later
+// active effects remain inspectable. Literal skill rules retain original text;
+// metadata rules and relational screening share this context and value view.
 func InstructionText(content string) string {
+	content = typedMetadataText(content)
 	bytes := []byte(content)
 	start := 0
 	for _, span := range clauseBreak.FindAllStringIndex(content, -1) {
