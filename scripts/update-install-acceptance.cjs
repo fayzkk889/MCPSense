@@ -18,7 +18,11 @@ const before=fs.readFileSync(old);assert.equal(goVersion(before),'0.3.0');
 fs.writeFileSync(path.join(goDir,'unrelated-tool.txt'),'preserved');
 const npmBin=process.platform==='win32'?prefix:path.join(prefix,'bin');
 const system=process.platform==='win32'?path.join(process.env.SystemRoot,'System32'):'/usr/bin:/bin';
-const env={...process.env,PATH:[goDir,npmBin,path.dirname(process.execPath),...(process.platform==='win32'?[system]:[])].join(path.delimiter),GOBIN:goDir,
+const tools=path.join(stage,'tools');fs.mkdirSync(tools);
+// npm invokes the OS shell by name for lifecycle scripts. Keep sh, while
+// excluding directories that could expose a Go compiler to installation.
+if(process.platform!=='win32')fs.symlinkSync('/bin/sh',path.join(tools,'sh'));
+const env={...process.env,PATH:[goDir,npmBin,path.dirname(process.execPath),process.platform==='win32'?system:tools].join(path.delimiter),GOBIN:goDir,
   npm_config_prefix:prefix,npm_config_update_notifier:'false',MCPSENSE_NO_UPDATE_CHECK:'1'};
 assert.equal(spawnSync('go',['version'],{env}).error?.code,'ENOENT','npm installation must not have Go available');
 function commandVersion() {

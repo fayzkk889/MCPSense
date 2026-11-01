@@ -47,7 +47,7 @@ mcpsense scan ./mcp.json --offline --no-baseline
 
 This creates a synthetic example manifest and refuses to overwrite an existing `mcp.json`. It does not connect to or configure your real MCP server. For a real inspection, replace the target path with your existing manifest or client MCP configuration. `mcpsense init` without `--example` creates scanner settings; it does not create a scan target.
 
-Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically; ordinary startup and offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
+Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically. Published 0.4.4 checks versions only on explicit request; the 0.4.5 candidate adds the interactive notices described above. Offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
 
 ### From a source checkout
 
