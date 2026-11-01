@@ -3,6 +3,7 @@ package checks
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/detection"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"sort"
 )
@@ -10,6 +11,14 @@ import (
 type metadataText struct {
 	owner, field, text string
 	instructions       bool
+}
+
+func recordAnalysisLimit(ctx *ScanContext, match detection.PatternMatch, location string) bool {
+	if match.Category != "analysis_limit" {
+		return false
+	}
+	ctx.Errors = append(ctx.Errors, fmt.Errorf("instruction analysis capacity exceeded in %s; manual review is required", location))
+	return true
 }
 
 // Enumerate the metadata the peer supplies without invoking tools, reading

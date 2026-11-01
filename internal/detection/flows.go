@@ -34,6 +34,8 @@ var (
 	flowValueRequest    = regexp.MustCompile(`\b(?:unmasked|unredacted|actual|values?|contents?)\b`)
 	flowObservation     = regexp.MustCompile(`^\s*(?:whether|if|that)\b`)
 	flowRequestArgument = regexp.MustCompile(`\b(?:using|with)\s+(.+?)(?:\bas\b|\bin\b|$)`)
+	flowDerivedFrom     = regexp.MustCompile(`\b(?:from|using|containing)\s+(.+)`)
+	flowOutputReference = regexp.MustCompile(`\b(?:same|that|this|its|the)\s+(?:request|message|response|answer|payload|attachment|output|report)\b`)
 )
 
 var flowActions = map[string]string{
@@ -101,7 +103,7 @@ func flowEvents(clause string) []metadataEffect {
 		if index > 0 {
 			previous := clause[spans[index-1][0]:spans[index-1][1]]
 			switch previous {
-			case "the", "a", "an", "final", "diagnostic", "public", "from", "for", "credential", "authentication", "security", "http":
+			case "the", "a", "an", "same", "this", "that", "these", "those", "its", "their", "final", "diagnostic", "public", "from", "for", "credential", "authentication", "security", "http":
 				continue
 			}
 			if strings.HasSuffix(clause[span[0]:span[1]], "ed") && (previous == "to" || previous == "is" || previous == "was" || previous == "are" || previous == "as") {
@@ -132,8 +134,14 @@ func flowEvents(clause string) []metadataEffect {
 }
 
 func valueFlowDetected(text string) bool {
+	detected, _ := traceValueFlow(text)
+	return detected
+}
+
+func traceValueFlow(text string) (bool, bool) {
 	text = metadataActiveText(text)
 	bindings := map[string]flowBinding{}
+	limited := false
 	var last flowValue
 	lastAt := -10
 	start, clauseIndex := 0, 0
@@ -161,6 +169,11 @@ func valueFlowDetected(text string) bool {
 			clean := publicKeyMaterial.ReplaceAllString(source, "")
 			value := flowValue{sensitive: flowSecret.MatchString(clean) || (flowValueRequest.MatchString(source) && flowSecret.MatchString(publicKeyMaterial.ReplaceAllString(object, "")))}
 			verb := flowStem(clause[event.start:event.end])
+			if event.kind == "assign" || event.kind == "transform" {
+				for _, input := range flowDerivedFrom.FindAllStringSubmatch(object, -1) {
+					value.sensitive = value.sensitive || flowSecret.MatchString(publicKeyMaterial.ReplaceAllString(input[1], ""))
+				}
+			}
 			if verb == "request" || verb == "issue" || verb == "fetch" {
 				for _, argument := range flowRequestArgument.FindAllStringSubmatch(object, -1) {
 					value.sensitive = value.sensitive || flowSecret.MatchString(publicKeyMaterial.ReplaceAllString(argument[1], ""))
@@ -172,8 +185,9 @@ func valueFlowDetected(text string) bool {
 			}
 			explicitPublic := !value.sensitive && (flowPublic.MatchString(source) || flowFixed.MatchString(object))
 			if !explicitPublic {
+				hasReference := flowReference.MatchString(object)
 				for _, word := range flowWord.FindAllString(object, -1) {
-					if b, ok := bindings[word]; ok && (b.named || flowReference.MatchString(object)) {
+					if b, ok := bindings[word]; ok && (b.named || hasReference) {
 						value.sensitive = value.sensitive || b.value.sensitive
 						value.outbound = value.outbound || b.value.outbound
 						value.credentialNames = value.credentialNames || b.value.credentialNames
@@ -185,10 +199,13 @@ func valueFlowDetected(text string) bool {
 					value.credentialNames = value.credentialNames || last.credentialNames
 				}
 			}
-			if value.credentialNames && event.kind == "release" && flowValueRequest.MatchString(object) {
+			if value.credentialNames && flowValueRequest.MatchString(object) {
 				value.sensitive = true
 			}
 			if event.kind == "release" && clauseIndex == lastAt && (verb == "include" || verb == "attach" || verb == "append") {
+				value.outbound = value.outbound || last.outbound
+			}
+			if event.kind == "release" && clauseIndex-lastAt <= 3 && flowOutputReference.MatchString(object) {
 				value.outbound = value.outbound || last.outbound
 			}
 			// A placeholder reassignment removes sensitivity from that new
@@ -201,19 +218,31 @@ func valueFlowDetected(text string) bool {
 			}
 			outbound := flowSink.MatchString(object) || value.outbound
 			if event.kind == "release" && value.sensitive && outbound {
-				return true
+				return true, limited
 			}
 			if (event.kind == "assign" || event.kind == "transform") && value.sensitive && flowSink.MatchString(object) {
-				return true
+				return true, limited
 			}
 			value.outbound = outbound && event.kind == "release"
 			bind := func(fragment string, named bool) {
-				for _, word := range flowWord.FindAllString(fragment, 16) {
+				words := flowWord.FindAllString(fragment, -1)
+				for _, word := range words {
 					_, exists := bindings[word]
-					if !flowAliasStop(word) && (len(bindings) < 256 || exists) {
-						bindings[word] = flowBinding{value, named}
-						if len(word) > 3 && strings.HasSuffix(word, "s") && !strings.HasSuffix(word, "ss") && !strings.HasSuffix(word, "us") {
-							bindings[strings.TrimSuffix(word, "s")] = flowBinding{value, false}
+					if flowAliasStop(word) {
+						continue
+					}
+					if len(bindings) >= 256 && !exists {
+						limited = true
+						continue
+					}
+					bindings[word] = flowBinding{value, named}
+					if len(word) > 3 && strings.HasSuffix(word, "s") && !strings.HasSuffix(word, "ss") && !strings.HasSuffix(word, "us") {
+						stem := strings.TrimSuffix(word, "s")
+						_, exists := bindings[stem]
+						if len(bindings) < 256 || exists {
+							bindings[stem] = flowBinding{value, false}
+						} else {
+							limited = true
 						}
 					}
 				}
@@ -253,7 +282,7 @@ func valueFlowDetected(text string) bool {
 			}
 		}
 	}
-	return false
+	return false, limited
 }
 
 func flowAliasStop(word string) bool {

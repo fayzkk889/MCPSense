@@ -7,7 +7,7 @@ import {spawnSync} from './cli-process.cjs';
 
 const binary=process.env.MCPSENSE_TEST_BINARY;
 assert.ok(binary,'Point MCPSENSE_TEST_BINARY at the existing product');
-const fixture='testdata/product-use-audit-2026-10-31.json';
+const fixture=process.env.MCPSENSE_USE_AUDIT_FIXTURE||'testdata/product-use-audit-2026-10-31.json';
 const frozen=fs.readFileSync(fixture),cases=JSON.parse(frozen);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const root=path.resolve(process.env.MCPSENSE_USE_AUDIT_DIR||'bin/product-use-audit-2026-10-31');
@@ -39,7 +39,7 @@ for(const surface of ['tool-description','server-instructions','schema-descripti
 assert.equal(hash(fs.readFileSync(fixture)),hash(frozen),'Frozen labels changed');
 const counts=Object.fromEntries(['TP','FN','FP','TN'].map(k=>[k,observations.filter(o=>o.outcome===k).length]));
 const distinct=cases.map(c=>({...c,outcomes:observations.filter(o=>o.id===c.id).map(o=>({surface:o.surface,outcome:o.outcome,exit:o.exit,rules:o.allRules}))}));
-const result={version:version.stdout.trim(),binary,corpusSha256:hash(frozen),workspace,counts,observations,distinct,acceptancePassed:counts.FN+counts.FP===0,limitation:'48 newly authored descriptions, repeated across three supported metadata fields. This is targeted product testing, not independent field accuracy or runtime enforcement.'};
+const result={version:version.stdout.trim(),binary,fixture,corpusSha256:hash(frozen),workspace,counts,observations,distinct,acceptancePassed:counts.FN+counts.FP===0,limitation:cases.length+' authored descriptions, repeated across three supported metadata fields. This is targeted product testing, not independent field accuracy or runtime enforcement.'};
 fs.writeFileSync(path.join(workspace,'results.json'),JSON.stringify(result,null,2));
 console.log(JSON.stringify({workspace,counts,acceptancePassed:result.acceptancePassed}));
 // Preserve every result before failing strict product acceptance.

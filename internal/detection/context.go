@@ -2,7 +2,9 @@ package detection
 
 import (
 	"regexp"
+	"sort"
 	"strings"
+	"unicode/utf8"
 )
 
 // Context is resolved before literal, relation and value-flow rules. Masking
@@ -19,7 +21,7 @@ var (
 	contextRedactedConstant = regexp.MustCompile(`(?i)\b[a-z0-9_-]*(?:key|token|password|secret|credential)[a-z0-9_-]*\s*[:=]\s*(?:['"]?\[(?:redacted|removed)\]['"]?|['"]<redacted>['"]|['"]redacted['"])`)
 	contextWithheldEvidence = regexp.MustCompile(`(?i)^\s*(?:warn|tell|report|inform|notify|mention|show|display)\b.{0,100}\b(?:user|operator|human)\b.{0,100}\b(?:unauthorized|transfer|changes?|actions?|warnings?|findings?|that this|that the|this step|this edit)\b`)
 	contextTemporal         = regexp.MustCompile(`(?i)\b(?:after|when|if|because)\b`)
-	contextReactivate       = regexp.MustCompile(`(?i)\b(?:do\s+(?:both|so|it)|(?:perform|execute|follow|obey|carry out)\s+(?:that|this|these|those|the quoted)\s+(?:transfer|instructions?|actions?|commands?|requests?|steps?|plan))\b`)
+	contextReactivate       = regexp.MustCompile(`(?i)\b(?:(?:do|perform|execute|follow|obey)\s+(?:both|so|it)|(?:perform|execute|follow|obey|carry out)\s+(?:that|this|these|those|the quoted)\s+(?:transfer|instructions?|actions?|commands?|requests?|steps?|plan))\b`)
 	contextObservation      = regexp.MustCompile(`(?i)\b(?:check|inspect|report|confirm|determine)\s+(?:whether|if)\b`)
 )
 
@@ -30,6 +32,52 @@ func blankContext(bytes []byte, start, end int) {
 }
 
 func metadataActiveText(content string) string {
+	type boundary struct{ at, delta int }
+	var out strings.Builder
+	out.Grow(len(content))
+	var changes []boundary
+	for pos, r := range content {
+		_, width := utf8.DecodeRuneInString(content[pos:])
+		before := out.Len()
+		if r = normalizedDirectiveRune(r); r >= 0 {
+			out.WriteRune(r)
+		}
+		if out.Len()-before != width {
+			changes = append(changes, boundary{out.Len(), pos + width - out.Len()})
+		}
+	}
+	normalized := out.String()
+	active := canonicalActiveText(normalized)
+	if normalized == content {
+		return active
+	}
+	original := func(pos int) int {
+		if pos == len(normalized) {
+			return len(content)
+		}
+		idx := sort.Search(len(changes), func(i int) bool { return changes[i].at > pos }) - 1
+		if idx < 0 {
+			return pos
+		}
+		return pos + changes[idx].delta
+	}
+	bytes := []byte(content)
+	for i := 0; i < len(active); {
+		if active[i] != ' ' || normalized[i] == ' ' {
+			i++
+			continue
+		}
+		end := i + 1
+		for end < len(active) && active[end] == ' ' {
+			end++
+		}
+		blankContext(bytes, original(i), original(end))
+		i = end
+	}
+	return string(bytes)
+}
+
+func canonicalActiveText(content string) string {
 	bytes := []byte(content)
 	// Only a constant value is neutral. A name such as redacted_api_key paired
 	// with an actual credential is deliberately not a redaction operation.
@@ -137,37 +185,39 @@ func contextHasAction(text string) bool {
 // explicitly adopts its effects. Preserve original evidence, not synthesized
 // expanded instructions with fabricated source positions.
 func (e *PatternEngine) contextReferenceMatches(content string) []PatternMatch {
-	var pending string
+	pendingRisk := false
+	assess := func(text string) bool {
+		positive := strings.Trim(contextNegative.ReplaceAllString(text, ""), " \t'\"")
+		return len(e.ScanDescriptions(positive))+len(rawIntentMatches(normalizedDirective(positive))) > 0
+	}
 	start := 0
-	stops := clauseBreak.FindAllStringIndex(content, -1)
-	stops = append(stops, []int{len(content), len(content)})
+	source := normalizedDirective(content)
+	stops := clauseBreak.FindAllStringIndex(source, -1)
+	stops = append(stops, []int{len(source), len(source)})
 	for _, stop := range stops {
-		clause := content[start:stop[0]]
+		clause := source[start:stop[0]]
 		start = stop[1]
 		active := metadataActiveText(clause)
-		if pending != "" && contextReactivate.MatchString(active) {
-			positive := strings.Trim(contextNegative.ReplaceAllString(pending, ""), " \t'\"")
-			if len(e.ScanDescriptions(positive))+len(rawIntentMatches(normalizedDirective(positive))) > 0 {
-				end := len(content)
-				if end > 2048 {
-					end = 2048
-					for end > 0 && (content[end]&0xc0) == 0x80 {
-						end--
-					}
+		if pendingRisk && contextReactivate.MatchString(active) {
+			end := len(content)
+			if end > 2048 {
+				end = 2048
+				for end > 0 && (content[end]&0xc0) == 0x80 {
+					end--
 				}
-				return []PatternMatch{{PatternID: "CTX-001", PatternName: "Quoted or prohibited effects explicitly reactivated", Severity: "high", Category: "injection", Description: "A later active directive adopts the effects of earlier quoted data or a prohibition; review the complete relation.", Remediation: "Do not let metadata reactivate prohibited operations or turn quoted data into host instructions.", MatchedText: content[:end]}}
 			}
+			return []PatternMatch{{PatternID: "CTX-001", PatternName: "Quoted or prohibited effects explicitly reactivated", Severity: "high", Category: "injection", Description: "A later active directive adopts the effects of earlier quoted data or a prohibition; review the complete relation.", Remediation: "Do not let metadata reactivate prohibited operations or turn quoted data into host instructions.", MatchedText: content[:end]}}
 		}
 		if contextNegative.MatchString(clause) {
-			pending = clause
+			pendingRisk = assess(clause)
 			continue
 		}
 		if quotes := quotedData.FindAllString(clause, -1); len(quotes) > 0 && contextDataOperation.MatchString(clause) && contextDataOperand.MatchString(clause) {
-			pending = strings.Join(quotes, " ")
+			pendingRisk = assess(strings.Join(quotes, " "))
 			continue
 		}
 		if contextHasAction(active) {
-			pending = ""
+			pendingRisk = false
 		}
 	}
 	return nil

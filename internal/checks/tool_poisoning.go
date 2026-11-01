@@ -300,7 +300,11 @@ func (c *ExfilInstructionCheck) Run(ctx *ScanContext) []models.Finding {
 		return nil
 	}
 	for _, text := range texts {
-		for _, match := range engine.ScanToolDescription(text.text) {
+		matches := engine.ScanToolDescription(text.text)
+		for _, match := range matches {
+			recordAnalysisLimit(ctx, match, text.owner+" ("+text.field+")")
+		}
+		for _, match := range matches {
 			if match.PatternID == "EFF-001" || match.PatternID == "PI-014" || match.PatternID == "PI-015" {
 				findings = append(findings, models.Finding{
 					ID:          "SEC-011",

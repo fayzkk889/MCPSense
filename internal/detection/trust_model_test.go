@@ -8,7 +8,7 @@ import (
 )
 
 func TestFrozenMetadataTrustAcceptance(t *testing.T) {
-	for _, fixture := range []string{"product-use-audit-2026-10-31.json", "metadata-trust-validation-2026-11-01.json"} {
+	for _, fixture := range []string{"product-use-audit-2026-10-31.json", "metadata-trust-validation-2026-11-01.json", "metadata-trust-fresh-2026-11-01.json", "metadata-trust-user-check-2026-11-01.json"} {
 		data, err := os.ReadFile("../../testdata/" + fixture)
 		if err != nil {
 			t.Fatal(err)

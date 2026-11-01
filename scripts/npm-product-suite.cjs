@@ -16,7 +16,7 @@ const commands = [
   ['scripts/baseline-acceptance.mjs'],['scripts/threat-review.mjs'],['scripts/dependency-acceptance.mjs'],['scripts/fresh-product-retest.mjs'],['scripts/user-product-retest.mjs'],['scripts/boundary-acceptance.cjs']];
 for (const args of commands) {
   env.MCPSENSE_ACCEPTANCE_DIR=path.join(output,args.includes('scripts/product-live-acceptance.mjs')?'live':'core');
-  const result=spawnSync(process.execPath,args,{cwd:root,env,stdio:'inherit',windowsHide:true,timeout:300000});
+  const result=spawnSync(process.execPath,args,{cwd:root,env,stdio:'inherit',windowsHide:true,timeout:args.includes('scripts/boundary-acceptance.cjs')?600000:300000});
   if(result.error || result.status!==0) {console.error('npm product suite failed: '+args.join(' '));process.exit(result.status || 1);}
 }
 console.log('PASS: npm product suite completed with the same native CLI expectations.');

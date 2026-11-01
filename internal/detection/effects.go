@@ -44,7 +44,7 @@ var (
 	effectProgram            = regexp.MustCompile(`\b(shell|bash|sh|powershell|python|node|downloaded (?:file|script)|bootstrap)\b|\.(sh|py|ps1|js)\b`)
 	effectNegative           = regexp.MustCompile(`\b(never|not|cannot|can't|don't|without)\b`)
 	effectFresh              = regexp.MustCompile(`\b(but|instead|however|then|and)\b|[:,;]`)
-	effectLocalReference     = regexp.MustCompile(`^\s*(it|them|that|its)\b`)
+	effectLocalReference     = regexp.MustCompile(`^\s*(it|them|that|its|their|this|these|those)\b`)
 	effectURL                = regexp.MustCompile(`https?://[^\s]+`)
 	effectSubordinateSubject = regexp.MustCompile(`\b(reveal|disclose|report|say|tell|claim|describe|mention)\s+that\s+(this|the|a|an|our|your)\s+[a-z_]+\s+`)
 )
@@ -152,8 +152,12 @@ func effectMatches(text string) []PatternMatch {
 		seen[id] = true
 		out = append(out, PatternMatch{PatternID: id, PatternName: name, Severity: models.SeverityHigh, Category: "injection", Description: name + "; inferred from bounded action/object relations, not proof of execution or authorization.", Remediation: "Review the requested effect and keep credentials, safeguard configuration and code execution under explicit host authorization."})
 	}
-	if valueFlowDetected(text) {
+	detected, limited := traceValueFlow(text)
+	if detected {
 		add("EFF-001", "Sensitive data flows to an output or external destination")
+	}
+	if limited {
+		out = append(out, PatternMatch{PatternID: "CTX-002", PatternName: "Instruction analysis capacity exceeded", Severity: models.SeverityHigh, Category: "analysis_limit", Description: "Value definitions exceeded the bounded analysis capacity; no complete interpretation is established.", Remediation: "Review and simplify this metadata field before relying on the inspection."})
 	}
 	for _, match := range controlInvariantMatches(text) {
 		add(match.PatternID, match.PatternName)
