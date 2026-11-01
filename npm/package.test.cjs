@@ -15,9 +15,9 @@ test('archive checksum rejects corruption and missing or ambiguous records',()=>
  assert.doesNotThrow(()=>verifyArchive(bytes,`${digest}  archive.tar.gz\n`,'archive.tar.gz'));
  for(const manifest of ['bad',`${'0'.repeat(64)}  archive.tar.gz`,`${digest}  archive.tar.gz\n${digest}  archive.tar.gz`])assert.throws(()=>verifyArchive(bytes,manifest,'archive.tar.gz'));
 });
-test('npm has no install hooks, native executable or compiler requirement',()=>{
+test('npm has only the guarded Node handoff hook, without native executable or compiler requirement',()=>{
  const pkg=require('./package.json');
- assert.equal(pkg.scripts?.postinstall,undefined);assert.equal(pkg.scripts?.install,undefined);assert.equal(pkg.scripts?.preinstall,undefined);
+ assert.equal(pkg.scripts?.postinstall,'node bin/manage.cjs postinstall');assert.equal(pkg.scripts?.install,undefined);assert.equal(pkg.scripts?.preinstall,undefined);
  assert.equal(pkg.engines.node,'>=22');assert.ok(pkg.files.includes('runtime/'));assert.ok(!pkg.files.includes('install.js'));assert.ok(!pkg.files.includes('bin/'));
 });
 

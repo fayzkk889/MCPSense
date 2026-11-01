@@ -95,6 +95,7 @@ func swapNativeBinary(staged, target string, verify func() error) (string, error
 	}
 	backup := reservation.Name()
 	if err = reservation.Close(); err != nil {
+		_ = os.Remove(backup)
 		return "", err
 	}
 	if err = os.Rename(target, backup); err != nil {
@@ -102,7 +103,12 @@ func swapNativeBinary(staged, target string, verify func() error) (string, error
 		return "", fmt.Errorf("cannot preserve old executable (it may be locked): %w", err)
 	}
 	if err = os.Rename(staged, target); err != nil {
-		restore := os.Rename(backup, target)
+		var restore error
+		if _, statErr := os.Lstat(target); os.IsNotExist(statErr) {
+			restore = os.Rename(backup, target)
+		} else {
+			restore = fmt.Errorf("target appeared during replacement; backup preserved at %s", backup)
+		}
 		return backup, errors.Join(fmt.Errorf("replacement failed: %w", err), restore)
 	}
 	if err = verify(); err != nil {
@@ -137,6 +143,10 @@ func performPlatformUpdate(cmd *cobra.Command, plan updatePlan, repair bool) err
 	if err != nil {
 		return err
 	}
+	originalHash, err := binaryHash(target)
+	if err != nil {
+		return err
+	}
 	if order, e := compareStable(installed, plan.Latest); e != nil || order > 0 {
 		return fmt.Errorf("PATH selects a newer or unknown release; refusing to downgrade it")
 	}
@@ -168,7 +178,7 @@ func performPlatformUpdate(cmd *cobra.Command, plan updatePlan, repair bool) err
 	fmt.Fprintf(cmd.ErrOrStderr(), "Updating %s → %s using Go...\n", installed, plan.Latest)
 	build := exec.CommandContext(cmd.Context(), goTool, "install", ownModule+"/cmd/mcpsense@v"+plan.Latest)
 	build.Dir = stage
-	build.Env = append(os.Environ(), "GOBIN="+stage, "GOWORK=off", "GOFLAGS=", "CGO_ENABLED=0")
+	build.Env = append(os.Environ(), "GOBIN="+stage, "GOWORK=off", "GOFLAGS=", "CGO_ENABLED=0", "GOTOOLCHAIN=local")
 	build.Stdout = cmd.ErrOrStderr()
 	build.Stderr = cmd.ErrOrStderr()
 	if err = build.Run(); err != nil {
@@ -185,6 +195,9 @@ func performPlatformUpdate(cmd *cobra.Command, plan updatePlan, repair bool) err
 	// Re-identify the target after the build; do not replace a concurrent edit.
 	if current, e := nativeInstallationVersion(target); e != nil || current != installed {
 		return fmt.Errorf("installation changed during the update; no replacement performed")
+	}
+	if currentHash, e := binaryHash(target); e != nil || currentHash != originalHash {
+		return fmt.Errorf("installation contents changed during the update; no replacement performed")
 	}
 	backup, err := swapNativeBinary(staged, target, func() error {
 		resolved, e := exec.LookPath("mcpsense")

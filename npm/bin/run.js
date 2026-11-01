@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 function runCLI(args, runtime = require('./wasm.js').runWasm) {
+  if (runtime === require('./wasm.js').runWasm && args[0] === 'update' && !args.some(a => ['--plan-json','--help','-h','--check','--check=true'].includes(a))) {
+    return require('./manage.cjs').update(args);
+  }
   return runtime(args);
 }
 module.exports = { runCLI };

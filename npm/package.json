@@ -1,11 +1,12 @@
 {
   "name": "mcpsense",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Security scanner for MCP servers. ESLint + Snyk for the Model Context Protocol.",
   "bin": {
     "mcpsense": "bin/run.js"
   },
   "scripts": {
+    "postinstall": "node bin/manage.cjs postinstall",
     "prepublishOnly": "node bin/wasm.js --verify"
   },
   "keywords": [
@@ -44,6 +45,7 @@
   ],
   "files": [
     "bin/run.js",
+    "bin/manage.cjs",
     "bin/wasm.js",
     "runtime/",
     "README.md",

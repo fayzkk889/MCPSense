@@ -22,10 +22,10 @@ async function download(address,limit,depth=0){
 async function main(){
  console.log(`Candidate ${pkg.version}, commit ${head}: package metadata and MIT license agree.`);
  if(process.argv.includes('--npm')) {
-  assert.equal(pkg.scripts?.install,undefined);assert.equal(pkg.scripts?.postinstall,undefined);assert.equal(pkg.scripts?.preinstall,undefined);
+  assert.equal(pkg.scripts?.install,undefined);assert.equal(pkg.scripts?.postinstall,'node bin/manage.cjs postinstall');assert.equal(pkg.scripts?.preinstall,undefined);
   assert.equal(pkg.engines.node,'>=22');assert.ok(!pkg.files.includes('install.js'));
   createRequire(import.meta.url)('../npm/bin/wasm.js').verifyRuntime('npm/runtime',pkg.version);
-  console.log('Bundled npm engine, Go runtime license and component checksums verified; no installation hooks.');
+  console.log('Bundled npm engine, Go runtime license and component checksums verified; guarded Node-only installation handoff.');
  }
  if(!process.argv.includes('--public')){console.log('Public availability NOT checked. Use --public after approved publication; code push alone does not update npm/Go releases.');return;}
  const release=JSON.parse(await download('https://api.github.com/repos/fayzkk889/MCPSense/releases/latest',2<<20));

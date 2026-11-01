@@ -24,10 +24,10 @@ jobs:
       - run: go test ./... -count=1 -cover
       - run: go test -race ./...
       - run: go vet ./...
-      - run: node --test scripts/action.test.mjs npm/package.test.cjs npm/runtime.test.cjs internal/nodebridge/node.test.cjs
+      - run: node --test scripts/action.test.mjs npm/package.test.cjs npm/management.test.cjs npm/runtime.test.cjs internal/nodebridge/node.test.cjs
       - run: npm pack ./npm --dry-run --json --ignore-scripts
       - run: node scripts/release-verify.mjs
-      - run: go build -ldflags="-X main.version=0.4.4" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
+      - run: go build -ldflags="-X main.version=0.4.5" -o bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/mcpsense
       - run: node --test npm/package.test.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
@@ -107,6 +107,8 @@ jobs:
       - run: node scripts/release-verify.mjs --npm
       - name: Install actual tarball offline without Go or archive tools
         run: node scripts/npm-wasm-smoke.cjs
+      - name: Normal global installation resolves an older Go command
+        run: node scripts/update-install-acceptance.cjs
       - name: Native-equivalent product journeys through npm entrypoint
         run: node scripts/npm-product-suite.cjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -116,6 +118,7 @@ jobs:
           path: |
             bin/npm-install-wasm/
             bin/npm-product/
+            bin/update-install-*/results.json
           retention-days: 7
   action:
     runs-on: ubuntu-latest
@@ -167,7 +170,7 @@ jobs:
           version: v2.18.3
           args: release --snapshot --skip=publish,announce,sign,sbom --timeout=10m
         env:
-          GORELEASER_CURRENT_TAG: v0.4.4
+          GORELEASER_CURRENT_TAG: v0.4.5
       - name: Verify snapshot archives and exercise remediation evidence
         run: |
           (cd dist && sha256sum -c checksums.txt)
