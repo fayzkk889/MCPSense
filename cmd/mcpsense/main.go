@@ -61,9 +61,11 @@ func rootCmd() *cobra.Command {
 		Version:       version,
 	}
 	root.SetVersionTemplate("mcpsense v{{.Version}}\n")
+	root.PersistentFlags().Bool("no-update-check", false, "Disable optional cached terminal update notices")
 
 	root.AddCommand(scanCmd())
 	root.AddCommand(versionCmd())
+	root.AddCommand(newUpdateCmd())
 	root.AddCommand(initConfigCmd())
 	root.AddCommand(verifyCmd())
 
@@ -224,6 +226,7 @@ CLI flags override config file values.`,
 				return fmt.Errorf("unknown protocol policy")
 			}
 
+			maybeAnnounceUpdate(cmd, offline, format)
 			s := scanner.New(scanner.Options{
 				Context:             cmd.Context(),
 				Mode:                scanMode,

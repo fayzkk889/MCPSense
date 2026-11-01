@@ -69,12 +69,14 @@ func publishedVersions(ctx context.Context, client *http.Client, githubURL, npmU
 func newVersionCmd() *cobra.Command {
 	check := false
 	cmd := &cobra.Command{Use: "version", Short: "Print installed version; --check compares published GitHub and npm versions", Args: cobra.NoArgs, RunE: func(cmd *cobra.Command, args []string) error {
+		if !check {
+			maybeAnnounceUpdate(cmd, false, "cli")
+		}
 		fmt.Fprintf(cmd.OutOrStdout(), "mcpsense v%s\n", version)
 		if !check {
 			return nil
 		}
-		// Networking is explicit, bounded, and never performed during ordinary
-		// version/startup/offline scans. No project contents or credentials are sent.
+		// Explicit checks are bounded and send no project contents or credentials.
 		client := &http.Client{Timeout: 8 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return fmt.Errorf("redirect rejected") }}
 		github, npm, err := publishedVersions(cmd.Context(), client, githubLatest, npmLatest)
 		if err != nil {
