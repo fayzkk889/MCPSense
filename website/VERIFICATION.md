@@ -1,4 +1,14 @@
-# Website verification — 27 October 2026
+# Website verification — 1 November 2026
+
+## Public 0.4.4 follow-up
+
+The existing Cloudflare `mcpsense` Worker serves the 0.4.4 snapshot, release entry and updated historical article notices at [mcpsense.site](https://mcpsense.site/). Production version **350457f5** was observed **100% Ready**; previous production **8848580b** remains available for rollback. npm and GitHub both serve 0.4.4, and the public browser confirms their agreement in the live stable label.
+
+Nine website tests pass. Actual public verification passes eight HTML pages, ten byte-exact assets, original robots rules after Cloudflare's managed prefix, security/cache headers and the genuine custom 404. The upload contains 20 static files and 205,270 uncompressed bytes. No source repository, credentials or CLI binaries are uploaded.
+
+The public changelog and getting-started pages pass 390px checks: one main heading each, no horizontal overflow and navigation closed after following a link. The normal desktop viewport is restored. Screenshot: ignored `bin/mcpsense-044-live-release.jpg`; machine receipt: `bin/release-044-site-public-receipt.json`. See the [complete release record](../docs/engineering/release-0.4.4-2026-11-01.md) for package identities and product-test scope.
+
+## Historical 27 October 2026 verification
 
 ## Public 0.4.2 follow-up
 
