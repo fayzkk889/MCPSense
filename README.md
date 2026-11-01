@@ -18,6 +18,8 @@ Install the latest published release from [npm](https://www.npmjs.com/package/mc
 
 **Fresh 0.4.3 product-test failures:** the [31 October audit](docs/engineering/product-use-audit-2026-10-31.md) passed existing workflows but missed 15 of 24 newly authored hostile descriptions in at least one supported metadata field and falsely flagged six of 24 benign controls. Native Go and npm agree; representative failures also reproduce through live discovery. These targeted results are not a field-accuracy estimate. A reviewed baseline detects subsequent changes, not initial safety.
 
+**Unpublished 0.4.4 candidate:** [shared metadata trust analysis](docs/engineering/metadata-trust-model-2026-11-01.md) addresses inconsistent context, value identity and control-effect interpretation. Its [verification record](docs/engineering/metadata-trust-verification-2026-11-01.md) preserves failed intermediate evaluations and records the complete native/npm rerun. The nine-corpus boundary gate is mandatory; reaching analysis capacity requires manual review. This branch work does not update the public 0.4.3 package or establish universal detection.
+
 ## Start safely
 
 Choose one installation route for a published release:

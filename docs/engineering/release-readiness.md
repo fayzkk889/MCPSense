@@ -1,5 +1,7 @@
 # Release readiness — 0.4.3 published
 
+**Unpublished 0.4.4 candidate, 1 November:** the [root-cause contract](metadata-trust-model-2026-11-01.md) and [candidate verification](metadata-trust-verification-2026-11-01.md) cover shared context, value identity, control effects and explicit incomplete-analysis errors. PR #21 prepares these changes with mandatory native/npm product gates. The public version remains 0.4.3; candidate testing and a branch push are not release approval or publication.
+
 **Fresh product-test verdict, 31 October:** the [0.4.3 user audit](product-use-audit-2026-10-31.md) passes existing product workflows but fails fresh hostile/benign metadata acceptance, identically through npm and native Go. Representative misses and false alarms also reproduce through live discovery. The historical publication receipts below establish delivery, not general detection reliability or a new security-acceptance all-clear.
 
 Verified 31 October 2026. PR #19 is merged and public npm, GitHub and Go now deliver **0.4.3** from tagged source `09f8022f300880244c4f91a961fbd59c243506c9`. The [0.4.3 release record](release-0.4.3-2026-10-30.md) contains canonical artifact identity, hosted checks, actual public installation and product evidence. MIT and the independent npm/Go installation routes remain unchanged.

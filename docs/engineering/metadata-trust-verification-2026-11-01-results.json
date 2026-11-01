@@ -1,0 +1,7371 @@
+{
+  "date": "2026-11-01",
+  "candidate": "0.4.4",
+  "source": "b0e231b219ec8d35d3a2a6f77f693d6b8cdf3d1a",
+  "published": false,
+  "wasm": {
+    "version": "0.4.4",
+    "toolchain": "go version go1.27.3 windows/amd64",
+    "format": "go-js-wasm-v1",
+    "files": {
+      "mcpsense.wasm": "7350a814975c9af86c8d1dc6ce99fd068188230b9f668bbab11419ea9b091ddd",
+      "wasm_exec.cjs": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
+      "host.cjs": "0bb96ce5386e390d592902fa0a18060c91894d9f31b006d84f017443ca73492b",
+      "LICENSE.Go": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+    }
+  },
+  "nativeSha256": "bb9e240487c5c8c6bdb904dd21c9ed08fadff30dcbe8ce8ca39ec37181b5b3ae",
+  "aggregatePerRoute": {
+    "TP": 353,
+    "FN": 0,
+    "FP": 0,
+    "TN": 365
+  },
+  "observationsPerRoute": 718,
+  "runtimeParity": true,
+  "corpora": [
+    {
+      "sha256": "8e4e48f56dba8c47becddb07d159d996682b7068cc95ed7d9663deb8c9764ce3",
+      "counts": {
+        "TP": 26,
+        "FN": 0,
+        "FP": 0,
+        "TN": 38
+      },
+      "observations": [
+        {
+          "id": "header-source-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "header-source-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "staged-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staged-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "transform-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "transform-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "encoding-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "encoding-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "routing-off-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-off-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "routing-empty-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-empty-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "noop-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "noop-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "downgrade-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "downgrade-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "pipe-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "pipe-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negated-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "negated-monitor-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "quote-data-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-command-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "authority-negation-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-after-negation-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "scope-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "scope-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "distant-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "diagnostic-names-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "public-key-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "header-source-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "header-source-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staged-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staged-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "transform-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "transform-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "encoding-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "encoding-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "routing-off-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-off-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "routing-empty-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "routing-empty-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "noop-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "noop-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "downgrade-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "downgrade-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "pipe-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "pipe-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negated-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negated-monitor-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-data-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-command-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "authority-negation-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-after-negation-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "claim-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "scope-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "scope-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "distant-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "diagnostic-names-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "public-key-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "c35976e18fbbeb3e71a845ca5534cc29273cb9d5636552069e7b786ff2cec815",
+      "counts": {
+        "TP": 32,
+        "FN": 0,
+        "FP": 0,
+        "TN": 32
+      },
+      "observations": [
+        {
+          "id": "monitor-quiet-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-quiet-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-migration-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 78,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-migration-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-recipient-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-recipient-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "evidence-fabrication-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "evidence-fabrication-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "diagnostic-auth-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "diagnostic-auth-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "encoded-secrets-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "encoded-secrets-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "credential-copy-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-copy-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "denial-workaround-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "denial-workaround-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "resource-authority-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-authority-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "review-edit-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "review-edit-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "failed-settlement-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-settlement-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-normalization-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-normalization-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "package-bootstrap-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "package-bootstrap-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-quotation-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-quotation-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-code-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-code-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "covert-relay-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "covert-relay-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-quiet-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-quiet-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-migration-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-migration-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-recipient-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-recipient-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "evidence-fabrication-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "evidence-fabrication-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "diagnostic-auth-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "diagnostic-auth-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "encoded-secrets-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "encoded-secrets-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-copy-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-copy-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "denial-workaround-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "denial-workaround-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "resource-authority-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-authority-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "review-edit-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "review-edit-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failed-settlement-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-settlement-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-normalization-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-normalization-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "package-bootstrap-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "package-bootstrap-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-quotation-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-quotation-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-code-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-code-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "covert-relay-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "covert-relay-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "d6551d39952aa6526caf7baa5977a15fe653b4a8f996c794c905663c75197167",
+      "counts": {
+        "TP": 12,
+        "FN": 0,
+        "FP": 0,
+        "TN": 12
+      },
+      "observations": [
+        {
+          "id": "hostile-01",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-02",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "hostile-03",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-04",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-05",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-06",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-01",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-02",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-03",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-04",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-05",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "benign-06",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "hostile-01",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-02",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "hostile-03",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-04",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-05",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "hostile-06",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "benign-01",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-02",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-03",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-04",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-05",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "benign-06",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "ed746a5ebb7900b4f9813f94704c13f1f18f85bf11bf099eaeb36cf245f068a4",
+      "counts": {
+        "TP": 36,
+        "FN": 0,
+        "FP": 0,
+        "TN": 36
+      },
+      "observations": [
+        {
+          "id": "fresh-from-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-from-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-names-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-names-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-quoted-plan-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-quoted-plan-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-queue-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-queue-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-header-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-header-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "fresh-value-name-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-value-name-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-reassign-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-reassign-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-observation-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-observation-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-constant-tail-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-constant-tail-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-outcome-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-outcome-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "fresh-wide-negation-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 53,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-wide-negation-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "fresh-wide-data-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 38,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-wide-data-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "fresh-from-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-from-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-names-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-names-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-quoted-plan-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-quoted-plan-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-queue-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-queue-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-header-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-header-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-value-name-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-value-name-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-reassign-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-reassign-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-observation-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-observation-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-constant-tail-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-constant-tail-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-outcome-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-outcome-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-wide-negation-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-wide-negation-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-wide-data-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 40,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-wide-data-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-from-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-from-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-names-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-names-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-quoted-plan-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-quoted-plan-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-queue-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-queue-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-header-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-header-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-value-name-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-value-name-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-reassign-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-reassign-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-observation-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-observation-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-constant-tail-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-constant-tail-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-outcome-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "fresh-outcome-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-wide-negation-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-wide-negation-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "fresh-wide-data-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 40,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "fresh-wide-data-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "5b761d6f78d8eb870f37e0200940ef542233d546bd560c55bab79afecf00c530",
+      "counts": {
+        "TP": 24,
+        "FN": 0,
+        "FP": 0,
+        "TN": 24
+      },
+      "observations": [
+        {
+          "id": "user-parallel-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-parallel-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-new-object-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-new-object-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-overwrite-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-overwrite-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-output-edit-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-output-edit-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-conditional-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-conditional-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "user-observed-gate-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 78,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "user-observed-gate-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "user-quoted-action-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "user-quoted-action-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-wide-refusal-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-wide-refusal-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "user-parallel-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-parallel-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-new-object-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-new-object-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-overwrite-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-overwrite-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-output-edit-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-output-edit-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-conditional-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-conditional-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-observed-gate-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "user-observed-gate-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-quoted-action-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "user-quoted-action-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-wide-refusal-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-wide-refusal-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-parallel-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-parallel-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-new-object-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-new-object-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-overwrite-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-overwrite-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-output-edit-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-output-edit-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-conditional-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-conditional-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-observed-gate-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "user-observed-gate-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-quoted-action-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "user-quoted-action-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "user-wide-refusal-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "user-wide-refusal-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "7235ceb6f342a80a9ae1e336a43aeeb490f5de913adee352147846b41eb026c8",
+      "counts": {
+        "TP": 51,
+        "FN": 0,
+        "FP": 0,
+        "TN": 51
+      },
+      "observations": [
+        {
+          "id": "header-refresh-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "header-refresh-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "cookie-transform-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "cookie-transform-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "archive-key-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "archive-key-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "reset-public-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "reset-public-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "alias-reassign-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "alias-reassign-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "route-no-delivery-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "route-no-delivery-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "sampling-disabled-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "sampling-disabled-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "approval-proxy-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "approval-proxy-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "tls-state-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "tls-state-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failed-result-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-result-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "infix-prohibition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 53,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "infix-prohibition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "quoted-query-tail-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "quoted-query-tail-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "constant-value-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "constant-value-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "variable-name-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "variable-name-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-data-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-data-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "report-observation-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "report-observation-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "subject-negation-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "subject-negation-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "header-refresh-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "header-refresh-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "cookie-transform-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "cookie-transform-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "archive-key-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "archive-key-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "reset-public-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "reset-public-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "alias-reassign-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "alias-reassign-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "route-no-delivery-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "route-no-delivery-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "sampling-disabled-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "sampling-disabled-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approval-proxy-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "approval-proxy-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "tls-state-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "tls-state-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failed-result-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-result-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "infix-prohibition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "infix-prohibition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quoted-query-tail-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "quoted-query-tail-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "constant-value-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "constant-value-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "variable-name-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "variable-name-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-data-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-data-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "report-observation-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "report-observation-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "subject-negation-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "subject-negation-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "header-refresh-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "header-refresh-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "cookie-transform-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "cookie-transform-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "archive-key-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "archive-key-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "reset-public-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "reset-public-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "alias-reassign-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "alias-reassign-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "route-no-delivery-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "route-no-delivery-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "sampling-disabled-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "sampling-disabled-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approval-proxy-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "approval-proxy-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "tls-state-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "tls-state-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failed-result-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failed-result-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "infix-prohibition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "infix-prohibition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quoted-query-tail-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "quoted-query-tail-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "constant-value-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "constant-value-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "variable-name-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "variable-name-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-data-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-data-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "report-observation-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "report-observation-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "subject-negation-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "subject-negation-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "8546a116b29bfddb1da920f17e63542f267e8ee731c72694992444e6a9b726f2",
+      "counts": {
+        "TP": 72,
+        "FN": 0,
+        "FP": 0,
+        "TN": 72
+      },
+      "observations": [
+        {
+          "id": "refresh-url-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "refresh-url-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "cookie-relay-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "cookie-relay-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "private-key-compress-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "private-key-compress-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-markdown-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-markdown-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "dns-chunks-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "dns-chunks-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "credential-env-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-env-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-queue-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-queue-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-sample-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-sample-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "monitor-maintenance-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-maintenance-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "approver-self-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "approver-self-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "policy-default-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-default-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "tls-identity-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "tls-identity-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "remote-setup-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "remote-setup-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "failure-rename-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failure-rename-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "findings-drop-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "findings-drop-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "resource-priority-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-priority-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "persistent-policy-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 58,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-012"
+          ]
+        },
+        {
+          "id": "persistent-policy-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "audit-delete-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "audit-delete-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "conditional-secret-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 63,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "conditional-secret-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "quote-then-action-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "quote-then-action-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-redacted-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-redacted-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "approved-data-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approved-data-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "negation-span-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "negation-span-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "ordinary-prose-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "ordinary-prose-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 43,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "refresh-url-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "refresh-url-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "cookie-relay-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "cookie-relay-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "private-key-compress-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "private-key-compress-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-markdown-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-markdown-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "dns-chunks-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "dns-chunks-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-env-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-env-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-queue-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-queue-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-sample-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-sample-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-maintenance-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-maintenance-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approver-self-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "approver-self-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-default-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-default-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "tls-identity-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "tls-identity-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "remote-setup-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "remote-setup-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failure-rename-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failure-rename-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "findings-drop-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "findings-drop-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "resource-priority-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-priority-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "persistent-policy-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 70,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "persistent-policy-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "audit-delete-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "audit-delete-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "conditional-secret-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "conditional-secret-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-then-action-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "quote-then-action-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-redacted-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-redacted-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "approved-data-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approved-data-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "negation-span-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negation-span-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "ordinary-prose-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "ordinary-prose-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 45,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "refresh-url-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "refresh-url-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "cookie-relay-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "cookie-relay-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "private-key-compress-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "private-key-compress-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-markdown-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-markdown-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "dns-chunks-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "dns-chunks-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-env-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "credential-env-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-queue-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-queue-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-sample-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-sample-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "monitor-maintenance-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "monitor-maintenance-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approver-self-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "approver-self-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-default-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-default-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "tls-identity-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "tls-identity-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "remote-setup-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "remote-setup-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "failure-rename-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "failure-rename-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "findings-drop-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "findings-drop-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "resource-priority-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "resource-priority-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "persistent-policy-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 70,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "persistent-policy-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "audit-delete-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "audit-delete-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "conditional-secret-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "conditional-secret-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "quote-then-action-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "quote-then-action-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-redacted-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "credential-redacted-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "approved-data-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "approved-data-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "negation-span-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "negation-span-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "ordinary-prose-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "ordinary-prose-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 45,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        }
+      ]
+    },
+    {
+      "sha256": "2027914f6a38e4c6349b793bcfbab1adc3c494c8bc505c18fdac62c945630683",
+      "counts": {
+        "TP": 40,
+        "FN": 0,
+        "FP": 0,
+        "TN": 40
+      },
+      "observations": [
+        {
+          "id": "permission-h1",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h2",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h3",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h4",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 78,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-b1",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-b2",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-b3",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-b4",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-h1",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h2",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h3",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h4",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-b1",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-b2",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-b3",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "outcome-b4",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-h1",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h2",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h3",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h4",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-b1",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-b2",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-b3",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "authority-b4",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-h1",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h2",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h3",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h4",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-b1",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-b2",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-b3",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "warning-b4",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-h1",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h2",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h3",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h4",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 88,
+          "exit": 1,
+          "rules": [
+            "QUAL-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-b1",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "policy-b2",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b3",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b4",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 98,
+          "exit": 0,
+          "rules": [
+            "QUAL-001"
+          ]
+        },
+        {
+          "id": "permission-h1",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h2",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h3",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-h4",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 80,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "permission-b1",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "permission-b2",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "permission-b3",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "permission-b4",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-h1",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h2",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h3",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-h4",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "outcome-b1",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-b2",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-b3",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "outcome-b4",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-h1",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h2",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h3",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-h4",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "authority-b1",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-b2",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-b3",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "authority-b4",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-h1",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h2",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h3",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-h4",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "warning-b1",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-b2",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-b3",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "warning-b4",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-h1",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h2",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h3",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-h4",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 90,
+          "exit": 1,
+          "rules": [
+            "SEC-001"
+          ]
+        },
+        {
+          "id": "policy-b1",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b2",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b3",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "policy-b4",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    },
+    {
+      "sha256": "1602234f0f3e33f833fdb9dbdc08c61d60b40204bfd5bea2e4529195c91195ea",
+      "counts": {
+        "TP": 60,
+        "FN": 0,
+        "FP": 0,
+        "TN": 60
+      },
+      "observations": [
+        {
+          "id": "q7-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "q7-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "q7-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "q7-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staging_packet_42-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staging_packet_42-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staging_packet_42-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staging_packet_42-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "customer_note-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "customer_note-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "customer_note-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "customer_note-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "buffer-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "buffer-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "buffer-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "buffer-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "api_key-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "api_key-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "api_key-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "api_key-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "password-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "password-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "password-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "password-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "secret-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "secret-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "secret-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "secret-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted_api_key-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "redacted_api_key-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted_api_key-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "redacted_api_key-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "status-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "status-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "status-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "status-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "version-flow-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "version-flow-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "version-definition-h",
+          "surface": "tool-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "version-definition-b",
+          "surface": "tool-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "q7-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "q7-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "q7-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "q7-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staging_packet_42-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staging_packet_42-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staging_packet_42-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staging_packet_42-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "customer_note-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "customer_note-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "customer_note-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "customer_note-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "buffer-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "buffer-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "buffer-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "buffer-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "api_key-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "api_key-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "api_key-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "api_key-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "password-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "password-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "password-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "password-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "secret-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "secret-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "secret-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "secret-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted_api_key-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "redacted_api_key-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted_api_key-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "redacted_api_key-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "status-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "status-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "status-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "status-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "version-flow-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "version-flow-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "version-definition-h",
+          "surface": "server-instructions",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "version-definition-b",
+          "surface": "server-instructions",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "q7-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "q7-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "q7-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "q7-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staging_packet_42-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staging_packet_42-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "staging_packet_42-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "staging_packet_42-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "customer_note-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "customer_note-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "customer_note-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "customer_note-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "buffer-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "buffer-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "buffer-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "buffer-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "api_key-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "api_key-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "api_key-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 55,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "api_key-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "password-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "password-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "password-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "password-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "secret-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "secret-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "secret-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "secret-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted_api_key-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "redacted_api_key-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "redacted_api_key-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "redacted_api_key-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "status-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "status-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "status-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "status-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "version-flow-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "version-flow-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        },
+        {
+          "id": "version-definition-h",
+          "surface": "schema-description",
+          "outcome": "TP",
+          "score": 65,
+          "exit": 1,
+          "rules": [
+            "SEC-001",
+            "SEC-011"
+          ]
+        },
+        {
+          "id": "version-definition-b",
+          "surface": "schema-description",
+          "outcome": "TN",
+          "score": 100,
+          "exit": 0,
+          "rules": []
+        }
+      ]
+    }
+  ],
+  "live": {
+    "observations": [
+      {
+        "id": "credential-env-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "outcome": "TP",
+        "exit": 1,
+        "score": 63,
+        "rules": [
+          "SEC-001",
+          "SEC-011"
+        ]
+      },
+      {
+        "id": "cookie-relay-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "outcome": "TP",
+        "exit": 1,
+        "score": 61,
+        "rules": [
+          "SEC-001",
+          "SEC-011"
+        ]
+      },
+      {
+        "id": "monitor-queue-h",
+        "surface": "tool-description",
+        "hostile": true,
+        "outcome": "TP",
+        "exit": 1,
+        "score": 86,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "tls-identity-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "outcome": "TN",
+        "exit": 0,
+        "score": 96,
+        "rules": []
+      },
+      {
+        "id": "credential-redacted-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "outcome": "TN",
+        "exit": 0,
+        "score": 98,
+        "rules": []
+      },
+      {
+        "id": "approved-data-b",
+        "surface": "tool-description",
+        "hostile": false,
+        "outcome": "TN",
+        "exit": 0,
+        "score": 98,
+        "rules": []
+      },
+      {
+        "id": "credential-env-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "outcome": "TP",
+        "exit": 1,
+        "score": 63,
+        "rules": [
+          "SEC-011",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "cookie-relay-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "outcome": "TP",
+        "exit": 1,
+        "score": 63,
+        "rules": [
+          "SEC-011",
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "monitor-queue-h",
+        "surface": "server-instructions",
+        "hostile": true,
+        "outcome": "TP",
+        "exit": 1,
+        "score": 88,
+        "rules": [
+          "SEC-001"
+        ]
+      },
+      {
+        "id": "tls-identity-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "outcome": "TN",
+        "exit": 0,
+        "score": 98,
+        "rules": []
+      },
+      {
+        "id": "credential-redacted-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "outcome": "TN",
+        "exit": 0,
+        "score": 98,
+        "rules": []
+      },
+      {
+        "id": "approved-data-b",
+        "surface": "server-instructions",
+        "hostile": false,
+        "outcome": "TN",
+        "exit": 0,
+        "score": 98,
+        "rules": []
+      }
+    ],
+    "counts": {
+      "TP": 6,
+      "FN": 0,
+      "FP": 0,
+      "TN": 6
+    },
+    "calls": [
+      {
+        "case": "credential-env-h",
+        "surface": "tool-description",
+        "method": "server/discover"
+      },
+      {
+        "case": "credential-env-h",
+        "surface": "tool-description",
+        "method": "tools/list"
+      },
+      {
+        "case": "cookie-relay-h",
+        "surface": "tool-description",
+        "method": "server/discover"
+      },
+      {
+        "case": "cookie-relay-h",
+        "surface": "tool-description",
+        "method": "tools/list"
+      },
+      {
+        "case": "monitor-queue-h",
+        "surface": "tool-description",
+        "method": "server/discover"
+      },
+      {
+        "case": "monitor-queue-h",
+        "surface": "tool-description",
+        "method": "tools/list"
+      },
+      {
+        "case": "tls-identity-b",
+        "surface": "tool-description",
+        "method": "server/discover"
+      },
+      {
+        "case": "tls-identity-b",
+        "surface": "tool-description",
+        "method": "tools/list"
+      },
+      {
+        "case": "credential-redacted-b",
+        "surface": "tool-description",
+        "method": "server/discover"
+      },
+      {
+        "case": "credential-redacted-b",
+        "surface": "tool-description",
+        "method": "tools/list"
+      },
+      {
+        "case": "approved-data-b",
+        "surface": "tool-description",
+        "method": "server/discover"
+      },
+      {
+        "case": "approved-data-b",
+        "surface": "tool-description",
+        "method": "tools/list"
+      },
+      {
+        "case": "credential-env-h",
+        "surface": "server-instructions",
+        "method": "server/discover"
+      },
+      {
+        "case": "credential-env-h",
+        "surface": "server-instructions",
+        "method": "tools/list"
+      },
+      {
+        "case": "cookie-relay-h",
+        "surface": "server-instructions",
+        "method": "server/discover"
+      },
+      {
+        "case": "cookie-relay-h",
+        "surface": "server-instructions",
+        "method": "tools/list"
+      },
+      {
+        "case": "monitor-queue-h",
+        "surface": "server-instructions",
+        "method": "server/discover"
+      },
+      {
+        "case": "monitor-queue-h",
+        "surface": "server-instructions",
+        "method": "tools/list"
+      },
+      {
+        "case": "tls-identity-b",
+        "surface": "server-instructions",
+        "method": "server/discover"
+      },
+      {
+        "case": "tls-identity-b",
+        "surface": "server-instructions",
+        "method": "tools/list"
+      },
+      {
+        "case": "credential-redacted-b",
+        "surface": "server-instructions",
+        "method": "server/discover"
+      },
+      {
+        "case": "credential-redacted-b",
+        "surface": "server-instructions",
+        "method": "tools/list"
+      },
+      {
+        "case": "approved-data-b",
+        "surface": "server-instructions",
+        "method": "server/discover"
+      },
+      {
+        "case": "approved-data-b",
+        "surface": "server-instructions",
+        "method": "tools/list"
+      }
+    ],
+    "noToolsCalled": true
+  },
+  "capacity": {
+    "results": [
+      {
+        "route": "npm",
+        "checks": null,
+        "exit": 2,
+        "stdout": "",
+        "stderr": "scan failed: instruction analysis capacity exceeded in server (instructions); manual review is required\n"
+      },
+      {
+        "route": "npm",
+        "checks": "SEC-001",
+        "exit": 2,
+        "stdout": "",
+        "stderr": "scan failed: instruction analysis capacity exceeded in server (instructions); manual review is required\n"
+      },
+      {
+        "route": "npm",
+        "checks": "SEC-011",
+        "exit": 2,
+        "stdout": "",
+        "stderr": "scan failed: instruction analysis capacity exceeded in server (instructions); manual review is required\n"
+      },
+      {
+        "route": "native",
+        "checks": null,
+        "exit": 2,
+        "stdout": "",
+        "stderr": "scan failed: instruction analysis capacity exceeded in server (instructions); manual review is required\n"
+      },
+      {
+        "route": "native",
+        "checks": "SEC-001",
+        "exit": 2,
+        "stdout": "",
+        "stderr": "scan failed: instruction analysis capacity exceeded in server (instructions); manual review is required\n"
+      },
+      {
+        "route": "native",
+        "checks": "SEC-011",
+        "exit": 2,
+        "stdout": "",
+        "stderr": "scan failed: instruction analysis capacity exceeded in server (instructions); manual review is required\n"
+      }
+    ],
+    "checks": 6
+  },
+  "expert": {
+    "pass": 87,
+    "fail": 0,
+    "online": true
+  },
+  "preservedInitialFresh": {
+    "counts": {
+      "TP": 21,
+      "FN": 15,
+      "FP": 6,
+      "TN": 30
+    },
+    "sha256": "ed746a5ebb7900b4f9813f94704c13f1f18f85bf11bf099eaeb36cf245f068a4",
+    "artifactWasmSha256": "a83d08880ed3d59a94679ab91e77feb86d3d502368488479949a332fac9a7182"
+  },
+  "scope": "Authored regressions and product workflows, not overall field accuracy, runtime authorization or exhaustive future detection."
+}
