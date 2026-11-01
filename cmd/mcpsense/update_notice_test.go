@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 )
@@ -31,23 +32,24 @@ func TestStableVersionOrdering(t *testing.T) {
 }
 
 func TestNoticeCacheAndFailureDoNotAuthorizeUpdates(t *testing.T) {
-	requests := 0
-	body := `{"tag_name":"v0.4.6","version":"0.4.6"}`
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { requests++; fmt.Fprint(w, body) }))
+	var requests atomic.Int32
+	var body atomic.Value
+	body.Store(`{"tag_name":"v0.4.6","version":"0.4.6"}`)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { requests.Add(1); fmt.Fprint(w, body.Load()) }))
 	defer server.Close()
 	o := noticeOptions{"0.4.5", filepath.Join(t.TempDir(), "cache", "updates.json"), server.URL, server.URL, time.Now(), server.Client()}
 	var out bytes.Buffer
 	cachedUpdateNotice(context.Background(), &out, o)
-	if requests != 2 || !strings.Contains(out.String(), "0.4.5 → 0.4.6") {
-		t.Fatalf("%d %s", requests, &out)
+	if requests.Load() != 2 || !strings.Contains(out.String(), "0.4.5 → 0.4.6") {
+		t.Fatalf("%d %s", requests.Load(), &out)
 	}
 	out.Reset()
 	cachedUpdateNotice(context.Background(), &out, o)
-	if requests != 2 || !strings.Contains(out.String(), "mcpsense update") {
-		t.Fatal(requests, out.String())
+	if requests.Load() != 2 || !strings.Contains(out.String(), "mcpsense update") {
+		t.Fatal(requests.Load(), out.String())
 	}
 	o.Now = o.Now.Add(2 * time.Hour)
-	body = `{"tag_name":"v0.4.6","version":"0.4.7"}`
+	body.Store(`{"tag_name":"v0.4.6","version":"0.4.7"}`)
 	out.Reset()
 	cachedUpdateNotice(context.Background(), &out, o)
 	if out.Len() != 0 {
@@ -56,7 +58,7 @@ func TestNoticeCacheAndFailureDoNotAuthorizeUpdates(t *testing.T) {
 	if err := os.WriteFile(o.File, []byte(`{"checked_at":"2099-01-01T00:00:00Z","latest_version":"99.0.0\u001b[31m"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
-	body = `invalid`
+	body.Store(`invalid`)
 	out.Reset()
 	cachedUpdateNotice(context.Background(), &out, o)
 	if out.Len() != 0 {

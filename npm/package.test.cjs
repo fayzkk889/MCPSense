@@ -10,6 +10,11 @@ test('declared executable passes literal arguments to the bundled engine',async(
  const {runCLI}=require(wrapper);const payload='x"; echo SENTINEL; #';
  assert.equal(await runCLI(['scan',payload],async args=>{assert.deepEqual(args,['scan',payload]);return 2;}),2);
 });
+test('update management preserves Cobra check/help validation and leading global opt-out flags',()=>{
+ const {managesUpdate}=require('./bin/run.js');
+ for(const args of [['update'],['update','--repair-path'],['--no-update-check','update'],['--no-update-check=false','update'],['update','--check=false']])assert.ok(managesUpdate(args));
+ for(const args of [['scan'],['version'],['update','--check'],['update','--check=true'],['update','--help'],['--no-update-check','update','--plan-json']])assert.equal(managesUpdate(args),false);
+});
 test('archive checksum rejects corruption and missing or ambiguous records',()=>{
  const {verifyArchive}=require('./install.js');const bytes=Buffer.from('synthetic');const digest=createHash('sha256').update(bytes).digest('hex');
  assert.doesNotThrow(()=>verifyArchive(bytes,`${digest}  archive.tar.gz\n`,'archive.tar.gz'));

@@ -11,7 +11,7 @@ function goFixture(v='0.3.0', module='github.com/fayzkk889/MCPSense', extra='') 
   return Buffer.concat([header,varint(6),Buffer.from('go1.27'),varint(framed.length),framed]);
 }
 function setup(t) {
-  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'mcpsense-handoff-')); t.after(()=>fs.rmSync(tmp,{recursive:true,force:true}));
+  const tmp=fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()),'mcpsense-handoff-')); t.after(()=>fs.rmSync(tmp,{recursive:true,force:true}));
   const prefix=path.join(tmp,'npm with spaces'),own=layout(prefix),go=path.join(tmp,'go','bin');
   fs.mkdirSync(path.join(own.root,'bin'),{recursive:true});fs.mkdirSync(own.bin,{recursive:true});fs.mkdirSync(go,{recursive:true});
   const entry=path.join(own.root,'bin/run.js');fs.writeFileSync(entry,'#!/usr/bin/env node\n');
