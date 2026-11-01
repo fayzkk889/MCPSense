@@ -172,6 +172,7 @@ func normalizedDirective(text string) string {
 // never an exemption. Literal skill rules still inspect the original text;
 // relational screening also uses this constrained context handling.
 func InstructionText(content string) string {
+	content = metadataActiveText(content)
 	bytes := []byte(content)
 	start := 0
 	for _, span := range clauseBreak.FindAllStringIndex(content, -1) {

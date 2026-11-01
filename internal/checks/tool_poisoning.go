@@ -274,8 +274,9 @@ func findMixedScriptWords(text string) []string {
 
 // --- SEC-011: Data Exfiltration Instructions in Descriptions ---
 
-// ExfilInstructionCheck detects tool descriptions that instruct the agent to read, include,
-// or send sensitive data — the primary mechanism for tool-poisoning-based data theft.
+// ExfilInstructionCheck uses shared active-context/value analysis over the same
+// advertised fields as injection screening. It never runs a second raw regex
+// policy with a different interpretation of negation or literal operands.
 type ExfilInstructionCheck struct{}
 
 func (c *ExfilInstructionCheck) ID() string { return "SEC-011" }
@@ -284,39 +285,33 @@ func (c *ExfilInstructionCheck) Name() string {
 }
 func (c *ExfilInstructionCheck) Category() models.Category { return models.CategorySecurity }
 
-var exfilInstructionPatterns = []*regexp.Regexp{
-	// Instructions to read sensitive files
-	regexp.MustCompile(`(?i)(read|include|send|attach|return|output|append|add|embed|insert)\s+(the\s+)?(contents?\s+of|data\s+from|file)\s+[~./]`),
-	regexp.MustCompile(`(?i)\b(read|copy|send|upload|print|include|access)\b[^\n!?]{0,160}(\.ssh|\.env|\.aws|\.kube|/etc/passwd|/etc/shadow|id_rsa|id_ed25519|\.npmrc|\.pypirc|\.docker|credentials)`),
-	// Instructions to exfiltrate to external services
-	regexp.MustCompile(`(?i)(send|post|forward|upload|transmit|exfiltrate|leak)\s+(to|via|using)\s+(http|https|ftp|webhook|endpoint|url|api)`),
-	regexp.MustCompile(`(?i)(include|embed|encode|base64|hex).{0,30}(in\s+the\s+response|in\s+your\s+(response|output|answer))`),
-	// Instructions to access environment variables or secrets
-	regexp.MustCompile(`(?i)(read|access|get|retrieve|print|output|include)\s+(the\s+)?(environment\s+variable|env\s+var|API.?key|secret|token|password|credential)`),
-	// Instructions to hide actions from the user
-	regexp.MustCompile(`(?i)(do\s+not|don'?t|never)\s+(show|display|tell|reveal|mention|report)\s+(the\s+user|to\s+the\s+user|this)`),
-	regexp.MustCompile(`(?i)(silently|quietly|without\s+(telling|informing|notifying|showing))[^\n.!?]{0,100}\b(copy|send|upload|transfer|credentials?|private|secrets?)\b`),
-}
-
 func (c *ExfilInstructionCheck) Run(ctx *ScanContext) []models.Finding {
 	if ctx.Manifest == nil {
 		return nil
 	}
 	var findings []models.Finding
-	for _, tool := range ctx.Manifest.Tools {
-		for _, pat := range exfilInstructionPatterns {
-			if loc := pat.FindStringIndex(detection.InstructionText(tool.Description)); loc != nil {
-				matched := tool.Description[loc[0]:loc[1]]
+	engine := ctx.Patterns
+	if engine == nil {
+		engine = detection.NewPatternEngine()
+	}
+	texts, err := metadataTexts(ctx.Manifest)
+	if err != nil {
+		ctx.Errors = append(ctx.Errors, err)
+		return nil
+	}
+	for _, text := range texts {
+		for _, match := range engine.ScanToolDescription(text.text) {
+			if match.PatternID == "EFF-001" || match.PatternID == "PI-014" || match.PatternID == "PI-015" {
 				findings = append(findings, models.Finding{
 					ID:          "SEC-011",
-					Title:       fmt.Sprintf("Suspected data exfiltration instruction in tool %q", tool.Name),
-					Description: fmt.Sprintf("Tool %q description contains text that may instruct the agent to access or transmit sensitive data. Matched: %q", tool.Name, matched),
+					Title:       fmt.Sprintf("Suspected data exfiltration instruction in metadata: %s (%s)", text.owner, text.field),
+					Description: fmt.Sprintf("Metadata for %q (%s) requests sensitive access or transfer. Shared analysis: %s. Matched: %q", text.owner, text.field, match.PatternID, match.MatchedText),
 					Severity:    models.SeverityCritical,
 					Category:    models.CategorySecurity,
-					Location:    models.Location{ToolName: tool.Name},
+					Location:    models.Location{ToolName: text.owner},
 					Remediation: "Remove any instructions that direct the agent to read sensitive files, access credentials, or send data to external endpoints. Tool descriptions should only describe the tool's functional behavior.",
 				})
-				break // One finding per tool for this check
+				break // One finding per advertised field for this check
 			}
 		}
 	}

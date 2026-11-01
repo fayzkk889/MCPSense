@@ -65,6 +65,7 @@ var documentQuery = regexp.MustCompile(`(?is)^\s*(?:search(?:es)?|retriev(?:e|es
 func (e *PatternEngine) ScanToolDescription(content string) []PatternMatch {
 	screened := InstructionText(content)
 	matches := e.scanMetadataClauses(screened)
+	matches = append(matches, e.contextReferenceMatches(content)...)
 	for i := range matches {
 		m := &matches[i]
 		m.MatchedText = content[m.Offset : m.Offset+len(m.MatchedText)]
