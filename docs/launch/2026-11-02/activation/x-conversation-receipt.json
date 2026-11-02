@@ -14,5 +14,14 @@
   "externalCompletedInspections": null,
   "repeatInspections": null,
   "metricoolScheduling": "not_executed_no_tools_exposed",
-  "preparedQueue": "content-queue.json"
+  "preparedQueue": "content-queue.json",
+  "catalogInvitation": {
+    "url": "https://x.com/Kantorcodes/status/2117163012679450898",
+    "workflowStated": "initial evaluation for an open-source catalog; subsequent drift also of interest",
+    "replyURL": "https://x.com/tana_shahh/status/2117206963268567154",
+    "replyText": "Yes, please send the repo and format. MCPSense is a security CLI for inspecting MCP integrations, so the developer/security-tools category would fit. I can supply npm/Go install links, a runnable demo and its inspection limits.",
+    "status": "reply_published_verified_awaiting_repo_and_format",
+    "submissionComplete": false,
+    "identityAffiliationIndependentlyVerified": false
+  }
 }
