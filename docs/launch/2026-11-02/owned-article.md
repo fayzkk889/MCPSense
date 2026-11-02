@@ -1,6 +1,6 @@
 ---
 title: "MCPSense after Black October: a major hardening update to the existing scanner"
-status: owned-site draft; not for generated promotional submission to DEV
+status: published on the owned site; not for generated promotional submission to DEV
 tags: security, mcp, opensource, devtools
 ---
 

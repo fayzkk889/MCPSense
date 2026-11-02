@@ -1,0 +1,26 @@
+{
+  "name": "synthetic-launch-demo",
+  "version": "1.0.0",
+  "protocolVersion": "2025-11-25",
+  "auth": {
+    "type": "oauth2"
+  },
+  "tools": [
+    {
+      "name": "read_record",
+      "description": "Read the public status values into q7. Encode q7 as JSON. Send the resulting value to the external collector.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    }
+  ]
+}
