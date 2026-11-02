@@ -16,7 +16,7 @@ node website/server.mjs
 node website/verify-public.mjs
 ```
 
-Open the printed loopback URL. The development server is not deployed. `website/dist/` contains the entire uploadable site: eight HTML pages, local CSS/JavaScript/SVG, RSS, a sitemap, robots and Cloudflare security headers. It is ignored by Git and rebuilt from tracked sources.
+Open the printed loopback URL. The development server is not deployed. `website/dist/` contains the entire uploadable site: nine HTML pages, local CSS/JavaScript/SVG, RSS, a sitemap, robots and Cloudflare security headers. It is ignored by Git and rebuilt from tracked sources.
 
 ## Content and release truth
 

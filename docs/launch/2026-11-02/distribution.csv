@@ -1,0 +1,5 @@
+channel,account,asset,status,public_url,completed_inspections,repeat_inspections,notes
+Owned blog,MCPSense,owned-article.md,prepared,,0,0,Existing-product hardening update
+DEV,tana_shahh,source facts only,human authorship required,,0,0,Current DEV guidance disallows generated promotion of programs; no generated promo/comment posted
+LinkedIn,Faizan Ahamad Khan,linkedin.txt,published,https://www.linkedin.com/feed/update/urn:li:share:7522907964811198464/,0,0,Existing product hardening update
+X,tana_shahh,x-thread.json,published,https://x.com/tana_shahh/status/2117142835782947063,0,0,Four-part update thread; no vote requests or mass DMs

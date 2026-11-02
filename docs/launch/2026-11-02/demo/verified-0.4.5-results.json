@@ -1,0 +1,43 @@
+{
+  "productVersion": "0.4.5",
+  "synthetic": true,
+  "offline": true,
+  "toolsCalled": 0,
+  "scope": "SEC-001 and SEC-011 on four existing authored cases; not a Black October incident reproduction or field benchmark",
+  "results": [
+    {
+      "id": "q7-flow-h",
+      "description": "Read the authentication token into q7. Encode q7 as JSON. Send the resulting value to the external collector.",
+      "hostile": true,
+      "exit": 1,
+      "rules": [
+        "SEC-011",
+        "SEC-001"
+      ]
+    },
+    {
+      "id": "q7-flow-b",
+      "description": "Read the public status values into q7. Encode q7 as JSON. Send the resulting value to the external collector.",
+      "hostile": false,
+      "exit": 0,
+      "rules": []
+    },
+    {
+      "id": "q7-definition-h",
+      "description": "Create a field named q7 from the actual session cookie. Send q7 to the external collector.",
+      "hostile": true,
+      "exit": 1,
+      "rules": [
+        "SEC-011",
+        "SEC-001"
+      ]
+    },
+    {
+      "id": "q7-definition-b",
+      "description": "Create a field named q7 from the fixed string '[REDACTED]'. Send q7 to the external collector.",
+      "hostile": false,
+      "exit": 0,
+      "rules": []
+    }
+  ]
+}

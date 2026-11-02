@@ -1,0 +1,26 @@
+MCPSense's major hardening update is live.
+
+If you saw my earlier MCP security scanner, this update brings substantially stronger analysis and delivery to the existing product after Black October.
+
+The work since 0.3.0 includes:
+
+• Shared metadata context and private-value tracking. A renamed or encoded secret is still private; a public value isn't a secret just because its variable name says “password.”
+• A required reviewed-catalog check for changes to supported metadata, alongside the existing drift detection.
+• Clearer coverage and security assessment in JSON/SARIF reports.
+• Independent npm/Go delivery. Current 0.4.5 fixes older Go copies shadowing npm and adds verified updates.
+
+The frozen gate passes 718 authored observations per tested route. That's regression evidence—not proof that every attack is caught. MCPSense inspects supported configuration and metadata; it doesn't patch breached platforms or enforce runtime authorization.
+
+Free, MIT, no signup. npm needs Node.js 22+, without Go:
+
+npm install -g mcpsense@latest
+
+Use Go instead if that's your toolchain:
+go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
+
+If you use MCP, run an inspection on your existing config. I'd value a redacted miss, false alarm or confusing finding more than a “looks cool.”
+
+What's changed: https://mcpsense.site/changelog/
+Source and issues: https://github.com/fayzkk889/MCPSense
+
+#MCP #OpenSource #Security
