@@ -12,6 +12,8 @@ Install the latest published release from [npm](https://www.npmjs.com/package/mc
 
 **Published 0.4.4:** npm and Go deliver [shared metadata trust analysis](docs/engineering/metadata-trust-model-2026-11-01.md) addressing the reproduced context, value-identity and control-effect failures. The [release record](docs/engineering/release-0.4.4-2026-11-01.md) identifies the published artifacts; the [verification record](docs/engineering/metadata-trust-verification-2026-11-01.md) preserves failed intermediate evaluations and the complete native/npm rerun. All 718 frozen observations per route pass the mandatory boundary gate; reaching analysis capacity requires manual review. These are bounded regression results, not universal protection. Rerun your preferred installation command to update an older package.
 
+**Unreleased 0.4.5 candidate:** [installation/update work](docs/engineering/update-contract-2026-11-01.md) addresses an older Go executable shadowing a newer npm package. It adds a guarded global npm handoff with a preserved backup, `mcpsense update`, and opt-out interactive update notices. These commands are not in the currently published 0.4.4 package. Until publication, Windows users can run `mcpsense.cmd version` to select npm's installed version explicitly. Automatic notices skip offline scans, machine-readable reports, CI and pipes; they never install an update automatically.
+
 <details>
 <summary>Historical audits and earlier release evidence</summary>
 
@@ -45,7 +47,7 @@ mcpsense scan ./mcp.json --offline --no-baseline
 
 This creates a synthetic example manifest and refuses to overwrite an existing `mcp.json`. It does not connect to or configure your real MCP server. For a real inspection, replace the target path with your existing manifest or client MCP configuration. `mcpsense init` without `--example` creates scanner settings; it does not create a scan target.
 
-Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically; ordinary startup and offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
+Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically. Published 0.4.4 checks versions only on explicit request; the 0.4.5 candidate adds the interactive notices described above. Offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
 
 ### From a source checkout
 

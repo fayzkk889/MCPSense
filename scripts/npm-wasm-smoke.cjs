@@ -28,7 +28,7 @@ function main() {
   assert.equal(spawnSync('tar',['--version'],{env}).error?.code,'ENOENT');
   const options = {cwd:root,env,encoding:'utf8',windowsHide:true,timeout:120000};
   const pack = JSON.parse(execFileSync(process.execPath,[npm,'pack','./npm','--json','--ignore-scripts','--pack-destination',tmp],options))[0];
-  const expected = ['package.json','README.md','LICENSE','bin/run.js','bin/wasm.js','runtime/manifest.json','runtime/host.cjs','runtime/wasm_exec.cjs','runtime/mcpsense.wasm','runtime/LICENSE.Go'];
+  const expected = ['package.json','README.md','LICENSE','bin/run.js','bin/manage.cjs','bin/wasm.js','runtime/manifest.json','runtime/host.cjs','runtime/wasm_exec.cjs','runtime/mcpsense.wasm','runtime/LICENSE.Go'];
   assert.deepEqual(pack.files.map(f=>f.path).sort(),expected.sort(),'Unexpected/missing npm package files');
   const tarball = path.join(tmp,pack.filename);
   fs.copyFileSync(tarball,path.join(evidence,pack.filename));

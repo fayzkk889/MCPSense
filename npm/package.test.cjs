@@ -10,14 +10,19 @@ test('declared executable passes literal arguments to the bundled engine',async(
  const {runCLI}=require(wrapper);const payload='x"; echo SENTINEL; #';
  assert.equal(await runCLI(['scan',payload],async args=>{assert.deepEqual(args,['scan',payload]);return 2;}),2);
 });
+test('update management preserves Cobra check/help validation and leading global opt-out flags',()=>{
+ const {managesUpdate}=require('./bin/run.js');
+ for(const args of [['update'],['update','--repair-path'],['--no-update-check','update'],['--no-update-check=false','update'],['update','--check=false'],['update','--check'],['update','--check=1'],['update','--check=true']])assert.ok(managesUpdate(args));
+ for(const args of [['scan'],['version'],['update','--help'],['--no-update-check','update','--plan-json']])assert.equal(managesUpdate(args),false);
+});
 test('archive checksum rejects corruption and missing or ambiguous records',()=>{
  const {verifyArchive}=require('./install.js');const bytes=Buffer.from('synthetic');const digest=createHash('sha256').update(bytes).digest('hex');
  assert.doesNotThrow(()=>verifyArchive(bytes,`${digest}  archive.tar.gz\n`,'archive.tar.gz'));
  for(const manifest of ['bad',`${'0'.repeat(64)}  archive.tar.gz`,`${digest}  archive.tar.gz\n${digest}  archive.tar.gz`])assert.throws(()=>verifyArchive(bytes,manifest,'archive.tar.gz'));
 });
-test('npm has no install hooks, native executable or compiler requirement',()=>{
+test('npm has only the guarded Node handoff hook, without native executable or compiler requirement',()=>{
  const pkg=require('./package.json');
- assert.equal(pkg.scripts?.postinstall,undefined);assert.equal(pkg.scripts?.install,undefined);assert.equal(pkg.scripts?.preinstall,undefined);
+ assert.equal(pkg.scripts?.postinstall,'node bin/manage.cjs postinstall');assert.equal(pkg.scripts?.install,undefined);assert.equal(pkg.scripts?.preinstall,undefined);
  assert.equal(pkg.engines.node,'>=22');assert.ok(pkg.files.includes('runtime/'));assert.ok(!pkg.files.includes('install.js'));assert.ok(!pkg.files.includes('bin/'));
 });
 
