@@ -1,4 +1,12 @@
-# Website verification — 1 November 2026
+# Website verification — 2 November 2026
+
+## Public 0.4.5 follow-up
+
+The existing Cloudflare assets-only `mcpsense` Worker serves the 0.4.5 snapshot, changelog and installation/update guide at [mcpsense.site](https://mcpsense.site/). Production version **80226ef7** was observed **100% Ready**; previous production **350457f5** remains available for rollback. Public npm and GitHub agree on 0.4.5, and the browser confirms `Latest stable · v0.4.5` with the new release entry.
+
+Nine website tests passed. The changed guide and changelog fit a 390px local preview with one main heading and no horizontal overflow; the normal viewport was restored. Actual public verification passed eight HTML pages, ten byte-exact assets, preserved robots rules after Cloudflare's managed prefix, security/cache headers and the genuine custom 404. Only the 20 built static files (208,237 uncompressed bytes) were uploaded, with `index.html` at root and subdirectories preserved.
+
+Screenshot: ignored `bin/mcpsense-045-live-release.jpg`; machine receipt: `bin/release-045-site-public-receipt.json`. The [release record](../docs/engineering/release-0.4.5-2026-11-02.md) identifies canonical/public package bytes and actual user tests. The tagged executable source and published package bytes remain unchanged by this documentation/static-content follow-up.
 
 ## Public 0.4.4 follow-up
 

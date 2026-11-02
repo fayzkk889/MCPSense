@@ -1,4 +1,8 @@
-# Release readiness — 0.4.4 published
+# Release readiness — 0.4.5 published
+
+**Published 0.4.5, 2 November:** [PR #23](https://github.com/fayzkk889/MCPSense/pull/23) is merged and the approved npm/GitHub/Go release delivers guarded installation handoff, verified update commands and bounded terminal notices. The [release record](release-0.4.5-2026-11-02.md) identifies the exact canonical/public bytes, actual anonymous installation and public Go user tests. All 15 PR checks, 14 merged-source jobs and the tagged publication workflow passed. MIT licensing and independent npm/Go routes remain unchanged.
+
+## Historical 0.4.4 status
 
 **Published 0.4.4, 1 November:** [PR #21](https://github.com/fayzkk889/MCPSense/pull/21) is merged and the approved npm/GitHub/Go release delivers shared metadata context, value provenance, control effects and explicit incomplete-analysis errors. The [release record](release-0.4.4-2026-11-01.md) contains publication identities and actual public verification; the [root-cause contract](metadata-trust-model-2026-11-01.md) and [candidate verification](metadata-trust-verification-2026-11-01.md) preserve development evidence and limitations. MIT and the independent installation routes remain unchanged.
 

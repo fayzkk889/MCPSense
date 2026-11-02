@@ -1,0 +1,97 @@
+{
+  "version": "0.4.5",
+  "status": "published",
+  "date": "2026-11-02",
+  "license": "MIT",
+  "source": {
+    "reviewPR": 23,
+    "reviewedHead": "e9116c46ce36a8ec800961d5b5019dd15eda4bb6",
+    "tag": "v0.4.5",
+    "commit": "4ad87fc5aa8dd03cfc7be6d67f23f2111144c2c7"
+  },
+  "ci": {
+    "premergeChecks": 15,
+    "premergeRun": 41319640376,
+    "mergedJobs": 14,
+    "mergedRun": 41390186670,
+    "releaseRun": 41390293291,
+    "releaseSucceeded": true
+  },
+  "npm": {
+    "artifactId": 13117027227,
+    "sha256": "77fa8995b72d66dda90557edebaa61152683d14fa583b1a1c02ba3218f6dc147",
+    "integrity": "sha512-jEQncvhllhhxhLEQ85vNT9acEAOKlP9GjAKzs8+AhueLmRTM24z0wYUXQqUBHeWn3/rOEynS0lABbzbQP4JfQw==",
+    "wasmSHA256": "c9100400d43775db342a9df6685c57085f7baa32a4c1834ed6a279bab2a55ae6",
+    "fileCount": 11,
+    "publicLatest": "0.4.5",
+    "publicBytesEqualCanonical": true,
+    "anonymousInstall": true,
+    "noGoRequired": true,
+    "normalGlobalLifecycle": true,
+    "oldGoCommand": "0.3.0",
+    "plainCommandAfter": "0.4.5",
+    "backupPreserved": true,
+    "repeatInstall": true,
+    "checkOnlyVerified": true,
+    "updateCommandVerified": true,
+    "publicVerifiedAt": "2026-11-02T05:17:17.506Z"
+  },
+  "go": {
+    "publicLatest": "0.4.5",
+    "freshInstalls": [
+      "windows/amd64",
+      "linux/amd64"
+    ],
+    "noNodeOrNpmRequired": true,
+    "windowsBinarySHA256": "1738e21afa39c9fe5e01f1ed91fe8b66684c2045edc85b2f3798c7ac1736245d"
+  },
+  "product": {
+    "canonicalNpmSuite": "passed",
+    "publicGoUserJourneys": "passed",
+    "frozenNpm": {
+      "TP": 353,
+      "FN": 0,
+      "FP": 0,
+      "TN": 365
+    },
+    "frozenGo": {
+      "TP": 353,
+      "FN": 0,
+      "FP": 0,
+      "TN": 365
+    },
+    "live": {
+      "TP": 6,
+      "FN": 0,
+      "FP": 0,
+      "TN": 6,
+      "toolsCalled": 0
+    },
+    "limitation": "Authored regression observations, not universal detection, field accuracy or runtime authorization."
+  },
+  "website": {
+    "origin": "https://mcpsense.site",
+    "worker": "mcpsense",
+    "productionVersion": "80226ef7",
+    "previousVersion": "350457f5",
+    "readyPercent": 100,
+    "uploadFiles": 20,
+    "uploadBytes": 208237,
+    "unitTests": 9,
+    "publicHtmlPages": 8,
+    "exactAssets": 10,
+    "robotsPreserved": true,
+    "securityHeadersVerified": true,
+    "custom404": true,
+    "publicVerifiedAt": "2026-11-02T05:22:12.144Z",
+    "screenshot": "bin/mcpsense-045-live-release.jpg"
+  },
+  "userInstallation": {
+    "plainPowerShellVersion": "mcpsense v0.4.5",
+    "updateCheckInstalled": "0.4.5",
+    "updateCheckLatest": "0.4.5",
+    "wasmMatchesCanonical": true,
+    "oldGoBackupRetained": true,
+    "pathUnchanged": true
+  }
+}
