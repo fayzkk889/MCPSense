@@ -1,0 +1,116 @@
+{
+  "origin": "https://mcpsense.site",
+  "checked_at": "2026-11-02T06:34:46.173Z",
+  "pages": [
+    {
+      "path": "/404.html",
+      "status": 200,
+      "heading": "This page isn’t in the picture."
+    },
+    {
+      "path": "/blog/a-clean-scan-is-not-a-trust-decision/",
+      "status": 200,
+      "heading": "A clean scan is not a trust decision."
+    },
+    {
+      "path": "/blog/",
+      "status": 200,
+      "heading": "Notes from the trust boundary."
+    },
+    {
+      "path": "/blog/mcpsense-after-black-october/",
+      "status": 200,
+      "heading": "MCPSense after Black October: a major hardening update."
+    },
+    {
+      "path": "/blog/npm-without-go/",
+      "status": 200,
+      "heading": "One command. Your choice of toolchain."
+    },
+    {
+      "path": "/blog/the-mcp-trust-boundary/",
+      "status": 200,
+      "heading": "MCP security starts at the trust boundary."
+    },
+    {
+      "path": "/changelog/",
+      "status": 200,
+      "heading": "A record of what changed."
+    },
+    {
+      "path": "/docs/",
+      "status": 200,
+      "heading": "Your first MCP security inspection."
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "heading": "Inspect the tools. Question the trust."
+    }
+  ],
+  "assets": [
+    {
+      "path": "/assets/app.js",
+      "comparison": "exact",
+      "sha256": "0adef1c5da73cf8f4872f53b682f774b9fd636597553677ab36f374f5bc66342"
+    },
+    {
+      "path": "/assets/favicon.svg",
+      "comparison": "exact",
+      "sha256": "70a460805cef60fefec0f8cba514a60cfc6a3a6a67e20551801527bd4a696072"
+    },
+    {
+      "path": "/assets/fonts/ibm-plex-sans-latin.woff2",
+      "comparison": "exact",
+      "sha256": "e2291e842cf5af167122a22881a740c7f2dda7716f1e8cd76680264f4a859470"
+    },
+    {
+      "path": "/assets/fonts/OFL.txt",
+      "comparison": "exact",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "/assets/motion.js",
+      "comparison": "exact",
+      "sha256": "0c1bd9da4075577b260190b460b2525ad6be72117cd70efd54a47ceef1f0688a"
+    },
+    {
+      "path": "/assets/release.json",
+      "comparison": "exact",
+      "sha256": "50fe5732384e63834479fbb49f3309c372538995294730b3966dd67d78bb4322"
+    },
+    {
+      "path": "/assets/releases.js",
+      "comparison": "exact",
+      "sha256": "124ed6dab0c078afaf326e61936efcd3fc99ca19b10cae067557976fa2620ae8"
+    },
+    {
+      "path": "/assets/site.css",
+      "comparison": "exact",
+      "sha256": "489b3807c4ef44f7340f5b73f4cb4829559fa7eab173b991ab7e456045c179b4"
+    },
+    {
+      "path": "/feed.xml",
+      "comparison": "exact",
+      "sha256": "7d17f762a6a7b3a3ae5adc5ed3d7a050f5c5f88fe767159357cd1a15bd956644"
+    },
+    {
+      "path": "/robots.txt",
+      "comparison": "original rules preserved after Cloudflare managed prefix",
+      "sha256": "9b092074167b071a5b0c1871c331d039025dd7f16a312c0a57727b22dc5a2bc3"
+    },
+    {
+      "path": "/sitemap.xml",
+      "comparison": "exact",
+      "sha256": "bd045d40badec5ff6e9b30729bf630fb549189964dd7e845a95953baea734ed8"
+    }
+  ],
+  "headers": {
+    "content-security-policy": "default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com https://registry.npmjs.org https://cloudflareinsights.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+    "cache-control": "public, max-age=0, must-revalidate",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "permissions-policy": "camera=(), microphone=(), geolocation=()"
+  },
+  "missing": 404
+}

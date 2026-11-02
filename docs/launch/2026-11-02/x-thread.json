@@ -1,0 +1,6 @@
+[
+  "The MCPSense hardening update I promised is live. Same open-source MCP security scanner, substantially revised after Black October: stronger metadata analysis, reviewed-catalog checks and independent npm/Go installs. Current release: 0.4.5. https://mcpsense.site/changelog/",
+  "A renamed secret is still a secret. Current checks follow supported private-value flows and distinguish them from public data, prohibitions and placeholders. The point is evidence for review, not a claim to prevent every attack. https://mcpsense.site/docs/",
+  "Validation: 718 authored description observations per tested native/npm route, plus live discovery and user journeys. These are regression results, not field accuracy. Earlier failed audits remain public. https://github.com/fayzkk889/MCPSense",
+  "Try the existing product's update: npm install -g mcpsense@latest (Node.js 22+, no Go). Or: go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest. Free, MIT, no signup. Scan your MCP config; send redacted misses/false alarms. https://mcpsense.site/"
+]
