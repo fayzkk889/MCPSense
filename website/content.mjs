@@ -2,8 +2,8 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.4.4',
-  verified: '2026-11-01',
+  stable: '0.4.5',
+  verified: '2026-11-02',
   candidate: null,
 };
 
@@ -27,6 +27,7 @@ export const articles = [
   },
   {
     slug: 'npm-without-go', category: 'Guides', date: '2026-10-26', minutes: 4,
+    update: '2 November 2026 update: 0.4.5 adds verified update commands, terminal notices and a guarded handoff when an older Go executable takes precedence over npm. The independent npm and Go installation routes remain available.',
     title: 'One command. Your choice of toolchain.',
     excerpt: 'npm needs Node.js. Go needs Go. Here is how MCPSense keeps the two installation paths independent.',
     lead: 'Installing a security tool should not start with installing a second language toolchain. MCPSense offers two independent routes, so you can use the environment you already have.',
@@ -35,7 +36,7 @@ export const articles = [
       ['The Go route', `<p>If Go is your preferred environment, use:</p><pre><code>go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest</code></pre><p>This route needs Go, not Node.js or npm. Go 1.22 is the source compatibility floor; use a current patched Go compiler. Ensure Go’s binary installation directory is on your PATH.</p>`],
       ['Run an offline first inspection', `<p>In an empty working directory:</p><pre><code>mcpsense init --example\nmcpsense scan ./mcp.json --offline --no-baseline</code></pre><p>The first command creates a synthetic example and refuses to overwrite an existing target. It does not connect a real server. The second command reads that example without scanner networking, server execution or a saved metadata baseline.</p><p>For your own integration, point the scan at an existing recognized manifest or MCP client configuration. Read coverage as well as findings.</p>`],
       ['Windows delivery, without workarounds', `<p>The npm route has no MCPSense <code>.exe</code> to download or launch. Optional native Windows archives remain unsigned and may be blocked by device policy. ZIP packaging does not provide a publisher signature.</p><p>No route disables Windows protections. Enterprise policies can also restrict Node.js or scripts, so a universally warning-free installation is not something we promise.</p>`],
-      ['Update deliberately', `<p>Run <code>mcpsense version --check</code> to check public npm and GitHub releases. It reports availability and update commands; it never updates automatically. Rerun your chosen install command when you want to upgrade.</p><p>A newer commit or release candidate does not mean that <code>@latest</code> has changed. Check the installed version before relying on a newly documented feature.</p>`],
+      ['Update deliberately', `<p>Run <code>mcpsense update --check</code> to compare public npm and GitHub releases, then <code>mcpsense update</code> when you want to install. It verifies the selected installation and preserves an identified older executable as a backup. Rerunning your chosen installation command also remains supported.</p><p>Version 0.4.5 adds a Node-only global installation check for an older Go executable taking precedence over npm. It preserves that executable and routes the command to the verified npm runtime. Unknown, linked or newer commands are preserved and reported; PATH is unchanged.</p><p>Interactive scans and the version command can announce updates on stderr with a one-hour cache and a two-second lookup limit. Offline scans, JSON/SARIF, CI and pipes skip automatic checks. Use <code>--no-update-check</code> or <code>MCPSENSE_NO_UPDATE_CHECK=1</code> to opt out. A notice never installs an update.</p><p>A newer commit or release candidate does not mean that <code>@latest</code> has changed. Check the installed version before relying on a newly documented feature.</p>`],
     ],
     sources: [
       ['Installation documentation', 'https://github.com/fayzkk889/MCPSense#start-safely'],
@@ -65,6 +66,18 @@ export const articles = [
 ];
 
 export const releases = [
+  {
+    version: '0.4.5', status: 'Released', date: '2026-11-02', title: 'Run the version you installed.',
+    intro: 'Verified command selection, deliberate updates and clear terminal notices keep installations current.',
+    items: [
+      'A Node-only global npm check preserves an identified older Go executable in a backup and routes its command to the verified npm runtime.',
+      'mcpsense update requires npm/GitHub agreement, keeps the owning installation location and verifies the resulting version.',
+      'Cached interactive update notices stay on stderr; offline scans, JSON/SARIF, CI and pipes skip automatic checks.',
+      'Actual fresh, repeated and mixed installations, native/npm self-updates and Windows/Linux/macOS product regressions passed.',
+    ],
+    note: 'npm requires Node.js 22+ without Go. The independent Go route and MIT license remain unchanged; notices never install automatically.',
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.5', label: 'Read the release notes',
+  },
   {
     version: '0.4.4', status: 'Released', date: '2026-11-01', title: 'Follow the value. Preserve the boundary.',
     intro: 'Shared metadata context and value provenance address the reproduced misses and benign false alarms in 0.4.3.',
