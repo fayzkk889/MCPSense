@@ -1,0 +1,37 @@
+[
+  {
+    "id": "drift-workflow",
+    "suggestedDate": "2026-11-03",
+    "channel": "X",
+    "status": "prepared_not_scheduled",
+    "text": "When an MCP tool catalog changes, do you review it again? MCPSense can require recognized metadata to match a reviewed reference. Review and protect that first reference; it isn't a server signature. Which changes worry you most? https://mcpsense.site/docs/#metadata-reference"
+  },
+  {
+    "id": "same-name-different-origin",
+    "suggestedDate": "2026-11-05",
+    "channel": "X",
+    "status": "prepared_not_scheduled",
+    "text": "Same q7. Same JSON encoding. Different origin: authentication token versus public status data. MCPSense's paired offline examples show why the value's origin matters. Try the synthetic cases and inspect the reports: https://mcpsense.site/blog/mcpsense-after-black-october/"
+  },
+  {
+    "id": "read-the-coverage",
+    "suggestedDate": "2026-11-07",
+    "channel": "X",
+    "status": "prepared_not_scheduled",
+    "text": "A quiet security report is only useful if you know what was inspected. MCPSense separates findings, coverage and security assessment. Read those before granting an MCP integration permissions. What would make that review easier for you? https://mcpsense.site/docs/#reports"
+  },
+  {
+    "id": "one-real-inspection",
+    "suggestedDate": "2026-11-09",
+    "channel": "X",
+    "status": "prepared_not_scheduled",
+    "text": "Do you maintain an MCP integration? I'd like feedback from one local MCPSense inspection: was the report useful, confusing or missing something? Keep your config and report private; a description of the friction is enough. Free, MIT: https://mcpsense.site/docs/"
+  },
+  {
+    "id": "initial-review-versus-drift",
+    "suggestedDate": "2026-11-04",
+    "channel": "LinkedIn",
+    "status": "prepared_not_scheduled",
+    "text": "A useful question came up after the MCPSense hardening update: is it for reviewing a new server, or catching changes in one already configured?\n\nThose are two different decisions.\n\nAn initial inspection reports signals in supported configuration and metadata. You still review the source, permissions and unassessed surfaces.\n\nFor later changes, the optional required-reference workflow checks recognized metadata against a reference you reviewed and protected. It can report a changed catalog even when the new wording doesn't match a detector. The reference is not a publisher signature.\n\nThe practical question for MCP maintainers: what happens in your workflow when a tool description changes after approval?\n\nMCPSense's existing scanner is now at 0.4.5. The four synthetic examples, commands, evidence and limits are here: https://mcpsense.site/blog/mcpsense-after-black-october/\n\nIf you try an inspection, I'd value feedback on whether the findings and coverage helped you make a decision. Keep private configurations and reports on your own machine."
+  }
+]
