@@ -1,6 +1,8 @@
 package detection
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -111,7 +113,7 @@ func TestPatternEngine_MCPVectors(t *testing.T) {
 		},
 		{
 			name:      "hardcoded api key",
-			input:     `api_key: "sk-abcdefghijklmnopqrstuvwxyz12345678"`,
+			input:     fmt.Sprintf("api_key: %q", strings.Repeat("Aa1", 8)),
 			wantPatID: "MCP-012",
 		},
 	}

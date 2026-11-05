@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from './cli-process.cjs';
-import {createHash} from 'node:crypto';
+import {createHash,randomUUID} from 'node:crypto';
 const binary=process.env.MCPSENSE_TEST_BINARY;
 if(!binary)throw Error('MCPSENSE_TEST_BINARY must name the reviewed CLI');
 const root=path.resolve(process.env.MCPSENSE_ACCEPTANCE_DIR||'bin/product-acceptance-2026-10-23');
@@ -37,9 +37,10 @@ for(const [name,args] of [
 for(const [name,data] of [['broken-json','{broken'],['empty-json',''],['wrong-shape',[]]]){r=scan(name,write(name+'.json',data));check(name+' does not look clean',r.exit===2,'exit='+r.exit);}
 const empty=path.join(workspace,'empty-directory');fs.mkdirSync(empty,{recursive:true});r=scan('empty-directory',empty);check('Empty directory is not falsely completed',r.exit===2,'exit='+r.exit);
 const marker=path.join(workspace,'SHOULD-NOT-EXIST');
-const config=write('nonexecution.json',{mcpServers:{fixture:{command:process.execPath,args:['-e',`require('fs').writeFileSync(${JSON.stringify(marker)},'EXECUTED')`],env:{API_KEY:'SYNTHETIC_KEY_SENTINEL_230910'}}}});
+const syntheticCredential=randomUUID();
+const config=write('nonexecution.json',{mcpServers:{fixture:{command:process.execPath,args:['-e',`require('fs').writeFileSync(${JSON.stringify(marker)},'EXECUTED')`],env:{API_KEY:syntheticCredential}}}});
 r=scan('config-no-execution',config);report=json(r);check('Configuration scan never starts server',!fs.existsSync(marker),'Marker absent');
-check('Credential value stays private',report.findings.some(f=>f.id==='SEC-015')&&!r.stdout.includes('SYNTHETIC_KEY_SENTINEL_230910'),'Generic API_KEY detected; synthetic value absent');
+check('Credential value stays private',report.findings.some(f=>f.id==='SEC-015')&&!r.stdout.includes(syntheticCredential),'Generic API_KEY detected; synthetic value absent');
 const credentialResults=[];
 for(const key of ['API_KEY','APIKEY','ACCESS_KEY','OPENAI_API_KEY','GITHUB_TOKEN','DATABASE_PASSWORD','KEYBOARD_LAYOUT','PUBLIC_KEY','MONKEY']){
  r=scan('credential-'+key,write('credential.json',{mcpServers:{records:{command:'node',args:['server.js'],env:{[key]:'SYNTHETIC_PRIVATE_SENTINEL_230911'}}}}));report=json(r);
