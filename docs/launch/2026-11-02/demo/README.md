@@ -18,3 +18,5 @@ mcpsense scan ./docs/launch/2026-11-02/demo/cases/q7-flow-b.json --offline --no-
 ```
 
 Expected: the token/cookie transfers produce findings and exit 1; the public-status/fixed-placeholder counterparts remain quiet on the selected security checks and exit 0. A finding reports a review signal. It does not prove runtime blocking or reproduce an observed Black October compromise.
+
+If you try the demo or run MCPSense on an integration you maintain, [share a short scan outcome](../../../../README.md#share-a-scan-outcome).

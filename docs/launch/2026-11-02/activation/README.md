@@ -44,7 +44,8 @@ A useful first question is: "Are you evaluating new servers or monitoring existi
 - Technical reply sent and verified: https://x.com/tana_shahh/status/2117162636538433773
 - Reproducible-demo follow-up sent and verified: https://x.com/tana_shahh/status/2117206045428961725
 - Five distinct follow-up posts prepared in content-queue.json; proposed dates are editorial slots, not an analytics-derived schedule. No scheduler writes occurred.
-- The first reviewed launch-thread snapshot showed one external technical question. That participant subsequently stated their initial-vetting workflow and offered a catalog submission format: https://x.com/Kantorcodes/status/2117163012679450898 . This is one interested participant, not multiple prospects or a completed listing. See catalog-fact-sheet.json.
+- The participant who asked about initial vetting shared HOL's submission format. The standalone listing was submitted on 5 November and awaits catalog review. [HOL pull request](https://github.com/hashgraph-online/awesome-ai-plugins/pull/1182)
+- The catalog submission links to an optional public scan-outcome prompt. It asks how the person found MCPSense and distinguishes demo runs, first real scans, repeat scans, and blockers. Use these responses as reported outcomes. The number of people who run the tool silently remains unknown.
 - The root post displayed 34 views and two likes when the reply was prepared. Views are not unique people, and no external completed inspection is verified from that snapshot.
 - Metricool connection was confirmed by the user, but no Metricool tools are exposed to this chat. Do not request another external-browser connection, claim scheduling succeeded, or choose posting times from nonexistent account analytics. The content queue is prepared, not scheduled.
 - Existing DEV/HN restrictions remain as documented in the parent README. No generated promotional DEV article or generated HN submission/comment is supplied.

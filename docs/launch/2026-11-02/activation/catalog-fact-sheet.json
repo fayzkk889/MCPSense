@@ -1,6 +1,9 @@
 {
-  "status": "prepared_pending_catalog_repository_and_format",
-  "format": "maintainer fact sheet; not an official HOL submission schema",
+  "status": "submitted_pending_catalog_review",
+  "format": "Tools & Integrations entry marked platform: standalone",
+  "catalog": "https://github.com/hashgraph-online/awesome-ai-plugins",
+  "contributionInstructions": "https://github.com/hashgraph-online/awesome-ai-plugins/blob/main/CONTRIBUTING.md",
+  "submission": "https://github.com/hashgraph-online/awesome-ai-plugins/pull/1182",
   "name": "MCPSense",
   "category": "MCP security CLI / developer tooling",
   "version": "0.4.5",
@@ -30,8 +33,9 @@
   ],
   "lead": {
     "publicInvitation": "https://x.com/Kantorcodes/status/2117163012679450898",
-    "identityClaim": "The participant says they work with HOL on an open-source MCP catalog; the specific repository and submission format have not yet been verified.",
-    "listingSubmitted": false,
+    "identityClaim": "The participant says they work with HOL on an open-source MCP catalog. The catalog repository and submission format were verified from its contribution instructions.",
+    "formatReply": "https://x.com/Kantorcodes/status/2117221740011036850",
+    "listingSubmitted": true,
     "acceptedOrEndorsed": false,
     "externalInspectionReported": false,
     "publicReply": "https://x.com/tana_shahh/status/2117206963268567154"
