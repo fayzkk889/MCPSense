@@ -51,6 +51,10 @@ This creates a synthetic example manifest and refuses to overwrite an existing `
 
 Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically. Version 0.4.5 adds the interactive notices described above. Offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
 
+### Share a scan outcome
+
+If you try MCPSense, [share a short scan outcome](https://github.com/fayzkk889/MCPSense/issues/new?title=MCPSense%20scan%20feedback&body=**How%20did%20you%20find%20MCPSense%3F**%0A%3C!--%20Optional.%20For%20example%2C%20HOL%20catalog%2C%20GitHub%2C%20X%2C%20or%20a%20colleague.%20--%3E%0A%0A**What%20did%20you%20try%3F**%0A%3C!--%20Choose%20one%3A%20ran%20the%20synthetic%20demo%2C%20scanned%20my%20own%20integration%20once%2C%20scanned%20my%20own%20integration%20again%20after%20a%20change%2C%20or%20got%20blocked%20before%20finishing.%20--%3E%0A%0A**What%20happened%3F**%0A%3C!--%20Did%20the%20result%20help%20you%20decide%20what%20to%20review%3F%20If%20you%20got%20blocked%2C%20which%20step%20stopped%20you%3F%20A%20short%20summary%20is%20enough.%20Keep%20configs%2C%20full%20reports%2C%20server%20URLs%2C%20and%20secrets%20private.%20--%3E%0A%0A**Version%20and%20operating%20system%20(optional)**%0A%3C!--%20Include%20npm%20or%20Go%20if%20relevant.%20--%3E). Tell us whether you tried the demo, scanned your own integration, ran it again after a change, or hit a blocker. GitHub posts your response publicly. Keep configurations, reports, server URLs, and credentials on your device.
+
 ### From a source checkout
 
 From this checkout, with Go 1.22 or newer:

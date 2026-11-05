@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-02",
+  "channel": "X",
+  "account": "tana_shahh",
+  "questionURL": "https://x.com/Kantorcodes/status/2117143798039904350",
+  "replyURL": "https://x.com/tana_shahh/status/2117162636538433773",
+  "replyText": "The required-reference check is mainly for drift: review the initial catalog, then require later metadata to match it. A first scan helps flag review signals; it cannot prove a server is safe. Are you evaluating new servers or monitoring existing ones?",
+  "replyStatus": "published_verified",
+  "demoFollowUpURL": "https://x.com/tana_shahh/status/2117206045428961725",
+  "demoFollowUpParent": "https://x.com/tana_shahh/status/2117142842510614529",
+  "demoFollowUpText": "Concrete test: identical q7/JSON/collector wording, but a token origin is flagged and public status data stays quiet on SEC-001/011. Four synthetic offline cases, reports and commands: https://github.com/fayzkk889/MCPSense/tree/main/docs/launch/2026-11-02/demo",
+  "demoFollowUpStatus": "published_verified",
+  "evidence": "Browser showed actual published articles and their unique status URLs. The technical reply also showed Your post was sent. The demonstration draft was retried only after its unsent state was checked; only the verified publication is recorded.",
+  "externalCompletedInspections": null,
+  "repeatInspections": null,
+  "metricoolScheduling": "not_executed_no_tools_exposed",
+  "preparedQueue": "content-queue.json",
+  "catalogInvitation": {
+    "url": "https://x.com/Kantorcodes/status/2117163012679450898",
+    "workflowStated": "initial evaluation for an open-source catalog; subsequent drift also of interest",
+    "replyURL": "https://x.com/tana_shahh/status/2117206963268567154",
+    "replyText": "Yes, please send the repo and format. MCPSense is a security CLI for inspecting MCP integrations, so the developer/security-tools category would fit. I can supply npm/Go install links, a runnable demo and its inspection limits.",
+    "formatReplyURL": "https://x.com/Kantorcodes/status/2117221740011036850",
+    "catalogPullRequestURL": "https://github.com/hashgraph-online/awesome-ai-plugins/pull/1182",
+    "status": "catalog_submission_open",
+    "submissionComplete": true,
+    "identityAffiliationIndependentlyVerified": false
+  }
+}

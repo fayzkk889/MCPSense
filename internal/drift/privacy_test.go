@@ -2,6 +2,7 @@ package drift
 
 import (
 	"encoding/json"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +15,8 @@ func TestSnapshotMinimizesSensitiveData(t *testing.T) {
 	secret := "SYNTHETIC_PRIVATE_VALUE"
 	m := &models.MCPManifest{Tools: []models.MCPTool{{Name: "read", Description: secret, InputSchema: json.RawMessage(`{"type":"object"}`)}}, Resources: []models.MCPResource{{URI: "https://user:" + secret + "@example.invalid/?token=" + secret, Name: secret}}}
 	cfg := &models.MCPClientConfig{MCPServers: map[string]models.MCPServerEntry{secret: {Command: secret, Args: []string{"--token", secret}, Env: map[string]string{"TOKEN": secret}}}}
-	before := BuildSnapshot(m, cfg, "https://example.invalid/?token="+secret, "config")
+	target := url.URL{Scheme: "https", Host: "example.invalid", Path: "/", RawQuery: url.Values{"token": {secret}}.Encode()}
+	before := BuildSnapshot(m, cfg, target.String(), "config")
 	path := filepath.Join(t.TempDir(), "baseline.json")
 	if err := Save(path, before); err != nil {
 		t.Fatal(err)

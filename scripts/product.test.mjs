@@ -3,6 +3,7 @@ import path from 'node:path';
 import {execFile} from './cli-process.cjs';
 import {promisify} from 'node:util';
 import http from 'node:http';
+import {randomUUID} from 'node:crypto';
 const exec = promisify(execFile);
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
@@ -39,7 +40,7 @@ check('Notice changed tool metadata',d.findings.some(f=>f.id.startsWith('DRIFT-'
 r=await run('accept-change',['scan',target,'--offline','--baseline',baseline,'--update-baseline','--format','json']);
 r=await run('accepted-rescan',['scan',target,'--offline','--baseline',baseline,'--format','json']);d=JSON.parse(r.stdout);
 check('Accept a reviewed change',!d.findings.some(f=>f.id.startsWith('DRIFT-')),'Explicit approval removes repeat drift notifications');
-const secret='PRODUCT_TEST_PRIVATE_VALUE_8721';
+const secret=randomUUID();
 const config=write('desktop.json',{mcpServers:{records:{command:'node',args:['server.js'],env:{API_KEY:secret},url:'http://example.invalid/mcp'}}});
 r=await run('configuration',['scan',config,'--offline','--no-baseline','--format','json']);let c=JSON.parse(r.stdout);
 check('Review risky configuration',c.findings.some(f=>f.id==='SEC-015')&&!r.stdout.includes(secret),'Flag credentials while keeping the credential value out of the report; rules='+c.findings.map(f=>f.id).join(','));

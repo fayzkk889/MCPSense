@@ -1,0 +1,43 @@
+{
+  "status": "submitted_pending_catalog_review",
+  "format": "Tools & Integrations entry marked platform: standalone",
+  "catalog": "https://github.com/hashgraph-online/awesome-ai-plugins",
+  "contributionInstructions": "https://github.com/hashgraph-online/awesome-ai-plugins/blob/main/CONTRIBUTING.md",
+  "submission": "https://github.com/hashgraph-online/awesome-ai-plugins/pull/1182",
+  "name": "MCPSense",
+  "category": "MCP security CLI / developer tooling",
+  "version": "0.4.5",
+  "description": "MIT-licensed CLI for inspecting supported MCP configurations, advertised metadata, source and agent-skill files, with structured findings, coverage and metadata-reference comparisons.",
+  "homepage": "https://mcpsense.site/",
+  "repository": "https://github.com/fayzkk889/MCPSense",
+  "release": "https://github.com/fayzkk889/MCPSense/releases/tag/v0.4.5",
+  "documentation": "https://mcpsense.site/docs/",
+  "license": "MIT",
+  "npm": {
+    "package": "https://www.npmjs.com/package/mcpsense",
+    "install": "npm install -g mcpsense@latest",
+    "requires": "Node.js 22+; no Go compiler or MCPSense native executable"
+  },
+  "go": {
+    "install": "go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest",
+    "requires": "Go toolchain; independent of Node.js/npm"
+  },
+  "syntheticDemo": "https://github.com/fayzkk889/MCPSense/tree/main/docs/launch/2026-11-02/demo",
+  "publishedEvidence": "https://github.com/fayzkk889/MCPSense/blob/main/docs/engineering/release-0.4.5-2026-11-02.md",
+  "importantScope": [
+    "MCPSense is a scanner CLI, not a tool-serving MCP server.",
+    "An initial scan supplies review signals, not a declaration that a server is safe.",
+    "The optional required-reference workflow compares recognized metadata to an operator-reviewed reference; the reference is not a publisher signature.",
+    "Runtime tool responses, host authorization and execution containment need separate controls.",
+    "The four synthetic offline demo cases are selected regression evidence, not a field-accuracy benchmark."
+  ],
+  "lead": {
+    "publicInvitation": "https://x.com/Kantorcodes/status/2117163012679450898",
+    "identityClaim": "The participant says they work with HOL on an open-source MCP catalog. The catalog repository and submission format were verified from its contribution instructions.",
+    "formatReply": "https://x.com/Kantorcodes/status/2117221740011036850",
+    "listingSubmitted": true,
+    "acceptedOrEndorsed": false,
+    "externalInspectionReported": false,
+    "publicReply": "https://x.com/tana_shahh/status/2117206963268567154"
+  }
+}
