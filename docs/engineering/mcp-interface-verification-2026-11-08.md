@@ -65,6 +65,15 @@ a new tag/version alignment, public onboarding updates and post-publication
 channel/installation checks. No current stable version is relabelled or replaced
 by this work.
 
+Initial hosted run [42410822248](https://github.com/fayzkk889/MCPSense/actions/runs/42410822248)
+passed Linux native, lint and the vulnerability audit, but caught a test-identity
+assumption on macOS and Windows. MCP canonicalized the approved input, while the
+CLI test used macOS `/var` aliases or Windows `RUNNER~1` short names. Findings
+were identical except path-based locations/fingerprints. The corrected fixture
+uses one canonical target for both interfaces and retains full deep equality;
+an additional directory-alias scan must yield identical MCP findings. Existing
+reference identity checks and path permission boundaries are not relaxed.
+
 ## Reproduce
 
 ```sh

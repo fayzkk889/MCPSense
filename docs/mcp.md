@@ -83,6 +83,8 @@ Grants can be combined. Each live scan must also request `offline: false`; start
 
 Scans never create a baseline implicitly. Supply an existing `baseline` to compare it; `require_metadata_baseline: true` fails if supported metadata differs. To accept a new reference, first review the target, then explicitly approve `mcpsense_accept_baseline` with its `baseline` path and `reviewed: true`. A clean scan is not approval. Baselines can replace a reviewed reference; report exports require new files and never overwrite an existing report. Output parent directories must already exist within the approved root.
 
+MCP resolves local targets to canonical absolute paths for root approval. When sharing reports or baselines with terminal scans, use that same absolute target path; directory aliases, Windows short names, and relative target spellings can produce different CLI evidence identities. An existing reference with a different target identity is rejected for review rather than silently accepted or rewritten.
+
 The scanner executes locally. Findings, selected target paths, and report metadata are returned to the assistant and may be processed by its model provider. Secret redaction is best effort; inspect your sharing policy. Online advisory lookup discloses recognized package names and versions to OSV. A completed scan, zero findings, or a score of 100 does not establish safety or enforce runtime authorization. This MCP interface is an inspection assistant, not an inline gateway that blocks other MCP servers' tool calls.
 
 ## Updates stay together
