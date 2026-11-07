@@ -89,8 +89,8 @@ func mcpTools(policy mcpPolicy) []mcpserver.Tool {
 	}
 	scan := map[string]interface{}{
 		"target":                    stringProperty("User-selected file, directory, HTTP URL, or executable. Local paths are relative to the approved root."),
-		"mode":                      stringProperty("Same scan modes as the CLI.", "auto", "static", "manifest", "config", "skill", "dependencies", "live"),
-		"severity":                  stringProperty("Minimum reported severity, default low.", "info", "low", "medium", "high", "critical"),
+		"mode":                      stringProperty("Same scan modes as the CLI.", scanModeNames()...),
+		"severity":                  stringProperty("Minimum reported severity, default low.", severityNames()...),
 		"checks":                    list("Run only these check IDs. Cannot combine with exclude."),
 		"exclude":                   list("Skip these check IDs. Cannot combine with checks."),
 		"dependencies":              stringProperty("Optional explicitly selected npm v2/v3 lockfile."),
@@ -102,7 +102,7 @@ func mcpTools(policy mcpPolicy) []mcpserver.Tool {
 		"allow_private_network":     boolean("Also requires startup --allow-private-network."),
 		"baseline":                  stringProperty("An existing protected baseline to compare. Omitting it skips baseline handling."),
 		"require_metadata_baseline": boolean("Reject supported metadata changes against the explicit existing baseline."),
-		"format":                    stringProperty("Return formatted output alongside the structured report.", "json", "sarif", "cli"),
+		"format":                    stringProperty("Return formatted output alongside the structured report.", reportFormatNames()...),
 		"output":                    stringProperty("Optional new report file within the approved root; requires startup --allow-write. Existing files are preserved."),
 		"sarif_output":              stringProperty("Optional new SARIF file from the same scan; requires startup --allow-write."),
 	}
@@ -189,7 +189,7 @@ func (p mcpPolicy) operation(ctx context.Context, name string, args json.RawMess
 		case "mcpsense_status":
 			return mcpserver.TextResult("MCPSense "+version+". Select a target inside the approved root and call mcpsense_scan. Configurations and findings shared with this host can be processed by its model provider.",
 				map[string]interface{}{"version": version, "engine": "same_installed_cli", "root": p.Root, "allow_network": p.Network, "allow_exec": p.Exec, "allow_private_network": p.Private, "allow_write": p.Write,
-					"modes": []string{"auto", "static", "manifest", "config", "skill", "dependencies", "live"}}), nil
+					"modes": scanModeNames()}), nil
 		case "mcpsense_checks":
 			items := []map[string]interface{}{}
 			for _, c := range checks.NewRegistry().AllChecks() {
@@ -388,7 +388,7 @@ func (p mcpPolicy) scan(ctx context.Context, input mcpScanArgs, accept bool) (mc
 	if input.Format == "" {
 		input.Format = "json"
 	}
-	if input.Format != "json" && input.Format != "cli" && input.Format != "sarif" {
+	if !containsChoice(input.Format, reportFormatNames()) {
 		return mcpserver.Result{}, fmt.Errorf("unknown report format")
 	}
 	args := []string{"scan", "--mode=" + input.Mode, "--format=json", "--severity=" + input.Severity, "--checks=" + strings.Join(input.Checks, ","), "--exclude=" + strings.Join(input.Exclude, ","), fmt.Sprintf("--offline=%t", offline), fmt.Sprintf("--no-cve=%t", input.NoCVE), "--protocol=" + input.Protocol, fmt.Sprintf("--allow-exec=%t", input.AllowExec), fmt.Sprintf("--allow-private-network=%t", input.AllowPrivate)}

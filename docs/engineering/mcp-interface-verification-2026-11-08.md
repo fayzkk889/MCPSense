@@ -54,6 +54,8 @@ Cursor/Claude/VS Code/Codex release.
 `TestMCPScanFeatureParity` fails when a new CLI scan flag has neither an MCP
 mapping nor an explicit classification. The MCP check catalog comes directly
 from `checks.NewRegistry()`. Product tests compare CLI/MCP findings and versions.
+CLI validation/help and MCP schema/status also use shared mode, severity, and
+report-format definitions, rather than independent lists.
 Native and npm CI invoke the same MCP user journeys; actual npm packing and the
 tagged release workflow also run them. Official SDK interoperability is checked
 in the Linux Node 22 job. CI builds and snapshots read the candidate version
