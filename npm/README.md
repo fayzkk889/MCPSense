@@ -28,3 +28,5 @@ The CLI preserves literal arguments and exit status. Explicit local-server scans
 Directory inspection does not execute MCP commands. Live local startup requires --allow-exec. Offline prohibits scanner networking and local server execution; installing/building the package itself may need network access.
 
 Full behavior, protocol limits, report privacy and remediation verification are documented in the [repository README](https://github.com/fayzkk889/MCPSense#readme). Website deployment is not part of this checkout.
+
+The source checkout also adds an upcoming MCP interface using this exact bundled engine, with no additional server package. It is not in the published 0.4.5 package. See the [MCP guide](https://github.com/fayzkk889/MCPSense/blob/main/docs/mcp.md) for preview setup and the shared CLI/MCP update lifecycle.

@@ -1,5 +1,10 @@
 # Release readiness — 0.4.5 published
 
+**Upcoming 0.5.0 candidate:** the MCP interface is under development and review;
+it is not included in the published 0.4.5 artifacts. See the [MCP verification
+record](mcp-interface-verification-2026-11-08.md) and [setup guide](../mcp.md).
+No merge, release tag or publication is authorized by this candidate record.
+
 **Published 0.4.5, 2 November:** [PR #23](https://github.com/fayzkk889/MCPSense/pull/23) is merged and the approved npm/GitHub/Go release delivers guarded installation handoff, verified update commands and bounded terminal notices. The [release record](release-0.4.5-2026-11-02.md) identifies the exact canonical/public bytes, actual anonymous installation and public Go user tests. All 15 PR checks, 14 merged-source jobs and the tagged publication workflow passed. MIT licensing and independent npm/Go routes remain unchanged.
 
 ## Historical 0.4.4 status

@@ -1,7 +1,7 @@
 {
   "name": "mcpsense",
-  "version": "0.4.5",
-  "description": "Security scanner for MCP servers. ESLint + Snyk for the Model Context Protocol.",
+  "version": "0.5.0",
+  "description": "Local security inspection for MCP projects, available as a CLI and MCP server.",
   "bin": {
     "mcpsense": "bin/run.js"
   },
@@ -49,6 +49,7 @@
     "bin/wasm.js",
     "runtime/",
     "README.md",
+    "THIRD_PARTY_NOTICES.md",
     "LICENSE"
   ]
 }

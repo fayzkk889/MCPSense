@@ -28,7 +28,7 @@ function main() {
   assert.equal(spawnSync('tar',['--version'],{env}).error?.code,'ENOENT');
   const options = {cwd:root,env,encoding:'utf8',windowsHide:true,timeout:120000};
   const pack = JSON.parse(execFileSync(process.execPath,[npm,'pack','./npm','--json','--ignore-scripts','--pack-destination',tmp],options))[0];
-  const expected = ['package.json','README.md','LICENSE','bin/run.js','bin/manage.cjs','bin/wasm.js','runtime/manifest.json','runtime/host.cjs','runtime/wasm_exec.cjs','runtime/mcpsense.wasm','runtime/LICENSE.Go'];
+  const expected = ['package.json','README.md','LICENSE','THIRD_PARTY_NOTICES.md','bin/run.js','bin/manage.cjs','bin/wasm.js','runtime/manifest.json','runtime/host.cjs','runtime/wasm_exec.cjs','runtime/mcpsense.wasm','runtime/LICENSE.Go'];
   assert.deepEqual(pack.files.map(f=>f.path).sort(),expected.sort(),'Unexpected/missing npm package files');
   const tarball = path.join(tmp,pack.filename);
   fs.copyFileSync(tarball,path.join(evidence,pack.filename));
@@ -42,7 +42,7 @@ function main() {
     const shimEnv = {...env,PATH:path.dirname(process.execPath),MCPSENSE_NPM_SHIM:path.join(prefix,'mcpsense.cmd')};
     assert.equal(execFileSync(path.join(process.env.SystemRoot,'System32/cmd.exe'),['/d','/s','/c','""%MCPSENSE_NPM_SHIM%" version"'],{...options,env:shimEnv,windowsVerbatimArguments:true}).trim(),'mcpsense v'+pkg.version);
   } else assert.ok(fs.lstatSync(path.join(prefix,'bin/mcpsense')).isSymbolicLink());
-  execFileSync(process.execPath,['--test',path.join(root,'scripts/product.test.mjs')],{...options,timeout:240000,stdio:'inherit',env:{...env,MCPSENSE_TEST_BINARY:binary,MCPSENSE_TEST_RUNNER:runner}});
+  execFileSync(process.execPath,['--test',path.join(root,'scripts/product.test.mjs'),path.join(root,'scripts/mcp.test.cjs')],{...options,timeout:240000,stdio:'inherit',env:{...env,MCPSENSE_TEST_BINARY:binary,MCPSENSE_TEST_RUNNER:runner}});
   fs.writeFileSync(path.join(evidence,'installation.json'),JSON.stringify({version:pkg.version,node:process.version,platform:process.platform,noGo:true,noArchiveTools:true,offlineInstall:true,installScripts:false,tarball:pack.filename,integrity:pack.integrity,runner,binary},null,2)+'\n');
   console.log('PASS: actual npm package installed offline with no Go, no archive tools and no install scripts; installed user journeys passed.');
   console.log('Installed test runner: '+runner);
