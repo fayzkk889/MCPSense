@@ -76,6 +76,13 @@ uses one canonical target for both interfaces and retains full deep equality;
 an additional directory-alias scan must yield identical MCP findings. Existing
 reference identity checks and path permission boundaries are not relaxed.
 
+The follow-up Windows native comparison exposed a deeper distinction:
+JavaScript's non-native `fs.realpathSync` retained 8.3 short names while Go's
+canonicalization expanded them. The Node bridge and fixtures now use
+`fs.realpathSync.native`; the original OS TEMP spelling is also scanned and must
+produce the exact same MCP findings as the canonical target. This retains full
+location/fingerprint checks and aligns npm/native path identity.
+
 ## Reproduce
 
 ```sh

@@ -72,7 +72,7 @@ function createHost() {
     sourceHash: require('crypto').createHash('sha256').update(fs.readFileSync(__filename)).digest('hex'),
     platform: process.platform,
     absolute: value => path.resolve(value), dirname: value => path.dirname(value), basename: value => path.basename(value),
-    realpath: value => fs.realpathSync(value), relative: (base, value) => path.relative(base, value),
+    realpath: value => fs.realpathSync.native(value), relative: (base, value) => path.relative(base, value),
     mkdir(value, mode, callback) {const done = settle(callback); fs.mkdir(value, {recursive:true, mode}, error => done(error, true)); return () => done(true, null);},
     setSignalHandler(handler) {signalHandler = handler; process.on('SIGINT', onSignal); process.on('SIGTERM', onSignal);},
     clearSignalHandler() {signalHandler = null; process.removeListener('SIGINT', onSignal); process.removeListener('SIGTERM', onSignal);},
