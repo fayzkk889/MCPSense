@@ -226,7 +226,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 			result = map[string]interface{}{}
 		default:
 			if !modern && !ready {
-				fault = &rpcError{Code: -32002, Message: "Initialize and send notifications/initialized before using tools"}
+				fault = &rpcError{Code: -32600, Message: "Initialize and send notifications/initialized before using tools"}
 				break
 			}
 			switch request.Method {
@@ -282,7 +282,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 				activeMu.Lock()
 				if activeCancel != nil {
 					activeMu.Unlock()
-					fault = &rpcError{Code: -32000, Message: "A tool call is already running; retry after it completes"}
+					fault = &rpcError{Code: -32603, Message: "A tool call is already running; retry after it completes"}
 					break
 				}
 				callCtx, callCancel := context.WithCancel(ctx)

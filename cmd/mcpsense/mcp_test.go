@@ -130,3 +130,23 @@ func TestMCPSetupPreservesConflictingEntriesAndComments(t *testing.T) {
 		t.Fatal("comments or exact backup lost")
 	}
 }
+
+func TestMCPSetupPreservesLargeJSONNumbers(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "settings.json")
+	original := `{"custom_integer":9007199254740993,"custom_decimal":1.2300,"mcpServers":{"other":{"command":"keep"}}}`
+	if err := os.WriteFile(path, []byte(original), 0600); err != nil {
+		t.Fatal(err)
+	}
+	backup, changed, err := installMCPConfig(path, "mcpServers", map[string]interface{}{"command": "mcpsense"}, false)
+	if err != nil || !changed {
+		t.Fatal(backup, changed, err)
+	}
+	stored, err := os.ReadFile(path)
+	if err != nil || !strings.Contains(string(stored), "9007199254740993") || !strings.Contains(string(stored), "1.2300") {
+		t.Fatal("unrelated numeric settings changed", string(stored), err)
+	}
+	saved, _ := os.ReadFile(backup)
+	if string(saved) != original {
+		t.Fatal("original backup changed")
+	}
+}

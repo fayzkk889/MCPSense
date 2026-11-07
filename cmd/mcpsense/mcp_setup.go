@@ -169,7 +169,12 @@ func installMCPConfig(path, key string, entry map[string]interface{}, isTOML boo
 		if isTOML {
 			err = toml.Unmarshal(original, &document)
 		} else {
-			err = json.Unmarshal(original, &document)
+			decoder := json.NewDecoder(bytes.NewReader(original))
+			decoder.UseNumber()
+			err = decoder.Decode(&document)
+			if err == nil && !json.Valid(original) {
+				err = fmt.Errorf("invalid JSON configuration")
+			}
 		}
 		if err != nil || document == nil {
 			return "", false, fmt.Errorf("existing client configuration is invalid; it was preserved. Use mcp config for a manual snippet")
