@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,6 +13,18 @@ import (
 	"github.com/fayzkk889/MCPSense/internal/nodebridge"
 	"github.com/spf13/pflag"
 )
+
+func TestCancelledMCPCallsDoNotCreateFiles(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	policy := mcpPolicy{Root: t.TempDir(), Write: true}
+	if _, err := policy.operation(ctx, "mcpsense_init", json.RawMessage(`{"example":true}`)); !errors.Is(err, context.Canceled) {
+		t.Fatalf("cancelled operation was executed: %v", err)
+	}
+	if _, _, err := runMCPCommand(ctx, []string{"init", "--example"}); !errors.Is(err, context.Canceled) {
+		t.Fatalf("cancelled CLI operation was executed: %v", err)
+	}
+}
 
 func TestMCPScanFeatureParity(t *testing.T) {
 	// Every new CLI option must be deliberately mapped or classified here. This

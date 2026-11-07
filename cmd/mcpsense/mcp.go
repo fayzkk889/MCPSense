@@ -177,6 +177,9 @@ func (p mcpPolicy) call(ctx context.Context, name string, args json.RawMessage) 
 }
 
 func (p mcpPolicy) operation(ctx context.Context, name string, args json.RawMessage) (mcpserver.Result, error) {
+	if err := ctx.Err(); err != nil {
+		return mcpserver.Result{}, err
+	}
 	switch name {
 	case "mcpsense_status", "mcpsense_checks", "mcpsense_discover":
 		if err := decodeMCPArgs(args, &struct{}{}); err != nil {
@@ -265,20 +268,23 @@ func (p mcpPolicy) operation(ctx context.Context, name string, args json.RawMess
 }
 
 func runMCPCommand(ctx context.Context, args []string) ([]byte, int, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, 2, err
+	}
 	command := rootCmd()
 	output := &boundedMCPBuffer{}
 	command.SetOut(output)
 	command.SetErr(io.Discard)
 	command.SetArgs(append([]string{"--no-update-check"}, args...))
 	err := command.ExecuteContext(ctx)
+	if ctx.Err() != nil {
+		return nil, 2, ctx.Err()
+	}
 	if errors.Is(err, errFindings) {
 		return output.Bytes(), 1, nil
 	}
 	if err != nil {
 		return nil, 2, err
-	}
-	if ctx.Err() != nil {
-		return nil, 2, ctx.Err()
 	}
 	return output.Bytes(), 0, nil
 }
@@ -455,6 +461,9 @@ func (p mcpPolicy) scan(ctx context.Context, input mcpScanArgs, accept bool) (mc
 	for i, path := range outputs {
 		if path == "" {
 			continue
+		}
+		if err := ctx.Err(); err != nil {
+			return mcpserver.Result{}, err
 		}
 		content := rendered
 		if i == 1 {

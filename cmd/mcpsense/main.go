@@ -247,6 +247,9 @@ CLI flags override config file values.`,
 			if err != nil {
 				return fmt.Errorf("scan failed: %w", err)
 			}
+			if err := cmd.Context().Err(); err != nil {
+				return err
+			}
 
 			// --- Drift detection ---
 			noBaseline, _ := cmd.Flags().GetBool("no-baseline")
