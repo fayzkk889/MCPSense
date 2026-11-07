@@ -68,7 +68,18 @@ func Abs(p string) (string, error) {
 	}
 	return Host().Call("absolute", p).String(), nil
 }
-func Dir(p string) string  { return Host().Call("dirname", p).String() }
+func Dir(p string) string { return Host().Call("dirname", p).String() }
+func RealPath(p string) (path string, err error) {
+	defer func() {
+		if recover() != nil {
+			path, err = "", errors.New("path unavailable")
+		}
+	}()
+	return Host().Call("realpath", p).String(), nil
+}
+func Relative(base, p string) (string, error) {
+	return Host().Call("relative", base, p).String(), nil
+}
 func Base(p string) string { return Host().Call("basename", p).String() }
 func Windows() bool        { return Host().Get("platform").String() == "win32" }
 func ToSlash(p string) string {

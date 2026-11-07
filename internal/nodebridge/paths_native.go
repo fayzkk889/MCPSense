@@ -9,6 +9,8 @@ import (
 )
 
 func Abs(p string) (string, error)              { return filepath.Abs(p) }
+func RealPath(p string) (string, error)         { return filepath.EvalSymlinks(p) }
+func Relative(base, p string) (string, error)   { return filepath.Rel(base, p) }
 func Dir(p string) string                       { return filepath.Dir(p) }
 func Base(p string) string                      { return filepath.Base(p) }
 func MkdirAll(p string, mode os.FileMode) error { return os.MkdirAll(p, mode) }

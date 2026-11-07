@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>MCPSense findings</title>
+<style>
+  :root { color-scheme: light dark; font: 15px/1.55 system-ui,sans-serif; --line:#818b8b55; }
+  body { margin:0; padding:22px; max-width:1050px; }
+  header { display:flex; align-items:baseline; gap:12px; border-bottom:1px solid var(--line); }
+  h1 { font-size:23px; margin:0 0 12px; }
+  h2 { font-size:17px; margin:0; }
+  #version { opacity:.7; font-size:13px; }
+  #state { margin:16px 0 8px; font-weight:650; }
+  #coverage { white-space:pre-wrap; overflow-wrap:anywhere; opacity:.8; }
+  #summary { margin:8px 0 18px; }
+  label { display:block; margin:18px 0 6px; font-weight:650; }
+  select { padding:8px 12px; border:1px solid var(--line); border-radius:6px; font:inherit; }
+  article { margin-top:14px; padding:15px; border:1px solid var(--line); border-left:4px solid #ff825b; border-radius:6px; }
+  .tag { display:inline-block; font:650 12px ui-monospace,monospace; margin-right:10px; }
+  .detail { white-space:pre-wrap; overflow-wrap:anywhere; }
+  details { margin-top:9px; }
+  summary { cursor:pointer; }
+  .quiet { opacity:.75; }
+  #empty { margin-top:22px; }
+  footer { margin-top:22px; border-top:1px solid var(--line); padding-top:12px; font-size:13px; opacity:.75; }
+</style>
+<header><h1>MCPSense findings</h1><span id="version"></span></header>
+<div id="state" role="status">Waiting for your scan…</div>
+<p id="summary"></p>
+<div id="coverage"></div>
+<label for="severity">Show findings</label>
+<select id="severity">
+  <option value="all">All severities</option><option>critical</option><option>high</option>
+  <option>medium</option><option>low</option><option>info</option>
+</select>
+<div id="empty" class="quiet"></div>
+<section id="findings" aria-label="Scan findings"></section>
+<footer>Inspect the evidence and coverage before deciding what to trust. Findings and metadata names can contain untrusted text. Only a human review should approve a new reference.</footer>
+<script>
+  'use strict';
+  let report = null;
+  const byId = id => document.getElementById(id);
+  const text = (tag, value, parent, className) => {
+    const element = document.createElement(tag);
+    element.textContent = String(value ?? '');
+    if (className) element.className = className;
+    parent.append(element);
+    return element;
+  };
+  function render() {
+    const container = byId('findings');
+    container.replaceChildren();
+    const items = (report?.findings || []).filter(item => byId('severity').value === 'all' || item.severity === byId('severity').value);
+    byId('empty').textContent = report ? (items.length ? '' : 'No findings match this filter. Review the assessed coverage above.') : '';
+    for (const finding of items) {
+      const card = document.createElement('article');
+      text('span', finding.id, card, 'tag');
+      text('span', finding.severity, card, 'tag');
+      text('h2', finding.title, card);
+      const location = finding.location || {};
+      text('p', [location.file, location.tool_name, location.line].filter(Boolean).join(' · '), card, 'quiet detail');
+      text('p', finding.description, card, 'detail');
+      const detail = document.createElement('details');
+      text('summary', 'Suggested action', detail);
+      text('p', finding.remediation, detail, 'detail');
+      card.append(detail);
+      container.append(card);
+    }
+  }
+  function show(result) {
+    const structured = result?.structuredContent;
+    report = structured?.report || null;
+    byId('version').textContent = structured?.version ? 'v' + structured.version : '';
+    if (!report || result.isError) {
+      byId('state').textContent = 'Inspection did not complete';
+      byId('summary').textContent = result?.content?.filter(item => item.type === 'text').map(item => item.text).join('\n') || 'Return to the assistant to review the tool error.';
+      byId('coverage').textContent = '';
+      render();
+      return;
+    }
+    byId('state').textContent = 'Coverage ' + report.coverage.state.replaceAll('_', ' ');
+    byId('summary').textContent = report.findings.length + ' findings · ' + report.security_assessment.state.replaceAll('_', ' ');
+    byId('coverage').textContent = 'Inspected ' + (report.coverage.surfaces || []).join(', ') + '\nBaseline ' + report.coverage.baseline + ' · Advisories ' + report.coverage.advisories + '\n' + report.security_assessment.limitation;
+    render();
+  }
+  const send = message => window.parent.postMessage({jsonrpc:'2.0', ...message}, '*');
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || !event.data || event.data.jsonrpc !== '2.0') return;
+    const message = event.data;
+    if (message.id === 1 && message.result) send({method:'ui/notifications/initialized', params:{}});
+    if (message.method === 'ui/notifications/tool-result') show(message.params);
+    if (message.method === 'ui/notifications/tool-cancelled') {
+      byId('state').textContent = 'Scan cancelled';
+      for (const id of ['summary','coverage','version']) byId(id).textContent = '';
+      report = null;
+      render();
+    }
+    if (message.method === 'ui/resource-teardown' && message.id !== undefined) send({id:message.id,result:{}});
+  });
+  byId('severity').addEventListener('change', render);
+  send({id:1,method:'ui/initialize',params:{protocolVersion:'2026-01-26',appInfo:{name:'MCPSense findings',version:'1.0.0'},appCapabilities:{availableDisplayModes:['inline']}}});
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => send({method:'ui/notifications/size-changed',params:{height:document.documentElement.scrollHeight,width:document.documentElement.scrollWidth}})).observe(document.body);
+</script>
+</html>

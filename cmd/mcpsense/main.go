@@ -68,6 +68,7 @@ func rootCmd() *cobra.Command {
 	root.AddCommand(newUpdateCmd())
 	root.AddCommand(initConfigCmd())
 	root.AddCommand(verifyCmd())
+	root.AddCommand(mcpCmd())
 
 	return root
 }
@@ -292,7 +293,7 @@ CLI flags override config file values.`,
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not update baseline: %w", err)
 						} else {
-							fmt.Fprintln(os.Stderr, "Baseline updated.")
+							fmt.Fprintln(cmd.ErrOrStderr(), "Baseline updated.")
 						}
 					} else if drift.Exists(baselinePath) {
 						rep.Coverage.Baseline = "compared"
@@ -329,7 +330,7 @@ CLI flags override config file values.`,
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not save baseline: %w", err)
 						} else {
-							fmt.Fprintf(os.Stderr, "Baseline saved. Future scans of this target will detect drift.\n")
+							fmt.Fprintf(cmd.ErrOrStderr(), "Baseline saved. Future scans of this target will detect drift.\n")
 						}
 					}
 				}
@@ -345,7 +346,7 @@ CLI flags override config file values.`,
 			rep.FinalizeEvidence()
 
 			// Select output writer.
-			out := os.Stdout
+			out := cmd.OutOrStdout()
 			if outputFile != "" {
 				f, err := os.Create(outputFile)
 				if err != nil {
@@ -444,7 +445,7 @@ func initConfigCmd() *cobra.Command {
 			if err := os.WriteFile(configFile, data, 0600); err != nil {
 				return fmt.Errorf("writing config file: %w", err)
 			}
-			fmt.Printf("Created %s with default settings.\n", configFile)
+			fmt.Fprintf(cmd.OutOrStdout(), "Created %s with default settings.\n", configFile)
 			fmt.Fprintln(cmd.OutOrStdout(), "This configures MCPSense; it does not create an MCP server config.")
 			fmt.Fprintln(cmd.OutOrStdout(), "For a safe first scan, run: mcpsense init --example")
 			return nil
