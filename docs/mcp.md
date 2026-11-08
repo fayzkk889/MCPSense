@@ -12,6 +12,7 @@ After installing a release that contains MCP support, open the project you want 
 mcpsense mcp install --client cursor --root .
 # Or choose one of these instead:
 mcpsense mcp install --client vscode --root .
+mcpsense mcp install --client copilot --root .
 mcpsense mcp install --client claude-code --root .
 mcpsense mcp install --client claude-desktop --root .
 mcpsense mcp install --client codex --root .
@@ -23,7 +24,9 @@ Restart the assistant, approve its MCPSense connection, and ask:
 
 Setup preserves other servers and settings, keeps an exact private backup of an existing configuration, and prints its location. Running the same setup twice does not rewrite it. A different existing `mcpsense` entry is preserved for manual review. Setup does not silently expand its permissions or change its approved project.
 
-Default locations: Cursor uses `~/.cursor/mcp.json`; VS Code uses the approved project's `.vscode/mcp.json`; Claude Code uses its `.mcp.json`; Codex uses `$CODEX_HOME/config.toml` or `~/.codex/config.toml`. Claude Desktop uses its standard Windows/macOS configuration location; other platforms require its actual `--config` path. Shared project settings contain machine-specific absolute launch paths: keep these local or adapt them before sharing with teammates.
+Default locations: Cursor uses `~/.cursor/mcp.json`; VS Code uses the approved project's `.vscode/mcp.json`; Copilot uses `$COPILOT_HOME/mcp-config.json` or `~/.copilot/mcp-config.json`; Claude Code uses the project's `.mcp.json`; Codex uses `$CODEX_HOME/config.toml` or `~/.codex/config.toml`. Claude Desktop uses its standard Windows/macOS/Linux location (Linux: `~/.config/Claude/claude_desktop_config.json`); other platforms require its actual `--config` path. Shared project settings contain machine-specific absolute launch paths: keep these local or adapt them before sharing with teammates.
+
+VS Code currently forwards eligible `.vscode/mcp.json` entries to its Copilot runtime. `--client copilot` writes the direct portable Copilot configuration instead. The [VS Code format reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration) explains that distinction; Claude Desktop locations follow the [official local-server guide](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
 
 For another location, add `--config /path/to/settings`. For another client, use `--client generic --config /path/to/settings.json`. JSON client files must be valid JSON; files containing comments, invalid settings, symlinks, or incompatible Codex inline tables are preserved with an error. Generate a snippet and merge it in your editor:
 

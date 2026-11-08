@@ -54,14 +54,14 @@ func mcpSetupCmd(install bool) *cobra.Command {
 		entry := map[string]interface{}{"command": program, "args": args}
 		key := "mcpServers"
 		switch client {
-		case "generic", "cursor", "claude-desktop", "claude-code":
+		case "generic", "cursor", "claude-desktop", "claude-code", "copilot":
 		case "vscode":
 			key = "servers"
 			entry["type"] = "stdio"
 		case "codex":
 			key = "mcp_servers"
 		default:
-			return fmt.Errorf("client must be cursor, vscode, claude-code, claude-desktop, codex or generic")
+			return fmt.Errorf("client must be cursor, vscode, copilot, claude-code, claude-desktop, codex or generic")
 		}
 		if !install {
 			if client == "codex" {
@@ -86,6 +86,12 @@ func mcpSetupCmd(install bool) *cobra.Command {
 				config = filepath.Join(home, ".cursor", "mcp.json")
 			case "vscode":
 				config = filepath.Join(absolute, ".vscode", "mcp.json")
+			case "copilot":
+				copilotHome := managementEnv("COPILOT_HOME")
+				if copilotHome == "" {
+					copilotHome = filepath.Join(home, ".copilot")
+				}
+				config = filepath.Join(copilotHome, "mcp-config.json")
 			case "claude-code":
 				config = filepath.Join(absolute, ".mcp.json")
 			case "codex":
@@ -104,6 +110,8 @@ func mcpSetupCmd(install bool) *cobra.Command {
 					config = filepath.Join(appdata, "Claude", "claude_desktop_config.json")
 				case "darwin":
 					config = filepath.Join(home, "Library", "Application Support", "Claude", "claude_desktop_config.json")
+				case "linux":
+					config = filepath.Join(home, ".config", "Claude", "claude_desktop_config.json")
 				default:
 					return fmt.Errorf("pass the actual Claude Desktop --config path on this platform")
 				}
@@ -131,7 +139,7 @@ func mcpSetupCmd(install bool) *cobra.Command {
 		fmt.Fprintln(cmd.OutOrStdout(), "CLI and MCP use this same installed engine. After mcpsense update, restart the MCP connection to load the new release.")
 		return nil
 	}}
-	command.Flags().StringVar(&client, "client", "generic", "cursor, vscode, claude-code, claude-desktop, codex or generic")
+	command.Flags().StringVar(&client, "client", "generic", "cursor, vscode, copilot, claude-code, claude-desktop, codex or generic")
 	command.Flags().StringVar(&root, "root", ".", "Project directory the assistant is permitted to inspect")
 	if install {
 		command.Flags().StringVar(&config, "config", "", "Override the client's configuration file path")

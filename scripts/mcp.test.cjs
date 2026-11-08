@@ -203,7 +203,7 @@ test('reviewed baselines, new report exports, remediation and setup preserve use
   assert.equal((await c.call('mcpsense_init',{example:true})).isError,true);
   assert.deepEqual(fs.readFileSync(path.join(root,'mcp.json')),example);
 
-  for (const name of ['cursor','vscode','claude-code','claude-desktop','codex']) {
+  for (const name of ['cursor','vscode','copilot','claude-code','claude-desktop','codex']) {
     const file=path.join(root,name+(name==='codex'?'.toml':'.json'));
     const original=name==='codex'?'# preserve this comment\nmodel = "example"\n[mcp_servers.other]\ncommand = "existing"\n':JSON.stringify({custom:'preserve',[name==='vscode'?'servers':'mcpServers']:{other:{command:'existing'}}});
     fs.writeFileSync(file,original);
