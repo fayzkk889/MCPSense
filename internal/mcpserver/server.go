@@ -9,6 +9,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/jsonpolicy"
 	"io"
 	"sync"
 )
@@ -94,7 +95,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 				return err
 			}
 			var envelope map[string]interface{}
-			if err := json.Unmarshal(data, &envelope); err != nil {
+			if err := jsonpolicy.Unmarshal(data, &envelope); err != nil {
 				return err
 			}
 			envelope["resultType"] = "complete"
@@ -137,7 +138,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 			}
 			continue
 		}
-		if json.Unmarshal(line, &request) != nil || request.JSONRPC != "2.0" || request.Method == "" {
+		if jsonpolicy.Unmarshal(line, &request) != nil || request.JSONRPC != "2.0" || request.Method == "" {
 			if err := send(json.RawMessage("null"), nil, &rpcError{Code: -32600, Message: "Invalid JSON-RPC request"}); err != nil {
 				return err
 			}
@@ -158,7 +159,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 				var p struct {
 					RequestID json.RawMessage `json:"requestId"`
 				}
-				if json.Unmarshal(request.Params, &p) == nil {
+				if jsonpolicy.Unmarshal(request.Params, &p) == nil {
 					activeMu.Lock()
 					if requestKey(p.RequestID) == activeID && activeCancel != nil {
 						activeCancel()
@@ -186,7 +187,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 				Capabilities    json.RawMessage `json:"capabilities"`
 				ClientInfo      json.RawMessage `json:"clientInfo"`
 			}
-			if initialized || json.Unmarshal(request.Params, &p) != nil || p.ProtocolVersion == "" || len(p.Capabilities) == 0 || len(p.ClientInfo) == 0 {
+			if initialized || jsonpolicy.Unmarshal(request.Params, &p) != nil || p.ProtocolVersion == "" || len(p.Capabilities) == 0 || len(p.ClientInfo) == 0 {
 				fault = &rpcError{Code: -32602, Message: "Expected a single initialize request with protocolVersion, capabilities and clientInfo"}
 				break
 			}
@@ -199,8 +200,8 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 				Name    string `json:"name"`
 				Version string `json:"version"`
 			}
-			if json.Unmarshal(p.Capabilities, &capabilities) != nil || string(p.Capabilities) == "null" ||
-				json.Unmarshal(p.ClientInfo, &client) != nil || client.Name == "" || client.Version == "" {
+			if jsonpolicy.Unmarshal(p.Capabilities, &capabilities) != nil || string(p.Capabilities) == "null" ||
+				jsonpolicy.Unmarshal(p.ClientInfo, &client) != nil || client.Name == "" || client.Version == "" {
 				fault = &rpcError{Code: -32602, Message: "Invalid client capabilities or clientInfo"}
 				break
 			}
@@ -246,7 +247,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 				var p struct {
 					URI string `json:"uri"`
 				}
-				if json.Unmarshal(request.Params, &p) != nil || p.URI != ReportURI {
+				if jsonpolicy.Unmarshal(request.Params, &p) != nil || p.URI != ReportURI {
 					fault = &rpcError{Code: -32602, Message: "Unknown resource"}
 					break
 				}
@@ -257,7 +258,7 @@ func (s *Server) Serve(ctx context.Context, in io.Reader, out io.Writer) error {
 					Name      string          `json:"name"`
 					Arguments json.RawMessage `json:"arguments"`
 				}
-				if json.Unmarshal(request.Params, &p) != nil || p.Name == "" {
+				if jsonpolicy.Unmarshal(request.Params, &p) != nil || p.Name == "" {
 					fault = &rpcError{Code: -32602, Message: "Tool name and object arguments are required"}
 					break
 				}
@@ -330,7 +331,7 @@ func (s *Server) call(ctx context.Context, name string, args json.RawMessage) (a
 
 func validID(id json.RawMessage) bool {
 	var text string
-	if len(id) > 0 && id[0] == '"' && json.Unmarshal(id, &text) == nil {
+	if len(id) > 0 && id[0] == '"' && jsonpolicy.Unmarshal(id, &text) == nil {
 		return true
 	}
 	var n json.Number

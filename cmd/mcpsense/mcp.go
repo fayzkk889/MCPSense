@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/jsonpolicy"
 	"github.com/fayzkk889/MCPSense/internal/mcpserver"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"github.com/fayzkk889/MCPSense/internal/nodebridge"
@@ -157,6 +158,9 @@ type mcpScanArgs struct {
 }
 
 func decodeMCPArgs(data json.RawMessage, target interface{}) error {
+	if err := jsonpolicy.Validate(data, target); err != nil {
+		return fmt.Errorf("invalid tool arguments; use the advertised schema")
+	}
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(target); err != nil {
