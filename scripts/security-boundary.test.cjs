@@ -81,6 +81,10 @@ test('Live discovery never dereferences schemas, follows redirects or executes t
     if(req.url==='/destination'){redirectDestination++;res.end('{}');return;}
     requests++;
     if(mode==='307'||mode==='308'){res.writeHead(Number(mode),{Location:url+'/destination'});res.end();return;}
+    if(mode==='oversize-success'||mode==='oversize-error'){
+      res.writeHead(mode==='oversize-error'?403:200,{'Content-Type':'application/json'});
+      res.end(' '.repeat((2<<20)+1));return;
+    }
     let body='';for await(const chunk of req)body+=chunk;
     const q=JSON.parse(body);let result={};
     if(q.method==='initialize')result={protocolVersion:'2025-11-25',capabilities:{tools:{}},serverInfo:{name:'fixture',version:'1'}};
@@ -100,6 +104,10 @@ test('Live discovery never dereferences schemas, follows redirects or executes t
   const okay=await run(args);assert.equal(okay.status,0,okay.stderr);assert.equal(okay.report.coverage.state,'completed');
   assert.equal(schemaFetches,0);assert.equal(toolCalls,0);
   mode='shadow';const shadow=await run(args);assert.equal(shadow.status,2,shadow.stderr);assert.notEqual(shadow.report?.coverage?.state,'completed');
+  for(mode of ['oversize-success','oversize-error']){
+    const response=await run(args);assert.equal(response.status,2,response.stdout+response.stderr);
+    assert.notEqual(response.report?.coverage?.state,'completed');
+  }
   for(mode of ['307','308'])assert.equal((await run(args)).status,2);
   assert.equal(redirectDestination,0);assert.equal(schemaFetches,0);assert.equal(toolCalls,0);
   assert.equal(fs.readdirSync(root).length,0,'discovery wrote a baseline or other file');

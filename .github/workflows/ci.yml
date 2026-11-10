@@ -35,7 +35,7 @@ jobs:
       - run: node --test npm/package.test.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
-      - run: node --test scripts/installers.test.mjs scripts/product.test.mjs scripts/mcp.test.cjs scripts/security-boundary.test.cjs
+      - run: node --test scripts/installers.test.mjs scripts/product.test.mjs scripts/mcp.test.cjs scripts/security-boundary.test.cjs scripts/advisory-boundary.test.cjs
         env:
           MCPSENSE_TEST_BINARY: ${{ github.workspace }}/bin/mcpsense${{ runner.os == 'Windows' && '.exe' || '' }}
       - run: node scripts/npm-install-smoke.cjs

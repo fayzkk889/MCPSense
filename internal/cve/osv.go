@@ -34,12 +34,13 @@ type Package struct {
 
 // Vuln is a normalized vulnerability result.
 type Vuln struct {
-	ID           string
-	Summary      string
-	CVSS         float64
-	FixedVersion string
-	Source       string
-	ReviewedAt   string
+	ID            string
+	Applicability string // optional reviewed qualification, e.g. version_unresolved
+	Summary       string
+	CVSS          float64
+	FixedVersion  string
+	Source        string
+	ReviewedAt    string
 }
 
 // Result pairs a package with the vulns found for it.
