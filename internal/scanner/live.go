@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/jsonpolicy"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"io"
 	"net/http"
@@ -110,7 +111,7 @@ func fetchHTTPProtocolContext(client *http.Client, target, policy string, runCtx
 			var init struct {
 				ProtocolVersion string `json:"protocolVersion"`
 			}
-			if json.Unmarshal(r.Result, &init) == nil {
+			if jsonpolicy.Unmarshal(r.Result, &init) == nil {
 				protocol = init.ProtocolVersion
 			}
 		}
@@ -131,7 +132,7 @@ func fetchHTTPProtocolContext(client *http.Client, target, policy string, runCtx
 }
 func decodeRPC(data []byte, id int) (*models.MCPJSONRPCResponse, error) {
 	var r models.MCPJSONRPCResponse
-	if json.Unmarshal(data, &r) != nil {
+	if jsonpolicy.Unmarshal(data, &r) != nil {
 		return nil, fmt.Errorf("invalid MCP JSON response")
 	}
 	if r.JSONRPC != "2.0" || r.ID != id {
@@ -162,7 +163,7 @@ func legacyManifest(call rpcCall, notify rpcNotify) (*models.MCPManifest, error)
 		ServerInfo      models.MCPInfo             `json:"serverInfo"`
 		Instructions    string                     `json:"instructions"`
 	}
-	if json.Unmarshal(r.Result, &init) != nil || init.Capabilities == nil || init.ServerInfo.Name == "" {
+	if jsonpolicy.Unmarshal(r.Result, &init) != nil || init.Capabilities == nil || init.ServerInfo.Name == "" {
 		return nil, fmt.Errorf("invalid initialize result")
 	}
 	switch init.ProtocolVersion {
@@ -198,7 +199,7 @@ func listManifest(call rpcCall, m *models.MCPManifest, capabilities map[string]j
 				return nil, fmt.Errorf("%s/list: %w", kind, err)
 			}
 			var raw map[string]json.RawMessage
-			if json.Unmarshal(r.Result, &raw) != nil {
+			if jsonpolicy.Unmarshal(r.Result, &raw) != nil {
 				return nil, fmt.Errorf("invalid %s list", kind)
 			}
 			array := bytes.TrimSpace(raw[kind])
@@ -208,19 +209,19 @@ func listManifest(call rpcCall, m *models.MCPManifest, capabilities map[string]j
 			switch kind {
 			case "tools":
 				var v []models.MCPTool
-				if json.Unmarshal(array, &v) != nil {
+				if jsonpolicy.Unmarshal(array, &v) != nil {
 					return nil, fmt.Errorf("invalid tools")
 				}
 				m.Tools = append(m.Tools, v...)
 			case "resources":
 				var v []models.MCPResource
-				if json.Unmarshal(array, &v) != nil {
+				if jsonpolicy.Unmarshal(array, &v) != nil {
 					return nil, fmt.Errorf("invalid resources")
 				}
 				m.Resources = append(m.Resources, v...)
 			case "prompts":
 				var v []models.MCPPrompt
-				if json.Unmarshal(array, &v) != nil {
+				if jsonpolicy.Unmarshal(array, &v) != nil {
 					return nil, fmt.Errorf("invalid prompts")
 				}
 				m.Prompts = append(m.Prompts, v...)
@@ -230,7 +231,7 @@ func listManifest(call rpcCall, m *models.MCPManifest, capabilities map[string]j
 			}
 			cursor = ""
 			if v, ok := raw["nextCursor"]; ok {
-				if json.Unmarshal(v, &cursor) != nil {
+				if jsonpolicy.Unmarshal(v, &cursor) != nil {
 					return nil, fmt.Errorf("invalid list cursor")
 				}
 			}
@@ -306,7 +307,7 @@ func interrogateStdioProtocol(stdin io.Writer, stdout io.Reader, policy string) 
 				return nil, fmt.Errorf("MCP message exceeds size limit")
 			}
 			var envelope map[string]json.RawMessage
-			if json.Unmarshal(line, &envelope) != nil {
+			if jsonpolicy.Unmarshal(line, &envelope) != nil {
 				return nil, fmt.Errorf("invalid MCP stdio JSON")
 			}
 			if _, ok := envelope["method"]; ok {

@@ -87,7 +87,7 @@ func (c *DependencyCVECheck) Run(ctx *ScanContext) []models.Finding {
 func advisoryFinding(pkg cve.Package, v cve.Vuln, location models.Location) models.Finding {
 	evidence := &models.AdvisoryEvidence{ID: v.ID, Applicability: "reported_affected", FeedURL: "https://osv.dev/vulnerability/" + url.PathEscape(v.ID)}
 	pinNote := ""
-	if pkg.Version == "" {
+	if pkg.Version == "" || v.Applicability == "version_unresolved" {
 		evidence.Applicability = "version_unresolved"
 		pinNote = " The installed version is unresolved; this is a package-level advisory candidate and may not apply. Resolve the installed version before deciding whether it is affected."
 	}
@@ -104,6 +104,9 @@ func advisoryFinding(pkg cve.Package, v cve.Vuln, location models.Location) mode
 		Description: fmt.Sprintf("Component %q declares %s%s. Advisory %s from %s: %s%s", pkg.Server, pkg.Name, versionSuffix(pkg.Version), v.ID, source, summary, pinNote),
 		Severity:    severityFromCVSS(v.CVSS), Category: models.CategorySecurity, Location: location, Advisory: evidence,
 		Remediation: "Review this advisory's package-specific affected and patched branches, deployment prerequisites and required configuration. Resolve and pin an appropriate fixed version, apply the required settings, then retest. Upgrading alone may not remediate the issue."}
+	if evidence.Applicability == "version_unresolved" {
+		f.Confidence = "unresolved_applicability"
+	}
 	if reviewedApplicabilityConflict(pkg, v.ID) {
 		evidence.Applicability = "conflicting_sources"
 		evidence.ReviewedURL, evidence.ReviewedAt = tensorlakeAdvisory, "2026-10-30"

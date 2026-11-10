@@ -63,7 +63,7 @@ try {
       const p = write('vendor-' + version + '.json', {mcpServers: {postgres: {command: 'uvx', args: ['--from', 'awslabs.postgres-mcp-server==' + version, 'awslabs.postgres-mcp-server']}}});
       const r = scan('vendor-' + version, p, ['--checks', 'CVE-001']);
       assert.equal(r.findings.some(f => f.id === 'CVE-001' && f.description.includes('GHSA-fph8-pg5w-78fv')), want, version);
-      assert.ok(r.coverage.advisory_scope.includes('2026-10-23'));
+      assert.ok(r.coverage.advisory_scope.includes('2026-11-10'));
     }
   }
 } finally {

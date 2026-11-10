@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/jsonpolicy"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"io"
 	"net/http"
@@ -22,7 +23,7 @@ func modernCall(call rpcCall) rpcCall {
 		p := map[string]interface{}{}
 		if q.Params != nil {
 			b, _ := json.Marshal(q.Params)
-			if json.Unmarshal(b, &p) != nil {
+			if jsonpolicy.Unmarshal(b, &p) != nil {
 				return nil, fmt.Errorf("invalid modern request params")
 			}
 		}
@@ -35,7 +36,7 @@ func modernCall(call rpcCall) rpcCall {
 		var result struct {
 			ResultType string `json:"resultType"`
 		}
-		if json.Unmarshal(r.Result, &result) != nil || result.ResultType != "complete" {
+		if jsonpolicy.Unmarshal(r.Result, &result) != nil || result.ResultType != "complete" {
 			return nil, fmt.Errorf("modern discovery did not return a complete result")
 		}
 		return r, nil
@@ -59,7 +60,7 @@ func negotiateManifest(call rpcCall, notify rpcNotify, policy string, legacy fun
 				var data struct {
 					Supported []string `json:"supported"`
 				}
-				if json.Unmarshal(failure.Data, &data) == nil {
+				if jsonpolicy.Unmarshal(failure.Data, &data) == nil {
 					for _, v := range data.Supported {
 						if v == defaultProtocolVersion {
 							fallback = true
@@ -80,7 +81,7 @@ func negotiateManifest(call rpcCall, notify rpcNotify, policy string, legacy fun
 		Instructions string                     `json:"instructions"`
 		Meta         map[string]json.RawMessage `json:"_meta"`
 	}
-	if json.Unmarshal(r.Result, &d) != nil || d.Capabilities == nil {
+	if jsonpolicy.Unmarshal(r.Result, &d) != nil || d.Capabilities == nil {
 		return nil, fmt.Errorf("invalid discovery metadata")
 	}
 	supported := false
@@ -94,7 +95,7 @@ func negotiateManifest(call rpcCall, notify rpcNotify, policy string, legacy fun
 	}
 	var info models.MCPInfo
 	if raw, ok := d.Meta["io.modelcontextprotocol/serverInfo"]; ok {
-		if json.Unmarshal(raw, &info) != nil {
+		if jsonpolicy.Unmarshal(raw, &info) != nil {
 			return nil, fmt.Errorf("invalid server identity metadata")
 		}
 	}
@@ -121,7 +122,7 @@ func readHTTPRPC(resp *http.Response, id int) (*models.MCPJSONRPCResponse, error
 		raw := []byte(strings.Join(data, "\n"))
 		data = nil
 		var envelope map[string]json.RawMessage
-		if json.Unmarshal(raw, &envelope) != nil {
+		if jsonpolicy.Unmarshal(raw, &envelope) != nil {
 			return nil, fmt.Errorf("invalid SSE JSON")
 		}
 		if _, ok := envelope["method"]; ok {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/fayzkk889/MCPSense/internal/checks"
+	"github.com/fayzkk889/MCPSense/internal/jsonpolicy"
 	"github.com/fayzkk889/MCPSense/internal/models"
 	"github.com/fayzkk889/MCPSense/internal/utils"
 	"os"
@@ -47,7 +48,7 @@ func (s *Scanner) scanStatic(target string, ctx *checks.ScanContext) error {
 		}
 		b = []byte(stripBOM(string(b)))
 		var raw map[string]json.RawMessage
-		if json.Unmarshal(b, &raw) != nil {
+		if jsonpolicy.Unmarshal(b, &raw) != nil {
 			return fmt.Errorf("invalid discovered JSON input; scan coverage incomplete")
 		}
 		if d.Name() == "package.json" {
@@ -56,7 +57,7 @@ func (s *Scanner) scanStatic(target string, ctx *checks.ScanContext) error {
 				return nil
 			}
 			b = embedded
-			if json.Unmarshal(b, &raw) != nil {
+			if jsonpolicy.Unmarshal(b, &raw) != nil {
 				return fmt.Errorf("invalid embedded MCP metadata")
 			}
 		}
@@ -73,7 +74,7 @@ func (s *Scanner) scanStatic(target string, ctx *checks.ScanContext) error {
 			return fmt.Errorf("multiple manifests discovered; scan each with --mode manifest to preserve component boundaries")
 		}
 		var m models.MCPManifest
-		if json.Unmarshal(b, &m) != nil {
+		if jsonpolicy.Unmarshal(b, &m) != nil {
 			return fmt.Errorf("invalid discovered manifest")
 		}
 		ctx.Manifest = &m
@@ -84,7 +85,7 @@ func (s *Scanner) scanStatic(target string, ctx *checks.ScanContext) error {
 }
 func parseConfig(b []byte) (*models.MCPClientConfig, error) {
 	var raw map[string]json.RawMessage
-	if json.Unmarshal(b, &raw) != nil {
+	if jsonpolicy.Unmarshal(b, &raw) != nil {
 		return nil, fmt.Errorf("invalid MCP client configuration JSON")
 	}
 	entries, ok := raw["mcpServers"]
@@ -95,7 +96,7 @@ func parseConfig(b []byte) (*models.MCPClientConfig, error) {
 		return nil, fmt.Errorf("configuration must contain mcpServers or servers")
 	}
 	var servers map[string]models.MCPServerEntry
-	if json.Unmarshal(entries, &servers) != nil || servers == nil {
+	if jsonpolicy.Unmarshal(entries, &servers) != nil || servers == nil {
 		return nil, fmt.Errorf("invalid server map")
 	}
 	return &models.MCPClientConfig{MCPServers: servers}, nil

@@ -1,8 +1,8 @@
 package scanner
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/fayzkk889/MCPSense/internal/jsonpolicy"
 	"github.com/fayzkk889/MCPSense/internal/utils"
 
 	"github.com/fayzkk889/MCPSense/internal/checks"
@@ -21,7 +21,7 @@ func (s *Scanner) scanManifest(target string, ctx *checks.ScanContext) error {
 	if len(data) >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF {
 		data = data[3:]
 	}
-	if err := json.Unmarshal(data, &manifest); err != nil {
+	if err := jsonpolicy.Unmarshal(data, &manifest); err != nil {
 		return fmt.Errorf("invalid manifest JSON in %q: %w; check JSON syntax and field types", target, err)
 	}
 
