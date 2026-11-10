@@ -37,6 +37,7 @@ archives:
     files:
       - README.md
       - LICENSE
+      - THIRD_PARTY_NOTICES.md
 
 checksum:
   name_template: "checksums.txt"

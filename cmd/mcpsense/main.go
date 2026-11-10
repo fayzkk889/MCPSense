@@ -68,6 +68,7 @@ func rootCmd() *cobra.Command {
 	root.AddCommand(newUpdateCmd())
 	root.AddCommand(initConfigCmd())
 	root.AddCommand(verifyCmd())
+	root.AddCommand(mcpCmd())
 
 	return root
 }
@@ -128,24 +129,12 @@ CLI flags override config file values.`,
 			}
 
 			// Parse scan mode.
-			scanMode := scanner.ModeAuto
-			switch strings.ToLower(mode) {
-			case "static":
-				scanMode = scanner.ModeStatic
-			case "live":
-				scanMode = scanner.ModeLive
-			case "manifest":
-				scanMode = scanner.ModeManifest
-			case "config":
-				scanMode = scanner.ModeConfig
-			case "skill":
-				scanMode = scanner.ModeSkill
-			case "dependencies":
-				scanMode = scanner.ModeDependencies
-			case "auto", "":
-				// ModeAuto is the default, nothing to do.
-			default:
-				return fmt.Errorf("unknown mode %q, use: static, live, manifest, config, skill, dependencies, auto", mode)
+			scanMode := scanner.ScanMode(strings.ToLower(mode))
+			if scanMode == "" {
+				scanMode = scanner.ModeAuto
+			}
+			if !containsChoice(string(scanMode), scanModeNames()) {
+				return fmt.Errorf("unknown mode %q, use: %s", mode, strings.Join(scanModeNames(), ", "))
 			}
 
 			// Parse check filter lists.
@@ -186,10 +175,10 @@ CLI flags override config file values.`,
 				}
 			}
 			dependencyFile, _ := cmd.Flags().GetString("dependencies")
-			if format != "cli" && format != "json" && format != "sarif" {
+			if !containsChoice(format, reportFormatNames()) {
 				return fmt.Errorf("unknown output format")
 			}
-			if minSev != "critical" && minSev != "high" && minSev != "medium" && minSev != "low" && minSev != "info" {
+			if !containsChoice(minSev, severityNames()) {
 				return fmt.Errorf("unknown severity")
 			}
 			paths := []string{target, dependencyFile, outputFile, sarifOutput, baselineArg}
@@ -246,6 +235,9 @@ CLI flags override config file values.`,
 			if err != nil {
 				return fmt.Errorf("scan failed: %w", err)
 			}
+			if err := cmd.Context().Err(); err != nil {
+				return err
+			}
 
 			// --- Drift detection ---
 			noBaseline, _ := cmd.Flags().GetBool("no-baseline")
@@ -292,7 +284,7 @@ CLI flags override config file values.`,
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not update baseline: %w", err)
 						} else {
-							fmt.Fprintln(os.Stderr, "Baseline updated.")
+							fmt.Fprintln(cmd.ErrOrStderr(), "Baseline updated.")
 						}
 					} else if drift.Exists(baselinePath) {
 						rep.Coverage.Baseline = "compared"
@@ -329,7 +321,7 @@ CLI flags override config file values.`,
 						if err := drift.Save(baselinePath, current); err != nil {
 							return fmt.Errorf("could not save baseline: %w", err)
 						} else {
-							fmt.Fprintf(os.Stderr, "Baseline saved. Future scans of this target will detect drift.\n")
+							fmt.Fprintf(cmd.ErrOrStderr(), "Baseline saved. Future scans of this target will detect drift.\n")
 						}
 					}
 				}
@@ -345,7 +337,7 @@ CLI flags override config file values.`,
 			rep.FinalizeEvidence()
 
 			// Select output writer.
-			out := os.Stdout
+			out := cmd.OutOrStdout()
 			if outputFile != "" {
 				f, err := os.Create(outputFile)
 				if err != nil {
@@ -393,10 +385,10 @@ CLI flags override config file values.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: static, live, manifest, config, skill, dependencies, auto")
+	cmd.Flags().StringVarP(&mode, "mode", "m", "auto", "Scan mode: "+strings.Join(scanModeNames(), ", "))
 	cmd.Flags().String("dependencies", "", "Explicit npm v2/v3 lockfile to include; online advisories send recognized package names/versions to OSV")
-	cmd.Flags().StringVarP(&format, "format", "f", "cli", "Output format: cli, json, sarif")
-	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: critical, high, medium, low, info")
+	cmd.Flags().StringVarP(&format, "format", "f", "cli", "Output format: "+strings.Join(reportFormatNames(), ", "))
+	cmd.Flags().StringVarP(&minSev, "severity", "s", "low", "Minimum severity to report: "+strings.Join(severityNames(), ", "))
 	cmd.Flags().StringVarP(&checkIDs, "checks", "c", "", "Comma-separated list of check IDs to run (default: all)")
 	cmd.Flags().StringVar(&excludeIDs, "exclude", "", "Comma-separated list of check IDs to skip")
 	cmd.Flags().BoolVar(&probe, "probe", false, "Reserved; active probing is not implemented")
@@ -444,7 +436,7 @@ func initConfigCmd() *cobra.Command {
 			if err := os.WriteFile(configFile, data, 0600); err != nil {
 				return fmt.Errorf("writing config file: %w", err)
 			}
-			fmt.Printf("Created %s with default settings.\n", configFile)
+			fmt.Fprintf(cmd.OutOrStdout(), "Created %s with default settings.\n", configFile)
 			fmt.Fprintln(cmd.OutOrStdout(), "This configures MCPSense; it does not create an MCP server config.")
 			fmt.Fprintln(cmd.OutOrStdout(), "For a safe first scan, run: mcpsense init --example")
 			return nil
@@ -490,18 +482,12 @@ func loadConfig() (MCPSenseConfig, error) {
 
 // parseSeverity converts a severity string to a models.Severity value.
 func parseSeverity(s string) models.Severity {
-	switch strings.ToLower(s) {
-	case "critical":
-		return models.SeverityCritical
-	case "high":
-		return models.SeverityHigh
-	case "medium":
-		return models.SeverityMedium
-	case "info":
-		return models.SeverityInfo
-	default:
-		return models.SeverityLow
+	for _, severity := range models.AllSeverities() {
+		if strings.ToLower(s) == severity.String() {
+			return severity
+		}
 	}
+	return models.SeverityLow
 }
 
 // filterBySeverity returns only findings at or above the given minimum severity.

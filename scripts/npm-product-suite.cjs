@@ -11,7 +11,7 @@ const env = {...process.env,
   MCPSENSE_PERSONA_DIR:path.join(output,'persona'), MCPSENSE_BASELINE_DIR:path.join(output,'baseline'),
   MCPSENSE_THREAT_DIR:path.join(output,'threat'), MCPSENSE_DEPENDENCY_DIR:path.join(output,'dependency'), MCPSENSE_FRESH_DIR:path.join(output,'fresh'),MCPSENSE_USER_RETEST_DIR:path.join(output,'user-retest'),MCPSENSE_BOUNDARY_DIR:path.join(output,'boundary'),MCPSENSE_GATE_DIR:path.join(output,'gate')};
 const commands = [
-  ['--test','npm/management.test.cjs','npm/runtime.test.cjs','internal/nodebridge/node.test.cjs','scripts/npm-stdio.test.cjs','scripts/product.test.mjs'],
+  ['--test','npm/management.test.cjs','npm/runtime.test.cjs','internal/nodebridge/node.test.cjs','scripts/npm-stdio.test.cjs','scripts/product.test.mjs','scripts/mcp.test.cjs'],
   ['scripts/product-acceptance.mjs'],['scripts/persona-acceptance.mjs'],['scripts/product-live-acceptance.mjs'],
   ['scripts/baseline-acceptance.mjs'],['scripts/threat-review.mjs'],['scripts/dependency-acceptance.mjs'],['scripts/fresh-product-retest.mjs'],['scripts/user-product-retest.mjs'],['scripts/boundary-acceptance.cjs']];
 for (const args of commands) {

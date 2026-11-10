@@ -7,6 +7,7 @@ import {createRequire} from 'node:module';
 const pkg=JSON.parse(fs.readFileSync('npm/package.json','utf8'));
 assert.match(pkg.version,/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
 assert.equal(pkg.license,'MIT');assert.equal(fs.readFileSync('LICENSE','utf8'),fs.readFileSync('npm/LICENSE','utf8'));
+assert.equal(fs.readFileSync('THIRD_PARTY_NOTICES.md','utf8'),fs.readFileSync('npm/THIRD_PARTY_NOTICES.md','utf8'));
 const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 if(process.env.GITHUB_REF?.startsWith('refs/tags/'))assert.equal(process.env.GITHUB_REF,'refs/tags/v'+pkg.version,'Tag and npm package version differ');
 const archives=['windows_amd64.zip','linux_amd64.tar.gz','linux_arm64.tar.gz','darwin_amd64.tar.gz','darwin_arm64.tar.gz'].map(target=>`MCPSense_${pkg.version}_${target}`);
