@@ -51,9 +51,9 @@ This creates a synthetic example manifest and refuses to overwrite an existing `
 
 Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense version --check` contacts only GitHub/npm for published-version metadata and prints both versions, channel disagreement, and update commands. It never installs automatically. Version 0.4.5 adds the interactive notices described above. Offline scans do not perform version lookups. An installed development preview can be newer than the published stable release.
 
-### Use MCPSense from your assistant (0.5.0 candidate)
+### Use MCPSense from your assistant (0.5.0+)
 
-This checkout adds an MCP interface to the same CLI engine. It is **not included in the published 0.4.5 package**. See the [MCP setup guide](docs/mcp.md) for preview setup, supported clients, permissions, and natural-language scan examples. CLI and MCP ship together; an installed MCPSense update updates both, and restarting the MCP connection loads the new engine.
+MCPSense 0.5.0 adds an MCP interface to the same CLI engine. Earlier 0.4.5 installations do not include it; check `mcpsense version` and public availability before connecting. See the [MCP setup guide](docs/mcp.md) for supported clients, permissions, and natural-language scan examples. CLI and MCP ship together; an installed MCPSense update updates both, and restarting the MCP connection loads the new engine.
 
 ### Share a scan outcome
 

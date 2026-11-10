@@ -11,7 +11,7 @@ export function homeView({ product, articles, articleCard, command, install, arr
         <h1>Inspect the tools.<br><span>Question the trust.</span></h1>
       </div>
       <div class="hero-intro"><p>Security inspection for the interfaces your AI agents rely on. Surface suspicious instructions, risky configurations and unexpected metadata changes—before you decide what to trust.</p>
-        <div class="hero-actions"><a class="button primary" href="#install">Install MCPSense <span aria-hidden="true">↗</span></a><a class="text-link" href="${product.github}">View source ${arrow}</a></div>
+        <div class="hero-actions"><a class="button primary" href="/docs/#mcp">Connect your assistant <span aria-hidden="true">↗</span></a><a class="text-link" href="#install">Use the CLI ${arrow}</a></div>
         <span class="hero-prereq">npm / Node.js 22+ &nbsp; · &nbsp; or Go</span>
       </div>
     </div>
@@ -54,7 +54,7 @@ export function homeView({ product, articles, articleCard, command, install, arr
     <div class="engine-caption"><span>Illustrative sequence, not a live scan.</span><span>Inspection signals. No runtime enforcement.</span></div>
   </section>
 
-  <div class="proof-strip container"><div><span>01</span> Local-first inspection</div><div><span>02</span> Independent npm & Go installs</div><div><span>03</span> Terminal, JSON & SARIF</div></div>
+  <div class="proof-strip container"><div><span>01</span> CLI + MCP · one engine</div><div><span>02</span> Independent npm & Go installs</div><div><span>03</span> Terminal, JSON & SARIF</div></div>
 
   <section class="section container" id="product">
     <div class="section-heading"><p class="eyebrow">THE INSTRUCTION INSIDE THE INTERFACE</p><h2>Useful capability.<br>Unexpected authority.</h2><p>A tool description should explain a capability. When it starts overriding instructions, the trust boundary has moved. Inspect the request, not just the tool’s name.</p></div>

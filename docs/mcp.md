@@ -1,6 +1,6 @@
 # MCPSense inside your assistant
 
-**0.5.0 development candidate:** this interface is in the source checkout, not the published 0.4.5 release. Do not expect `npm install -g mcpsense@latest` to provide these commands until a release containing this change is approved and published.
+**Requires MCPSense 0.5.0 or newer.** Check `mcpsense version` before connecting. CLI and MCP are included in the same installation; earlier releases such as 0.4.5 do not include these commands. Public availability is shown by `mcpsense version --check` and the repository's release badges.
 
 MCPSense can run as a local MCP server. Ask your coding assistant to inspect an MCP configuration, source project, agent instruction file, dependency lockfile, or live server. It uses the installed MCPSense scanner, check registry, reports, and baseline logic. There is no second detection engine or separate MCP package to keep synchronized.
 

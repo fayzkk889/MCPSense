@@ -25,6 +25,7 @@ jobs:
       - run: go test -race ./...
       - run: go vet ./...
       - run: node --test scripts/action.test.mjs npm/package.test.cjs npm/management.test.cjs npm/runtime.test.cjs internal/nodebridge/node.test.cjs
+      - run: node --test website/test/*.test.mjs
       - run: npm pack ./npm --dry-run --json --ignore-scripts
       - run: node scripts/release-verify.mjs
       - name: Read the shared CLI and MCP candidate version
