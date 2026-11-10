@@ -4,10 +4,29 @@ export const product = {
   github: 'https://github.com/fayzkk889/MCPSense',
   stable: '0.4.5',
   verified: '2026-11-02',
-  candidate: null,
+  candidate: '0.5.0',
 };
 
 export const articles = [
+  {
+    slug: 'mcpsense-inside-your-assistant', category: 'Engineering', date: '2026-11-10',
+    title: 'The same security engine. Inside your assistant.',
+    excerpt: 'MCPSense 0.5.0 connects the existing scanner to coding assistants and tightens the boundary before detection starts.',
+    lead: 'Inspect your integration from the terminal or ask your assistant to do it. MCPSense 0.5.0 gives both interfaces the same checks, findings and explicit limits.',
+    sections: [
+      ['Connect once, inspect the project you choose', `<p>Install through npm with Node.js 22+, or independently through Go. No separate MCP server package is required. From the project directory, connect your chosen client:</p><pre><code>mcpsense version\nmcpsense mcp install --client cursor --root .</code></pre><p>Other supported client names are <code>vscode</code>, <code>copilot</code>, <code>claude-code</code>, <code>claude-desktop</code> and <code>codex</code>. Restart the client's MCP connection, then ask: “Use MCPSense to scan manifest.json offline. Explain the findings and coverage.” Replace the filename with an input you actually selected.</p><p>The default connection is offline and read-only within the approved project root. It does not automatically start programs from inspected configs, connect to their endpoints or accept metadata baselines.</p>`],
+      ['One engine, one update lifecycle', `<p>The terminal and MCP tools use the installed scanner engine, including its check registry, metadata reference workflows, dependency inspection and reports. Update with <code>mcpsense update</code>, then restart the MCP connection. You do not need to update a second package or change a working client configuration.</p><p>Optional network, execution and write capabilities must be granted at server startup and explicitly requested by the tool operation. Reviewed baseline acceptance also needs human approval. The MCP interface is an inspection tool, not an automatic runtime firewall.</p>`],
+      ['Fix the interpretation before tuning detection', `<p>A reproduced parsing defect let a benign <code>Description</code> overwrite a hostile lowercase <code>description</code> before the detector read it. Adding another phrase rule would not fix that failure.</p><p>The shared input policy now rejects ambiguous typed field aliases, Unicode-folded aliases and duplicate JSON members. It also bounds nesting and parsing work. Legitimate case-distinct names in schema properties and environment maps remain intact. Ambiguous inputs fail visibly rather than receiving a completed inspection.</p>`],
+      ['Retain evidence when a feed is quiet', `<p>At review time, successful empty OSV responses omitted AWS API MCP Server's token-audience advisory and AWS Serverless MCP Server's deployment-status path traversal. The reviewed vendor supplement retains their affected versions, sources and deployment conditions. Unresolved versions remain advisory candidates.</p><p>These warnings do not establish that a particular deployment is exploitable. Token validation, tenant isolation, tool-result contents and runtime authorization still require controls outside metadata inspection.</p>`],
+      ['Measured workflows, visible limits', `<p>Installed CLI/MCP journeys cover client setup, benign and hostile inputs, all registered scanner checks, baseline review, denied paths and permissions, remediation verification, and restart after an isolated synthetic update. Native and npm acceptance retain their frozen hostile and benign controls. The release workflow repeats gates before producing public artifacts.</p><p>These are bounded regression results, not a promise of future zero misses. Check the <a href="/changelog/">release status</a> before expecting 0.5.0 commands from <code>@latest</code>, and read the <a href="/docs/#mcp">connection guide</a> before granting capabilities.</p>`],
+    ],
+    sources: [
+      ['MCP setup and permission guide', 'https://github.com/fayzkk889/MCPSense/blob/main/docs/mcp.md'],
+      ['Research and reproduced parsing failure', 'https://github.com/fayzkk889/MCPSense/blob/main/docs/engineering/security-research-2026-11-10.md'],
+      ['AWS API MCP audience advisory', 'https://github.com/awslabs/mcp/security/advisories/GHSA-4prq-p2x5-w9fh'],
+      ['AWS Serverless path-traversal advisory', 'https://github.com/awslabs/mcp/security/advisories/GHSA-r6mm-377j-qg8m'],
+    ],
+  },
   {
   "slug": "mcpsense-after-black-october",
   "category": "Engineering",
@@ -111,6 +130,19 @@ export const articles = [
 ];
 
 export const releases = [
+  {
+    version: '0.5.0', status: 'Release candidate', date: null, title: 'The scanner, inside your assistant.',
+    intro: 'A local MCP interface shares the CLI engine, with explicit permissions and stricter input interpretation.',
+    items: [
+      'Connect Cursor, VS Code, Copilot, Claude Code, Claude Desktop or Codex using the installed CLI; no separate MCP package.',
+      'Offline, read-only inspection by default, with a selected project root and explicit optional network, execution and write grants.',
+      'CLI and MCP share every registered check, evidence and update lifecycle. Restart the MCP connection after updating.',
+      'Reject ambiguous JSON field aliases and duplicate members before inspection or dispatch, while preserving case-sensitive schema map keys.',
+      'Reviewed AWS API and Serverless advisory evidence survives successful empty feed responses; unresolved versions remain candidates.',
+    ],
+    note: 'Requires MCPSense 0.5.0+. This candidate is not yet available through public latest install commands. Inspection does not enforce runtime authorization or guarantee detection of every attack.',
+    link: 'https://github.com/fayzkk889/MCPSense/pull/32', label: 'Review the security changes',
+  },
   {
     version: '0.4.5', status: 'Released', date: '2026-11-02', title: 'Run the version you installed.',
     intro: 'Verified command selection, deliberate updates and clear terminal notices keep installations current.',
