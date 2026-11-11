@@ -1,9 +1,10 @@
-# Release readiness — 0.4.5 published
+# Release readiness — 0.5.0 published
 
-**Upcoming 0.5.0 candidate:** the MCP interface is under development and review;
-it is not included in the published 0.4.5 artifacts. See the [MCP verification
-record](mcp-interface-verification-2026-11-08.md) and [setup guide](../mcp.md).
-No merge, release tag or publication is authorized by this candidate record.
+**Published 0.5.0:** CLI and MCP share the installed scanner engine. PRs #31, #32 and #33 are merged, and the approved tagged source is `490049e8d13fcb77e7b4b788a35d26375fc42112`. The [release record](release-0.5.0-2026-11-11.md) preserves exact artifacts, local and hosted user tests, actual public npm/Go installs and website publication evidence. npm requires Node.js 22+ without Go; Go remains independent. Update once, then restart the assistant connection.
+
+These are bounded inspection and regression results, not universal detection or runtime authorization. MIT is preserved. Optional Windows native archives remain unsigned.
+
+## Historical 0.4.5 publication
 
 **Published 0.4.5, 2 November:** [PR #23](https://github.com/fayzkk889/MCPSense/pull/23) is merged and the approved npm/GitHub/Go release delivers guarded installation handoff, verified update commands and bounded terminal notices. The [release record](release-0.4.5-2026-11-02.md) identifies the exact canonical/public bytes, actual anonymous installation and public Go user tests. All 15 PR checks, 14 merged-source jobs and the tagged publication workflow passed. MIT licensing and independent npm/Go routes remain unchanged.
 

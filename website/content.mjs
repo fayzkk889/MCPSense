@@ -2,9 +2,9 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.4.5',
-  verified: '2026-11-02',
-  candidate: '0.5.0',
+  stable: '0.5.0',
+  verified: '2026-11-11',
+  candidate: null,
 };
 
 export const articles = [
@@ -131,7 +131,7 @@ export const articles = [
 
 export const releases = [
   {
-    version: '0.5.0', status: 'Release candidate', date: null, title: 'The scanner, inside your assistant.',
+    version: '0.5.0', status: 'Released', date: '2026-11-11', title: 'The scanner, inside your assistant.',
     intro: 'A local MCP interface shares the CLI engine, with explicit permissions and stricter input interpretation.',
     items: [
       'Connect Cursor, VS Code, Copilot, Claude Code, Claude Desktop or Codex using the installed CLI; no separate MCP package.',
@@ -140,8 +140,8 @@ export const releases = [
       'Reject ambiguous JSON field aliases and duplicate members before inspection or dispatch, while preserving case-sensitive schema map keys.',
       'Reviewed AWS API and Serverless advisory evidence survives successful empty feed responses; unresolved versions remain candidates.',
     ],
-    note: 'Requires MCPSense 0.5.0+. This candidate is not yet available through public latest install commands. Inspection does not enforce runtime authorization or guarantee detection of every attack.',
-    link: 'https://github.com/fayzkk889/MCPSense/pull/32', label: 'Review the security changes',
+    note: 'Available through npm and Go. CLI and MCP update together; restart the MCP connection after installing an update. Inspection does not enforce runtime authorization or guarantee detection of every attack.',
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.5.0', label: 'Read the release notes',
   },
   {
     version: '0.4.5', status: 'Released', date: '2026-11-02', title: 'Run the version you installed.',

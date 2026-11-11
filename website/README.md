@@ -16,7 +16,7 @@ node website/server.mjs
 node website/verify-public.mjs
 ```
 
-Open the printed loopback URL. The development server is not deployed. `website/dist/` contains the entire uploadable site: nine HTML pages, local CSS/JavaScript/SVG, RSS, a sitemap, robots and Cloudflare security headers. It is ignored by Git and rebuilt from tracked sources.
+Open the printed loopback URL. The development server is not deployed. `website/dist/` contains the entire uploadable site: ten HTML pages, local CSS/JavaScript/SVG, RSS, a sitemap, robots and Cloudflare security headers. It is ignored by Git and rebuilt from tracked sources.
 
 ## Content and release truth
 
@@ -29,7 +29,7 @@ Open the printed loopback URL. The development server is not deployed. `website/
 - Blog articles are dated engineering notes. Their sources and historical limitations remain explicit.
 - A browser shows “Latest stable” only after npm **and** GitHub agree on a valid public, non-prerelease version. A mismatch is visible. An outage retains a dated snapshot rather than claiming freshness.
 - If both channels move beyond the saved snapshot, the changelog links to the newer public release and retires a superseded candidate entry. Update the detailed editorial release notes in `content.mjs` after an approved release.
-- npm and Go are independent install routes. `@latest` refers to published releases, not a source branch. The dated snapshot is 0.4.5, verified on npm and GitHub on 2 November 2026. A null candidate means no unpublished candidate is advertised.
+- npm and Go are independent install routes. `@latest` refers to published releases, not a source branch. The dated snapshot is 0.5.0, verified on npm and GitHub on 11 November 2026. A null candidate means no unpublished candidate is advertised.
 
 ## Existing Cloudflare hosting
 
