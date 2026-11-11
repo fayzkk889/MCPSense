@@ -9,6 +9,27 @@ export const product = {
 
 export const articles = [
   {
+    slug: 'first-mcp-scan-in-your-assistant', category: 'Guides', date: '2026-11-11',
+    title: 'Run your first MCP scan in your assistant',
+    excerpt: 'Use a sample config to see an actual finding, change one setting, and check the result again.',
+    lead: 'Give your coding assistant one file to inspect. This example shows how MCPSense flags a plain HTTP URL, how to confirm the finding clears, and what the scan can tell you about your own setup.',
+    sections: [
+      ['Connect in an empty project', `<p><a href="/docs/#installation">Install MCPSense</a> using npm or Go. Open an empty folder in your assistant and run these commands from that folder:</p><pre><code>mcpsense version
+mcpsense mcp install --client vscode --root .</code></pre><p>Use MCPSense 0.5.0 or newer. Replace <code>vscode</code> with the <a href="/docs/#mcp">name of your client</a> if needed. Restart the MCP connection and approve the MCPSense connection in the host if prompted. Ask for <code>mcpsense_status</code> to confirm the project folder and default permissions.</p>`],
+      ['Scan a sample config', `<p>Save this as <code>review-mcp.json</code> in the empty project. It is an example file for inspection. Leave your assistant’s actual settings alone.</p><pre><code>{
+  "mcpServers": {
+    "sample": { "url": "http://example.invalid/mcp" }
+  }
+}</code></pre><blockquote>Use MCPSense to scan review-mcp.json offline. Tell me the finding ID, why it matters, and what the scan did not assess. Leave the file unchanged.</blockquote><p>The published 0.5.0 package returned one high-severity finding, <code>SEC-016</code>, for the plain HTTP URL. The scanner inspected the local file with no network connection to the example address.</p>`],
+      ['Change the URL and scan again', `<p>In the sample file, change <code>http://</code> to <code>https://</code>. Ask for the same offline scan. In the test run, the finding cleared and the report had zero findings. That confirms the scan recognized the change in the file. Server behavior, authentication and tool responses still need separate review.</p><p>The example was reproduced on Windows using the published npm package and the official MCP SDK over stdio. On the original file, the MCP and terminal reports agreed on findings and coverage. Your assistant may phrase the explanation differently.</p>`],
+      ['Try one config you maintain', `<p>Choose a supported MCP config inside your approved project. Ask for an offline scan and read the findings alongside the unassessed coverage. Follow your organization’s policy before giving an assistant access to project data.</p><p><a href="https://github.com/fayzkk889/MCPSense/issues/new?title=MCPSense%20scan%20feedback">Tell us whether you finished the scan or where you got stuck →</a> Keep your config, server addresses, full report and secrets private.</p>`],
+    ],
+    sources: [
+      ['MCPSense 0.5.0 release', 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.5.0'],
+      ['MCP setup and permissions', '/docs/#mcp'],
+    ],
+  },
+  {
     slug: 'mcpsense-inside-your-assistant', category: 'Engineering', date: '2026-11-10',
     title: 'The same security engine. Inside your assistant.',
     excerpt: 'MCPSense 0.5.0 connects the existing scanner to coding assistants and tightens the boundary before detection starts.',

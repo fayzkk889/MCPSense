@@ -7,6 +7,7 @@ export function mcpGuide({command, product}) {
     <h3>Ask for one real inspection</h3>
     <blockquote>Use MCPSense to scan manifest.json offline. Explain the findings, what was inspected, and what remains unassessed.</blockquote>
     <p>Use an actual file or directory you selected inside the approved project. Ask for <code>mcpsense_status</code> to confirm the running version and permissions. The assistant can inspect supported metadata, configurations, source and skill files, explicitly selected npm lockfiles, and equivalent saved reports.</p>
+    <p><a href="/blog/first-mcp-scan-in-your-assistant/">Try the guided sample scan →</a></p>
     <h3>Permissions start small</h3>
     <p>The default server is <strong>offline and read-only</strong>, scoped to the selected root. It does not start commands found in inspected configurations or silently accept baselines. Optional network, executable startup and file-writing grants must be explicitly enabled at setup and requested by the operation. A reviewed baseline also requires human approval. A running assistant or authorized child process is not an OS sandbox.</p>
     <p>Clients that support MCP Apps can display an optional findings panel. Other clients receive the same structured report and readable findings.</p>
