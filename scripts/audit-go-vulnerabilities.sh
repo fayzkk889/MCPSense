@@ -5,8 +5,8 @@
 set -eu
 export GOTOOLCHAIN=local
 export CGO_ENABLED=0
-if [ "$(go env GOVERSION)" != go1.27.3 ]; then
-  printf '%s\n' 'Run this release audit with the pinned production Go 1.27.3 compiler.' >&2
+if [ "$(go env GOVERSION)" != go1.27.4 ]; then
+  printf '%s\n' 'Run this release audit with the pinned production Go 1.27.4 compiler.' >&2
   exit 2
 fi
 audit_tools=$(mktemp -d)

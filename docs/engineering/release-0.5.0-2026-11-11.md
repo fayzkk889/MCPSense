@@ -112,3 +112,17 @@ verified ten HTML routes, eleven public assets, security and cache headers,
 and the custom 404 response. The [changelog](https://mcpsense.site/changelog/)
 lists 0.5.0 as released, and the [setup guide](https://mcpsense.site/docs/#mcp)
 covers connecting the installed MCP interface.
+
+## Go toolchain follow-up
+
+The Go project published [GO-2026-6859](https://vuln.go.dev/ID/GO-2026-6859.json)
+after the tagged build's audit. A fresh audit reported the affected Go 1.27.3
+standard library. The advisory describes a race in HTTP/1 request handlers
+that use `MaxBytesReader` or `MaxBytesHandler` and write a response header
+concurrently. MCPSense's MCP endpoint uses stdio, and the production Go source
+contains no HTTP listener or use of either helper. Its network scanning and
+advisory lookups use HTTP clients.
+
+Subsequent release builds and their audit use Go 1.27.4, the fixed version on
+the same Go release line. The 0.5.0 archives and npm package retain their
+original checksums. Source installations use the caller's Go toolchain.
