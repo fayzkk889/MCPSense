@@ -55,6 +55,8 @@ Check installation with `mcpsense version` and `mcpsense --help`. `mcpsense vers
 
 ### Use MCPSense from your assistant (0.5.0+)
 
+For desktop VS Code, [open the project-scoped setup](https://mcpsense.site/docs/#vscode) to review the server configuration in the editor.
+
 MCPSense 0.5.0 adds an MCP interface to the same CLI engine. Earlier 0.4.5 installations do not include it; check `mcpsense version` and public availability before connecting. See the [MCP setup guide](docs/mcp.md) for supported clients, permissions, and natural-language scan examples. CLI and MCP ship together; an installed MCPSense update updates both, and restarting the MCP connection loads the new engine.
 
 ### Share a scan outcome
@@ -219,6 +221,8 @@ Reports also carry a detector fingerprint derived from the checked-in rule sourc
 See the [reproducible before/after demonstration](docs/engineering/remediation-demo.md), [test report](docs/engineering/test-report.md), and [release readiness](docs/engineering/release-readiness.md).
 
 ## GitHub Action
+
+To start in report-only mode, copy the [pull-request example](docs/examples/mcpsense-report-only.yml) to `.github/workflows/mcpsense.yml`. It inspects `.vscode/mcp.json` offline when the file changes and reports a finding count in the job summary. Adjust the trigger and target together for another configuration file. Findings leave the job successful, while an invalid or incomplete scan fails visibly.
 
 The snippet uses main for development; pin a reviewed full commit SHA or release tag for production.
 
