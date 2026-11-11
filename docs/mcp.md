@@ -1,12 +1,22 @@
 # MCPSense inside your assistant
 
-**Requires MCPSense 0.5.0 or newer.** Check `mcpsense version` before connecting. CLI and MCP are included in the same installation; earlier releases such as 0.4.5 do not include these commands. Public availability is shown by `mcpsense version --check` and the repository's release badges.
+**Requires MCPSense 0.5.0 or newer.** The CLI and MCP interface come in the same installation. Run `mcpsense version` before connecting.
 
 MCPSense can run as a local MCP server. Ask your coding assistant to inspect an MCP configuration, source project, agent instruction file, dependency lockfile, or live server. It uses the installed MCPSense scanner, check registry, reports, and baseline logic. There is no second detection engine or separate MCP package to keep synchronized.
 
 ## Connect once
 
-After installing a release that contains MCP support, open the project you want to inspect and choose your assistant:
+Install from either channel, or run `mcpsense update` if you already have MCPSense:
+
+```sh
+# npm, with Node.js 22 or newer
+npm install -g mcpsense@latest
+
+# Or Go, with a current patched compiler
+go install github.com/fayzkk889/MCPSense/cmd/mcpsense@latest
+```
+
+Open the project you want to inspect and choose your assistant:
 
 ```sh
 mcpsense mcp install --client cursor --root .
@@ -35,7 +45,7 @@ mcpsense mcp config --client cursor --root .
 mcpsense mcp config --client codex --root .
 ```
 
-The npm route needs Node.js 22+/npm, with no Go compiler or MCPSense `.exe`. The independent Go route needs Go 1.22+, with no Node/npm. Use a persistent global npm installation for setup: temporary `npx` cache paths would freeze an obsolete copy and are rejected. For this preview, build a persistent native binary from the checkout, or build the npm runtime and install the resulting local tarball as described below.
+The npm route uses Node.js 22+ and npm. The Go route uses Go 1.22+ and works independently. Use a persistent global installation with npm so the assistant connection keeps working after an update. Setup rejects temporary `npx` cache paths.
 
 ## What you can ask
 
@@ -101,7 +111,7 @@ Restart the MCP connection after an installed update, then ask for `mcpsense_sta
 
 The test suite checks CLI option mappings, the live check registry, CLI/MCP version and finding parity, actual stdio workflows, permission denials, baseline review, report export, client setup, and both official SDK generations. Native Windows/Linux and npm Windows/Linux/macOS run these through the existing CI/release gates. New CLI flags fail the parity test until mapped or explicitly classified, preventing an independently outdated MCP feature list.
 
-## Try this checkout before publication
+## Test a local build
 
 Native Go, from the repository (choose your binary name on Windows):
 
@@ -110,16 +120,16 @@ go build -o bin/mcpsense-preview ./cmd/mcpsense
 ./bin/mcpsense-preview mcp install --client cursor --root /path/to/project
 ```
 
-For an npm preview, maintainers use the pinned production Go compiler to build the bundled runtime. End users of the resulting package do not need Go:
+To test the npm build, use the pinned production Go compiler to build the bundled runtime. Install the tarball named by `npm pack`:
 
 ```sh
 node scripts/build-npm-runtime.cjs
 npm pack ./npm --ignore-scripts
-npm install -g ./mcpsense-0.5.0.tgz
+npm install -g ./mcpsense-VERSION.tgz
 mcpsense mcp install --client cursor --root /path/to/project
 ```
 
-This local candidate identifies itself as 0.5.0; it is not a public release. Reinstall the published package when done. Do not relabel candidate bytes as an existing version. Final release approval must confirm the new version and refresh the public onboarding text.
+Use the installation commands above to return to the published package after local testing.
 
 The server supports stdio only, both legacy initialization (2024-11-05 through 2025-11-25) and per-request modern MCP (2026-07-28). It uses a cooperative 60-second operation timeout, an 8 MiB protocol-message limit, a 3 MiB rendered-report limit, and one active tool operation per server process. Cancellation stops supported ongoing work and suppresses success responses; local analysis must reach a cancellation checkpoint, and writes already completed are not rolled back. Oversized targets need smaller inspections. If a connection fails, check the assistant's MCP logs, the configured approved root, the installed runtime, and `mcpsense mcp serve --help`.
 
