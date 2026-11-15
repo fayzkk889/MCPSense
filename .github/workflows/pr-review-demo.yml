@@ -1,0 +1,59 @@
+name: MCPSense pilot demo
+
+on:
+  push:
+    branches: [codex/pr-review-demo]
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    name: Compare a sample config before and after HTTPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a disposable MCP config
+        run: |
+          mkdir -p .vscode
+          cat > .vscode/mcp.json <<'JSON'
+          {"servers":{"sample":{"type":"http","url":"http://example.invalid/mcp"}}}
+          JSON
+      - name: Review the original config
+        id: before
+        uses: fayzkk889/MCPSense@ce1dae89b57fc5d4b73895b7913bf0d598c30b8b # v0.5.1
+        with:
+          target: .vscode/mcp.json
+          mode: config
+          version: '0.5.1'
+          offline: 'true'
+          sarif-upload: 'false'
+          fail-on: none
+      - name: Change the sample URL to HTTPS
+        run: sed -i 's|http://example.invalid|https://example.invalid|' .vscode/mcp.json
+      - name: Review the changed config
+        id: after
+        uses: fayzkk889/MCPSense@ce1dae89b57fc5d4b73895b7913bf0d598c30b8b # v0.5.1
+        with:
+          target: .vscode/mcp.json
+          mode: config
+          version: '0.5.1'
+          offline: 'true'
+          sarif-upload: 'false'
+          fail-on: none
+      - name: Check and publish the result
+        env:
+          BEFORE: ${{ steps.before.outputs.findings-count }}
+          AFTER: ${{ steps.after.outputs.findings-count }}
+        run: |
+          test "$BEFORE" = 1
+          test "$AFTER" = 0
+          {
+            echo '## MCPSense 0.5.1 offline config review'
+            echo '| Sample URL | Findings |'
+            echo '| --- | ---: |'
+            printf '| Plain HTTP | %s |\n' "$BEFORE"
+            printf '| HTTPS | %s |\n' "$AFTER"
+            echo
+            echo 'Both report-only scans completed. The example endpoint was never contacted.'
+            echo '[Try the pilot](https://github.com/fayzkk889/MCPSense/issues/42).'
+          } >> "$GITHUB_STEP_SUMMARY"
