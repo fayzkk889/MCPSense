@@ -20,6 +20,7 @@ export function mcpGuide({command, product}) {
     <h3>Ask for one real inspection</h3>
     <p>For a first scan in any client, connect a disposable project and run <code>mcpsense init --example</code> in its folder. Then ask your assistant:</p>
     <blockquote>Use <code>mcpsense_scan</code> to scan <code>mcp.json</code> with <code>mode: "manifest"</code>, <code>offline: true</code>, and <code>severity: "info"</code>. Give me the findings and what was inspected.</blockquote>
+    <p><a href="/blog/first-mcp-scan-in-your-assistant/">Try a guided scan with a finding and a fix →</a></p>
     <h3>Permissions start small</h3>
     <p>The default server is <strong>offline and read-only</strong>, scoped to the selected root. It does not start commands found in inspected configurations or silently accept baselines. Optional network, executable startup and file-writing grants must be explicitly enabled at setup and requested by the operation. A reviewed baseline also requires human approval. A running assistant or authorized child process is not an OS sandbox.</p>
     <p>Clients that support MCP Apps can display an optional findings panel. Other clients receive the same structured report and readable findings.</p>
