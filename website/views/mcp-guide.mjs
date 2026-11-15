@@ -17,8 +17,8 @@ export function mcpGuide({command, product}) {
     ${command('mcpsense mcp install --client cursor --root .','Copy Cursor MCP setup command')}
     <p>Replace <code>cursor</code> with <code>vscode</code>, <code>copilot</code>, <code>claude-code</code>, <code>claude-desktop</code> or <code>codex</code> for your client. Existing settings and MCP server entries are preserved. JSONC configurations that need manual editing receive explicit instructions. Restart the client’s MCP connection after setup.</p>
     <h3>Ask for one real inspection</h3>
-    <blockquote>Use MCPSense to scan this project’s MCP configuration offline. Explain the findings, what was inspected, and what remains unassessed.</blockquote>
-    <p>Use an actual file or directory you selected inside the approved project. Ask for <code>mcpsense_status</code> to confirm the running version and permissions. The assistant can inspect supported metadata, configurations, source and skill files, explicitly selected npm lockfiles, and equivalent saved reports.</p>
+    <blockquote>Use <code>mcpsense_scan</code> to scan <code>.vscode/mcp.json</code> with <code>mode: "config"</code>, <code>offline: true</code>, and <code>severity: "info"</code>. Give me the findings and what was inspected.</blockquote>
+    <p>Replace the example path with an existing MCP client configuration inside the approved project. If you selected a server manifest instead, use <code>mode: "manifest"</code>. Ask for <code>mcpsense_status</code> to confirm the running version and permissions.</p>
     <h3>Permissions start small</h3>
     <p>The default server is <strong>offline and read-only</strong>, scoped to the selected root. It does not start commands found in inspected configurations or silently accept baselines. Optional network, executable startup and file-writing grants must be explicitly enabled at setup and requested by the operation. A reviewed baseline also requires human approval. A running assistant or authorized child process is not an OS sandbox.</p>
     <p>Clients that support MCP Apps can display an optional findings panel. Other clients receive the same structured report and readable findings.</p>

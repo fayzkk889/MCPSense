@@ -81,7 +81,10 @@
     }
     byId('state').textContent = 'Coverage ' + report.coverage.state.replaceAll('_', ' ');
     byId('summary').textContent = report.findings.length + ' findings · ' + report.security_assessment.state.replaceAll('_', ' ');
-    byId('coverage').textContent = 'Inspected ' + (report.coverage.surfaces || []).join(', ') + '\nBaseline ' + report.coverage.baseline + ' · Advisories ' + report.coverage.advisories + '\n' + report.security_assessment.limitation;
+    const threshold = report.min_severity && report.min_severity !== 'info'
+      ? '\nMinimum reported severity: ' + report.min_severity
+      : '';
+    byId('coverage').textContent = 'Inspected ' + (report.coverage.surfaces || []).join(', ') + '\nBaseline ' + report.coverage.baseline + ' · Advisories ' + report.coverage.advisories + threshold + '\n' + report.security_assessment.limitation;
     render();
   }
   const send = message => window.parent.postMessage({jsonrpc:'2.0', ...message}, '*');

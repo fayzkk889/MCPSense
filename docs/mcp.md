@@ -59,7 +59,7 @@ Examples:
 
 > Compare `before.json` with `after.json`. Only claim a resolution if their assessed coverage is comparable.
 
-Scans default to all registered checks, minimum severity low, offline operation, and no baseline handling. `checks`, `exclude`, `severity`, explicit `dependencies`, and all supported CLI scan modes are available. Select `format: "json"`, `"sarif"`, or `"cli"`; every completed scan also supplies its structured report. CLI display-only/compatibility flags are classified in the parity test. The CLI's unimplemented `--probe` is not advertised as a working MCP feature. Version checks and package updates remain terminal maintenance commands.
+MCP scans default to all registered checks and severities, offline operation, and no baseline handling. Use `severity` to set a minimum when you want a narrower report. The findings panel displays that minimum when the scan omitted lower severities. `checks`, `exclude`, explicit `dependencies`, and all supported CLI scan modes are available. Select `format: "json"`, `"sarif"`, or `"cli"`; every completed scan also supplies its structured report. CLI display-only/compatibility flags are classified in the parity test. The CLI's unimplemented `--probe` is not advertised as a working MCP feature. Version checks and package updates remain terminal maintenance commands.
 
 Supporting MCP Apps hosts can show a local findings panel with severity filters and expandable remediation. Other hosts receive the same structured and text report. The view has no network access and renders finding text as text. It does not change permissions or approve fixes.
 
