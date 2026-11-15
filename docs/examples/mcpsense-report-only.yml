@@ -20,11 +20,11 @@ jobs:
       - name: Inspect the changed configuration offline
         id: scan
         if: hashFiles('.vscode/mcp.json') != ''
-        uses: fayzkk889/MCPSense@490049e8d13fcb77e7b4b788a35d26375fc42112 # v0.5.0
+        uses: fayzkk889/MCPSense@ce1dae89b57fc5d4b73895b7913bf0d598c30b8b # v0.5.1
         with:
           target: .vscode/mcp.json
           mode: config
-          version: '0.5.0'
+          version: '0.5.1'
           offline: 'true'
           sarif-upload: 'false'
           fail-on: none
