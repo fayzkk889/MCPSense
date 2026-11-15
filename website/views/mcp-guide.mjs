@@ -17,6 +17,7 @@ export function mcpGuide({command, product}) {
     ${command('mcpsense mcp install --client cursor --root .','Copy Cursor MCP setup command')}
     <p>Replace <code>cursor</code> with <code>vscode</code>, <code>copilot</code>, <code>claude-code</code>, <code>claude-desktop</code> or <code>codex</code> for your client. Other clients that support local stdio MCP can use the command and arguments printed by <code>mcpsense mcp config --client generic --root .</code> in their own settings. Restart the client’s MCP connection after setup.</p>
     <p>For OpenCode 1.x, run <code>mcpsense mcp install --client opencode --root .</code>. If your OpenCode configuration uses the V2 format, choose <code>opencode-v2</code>. See the <a href="${product.github}/blob/main/docs/mcp.md#connect-once">connection guide</a> for existing settings and JSONC files.</p>
+    <p>Using Cline? Follow the <a href="${product.github}/blob/main/docs/mcp.md#connect-the-cline-cli">Cline CLI setup</a> to connect MCPSense to a local project you choose.</p>
     <h3>Ask for one real inspection</h3>
     <p>For a first scan in any client, connect a disposable project and run <code>mcpsense init --example</code> in its folder. Then ask your assistant:</p>
     <blockquote>Use <code>mcpsense_scan</code> to scan <code>mcp.json</code> with <code>mode: "manifest"</code>, <code>offline: true</code>, and <code>severity: "info"</code>. Give me the findings and what was inspected.</blockquote>
