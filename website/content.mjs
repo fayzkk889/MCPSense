@@ -2,8 +2,8 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.5.0',
-  verified: '2026-11-11',
+  stable: '0.5.1',
+  verified: '2026-11-15',
   candidate: null,
 };
 
@@ -151,6 +151,17 @@ mcpsense mcp install --client vscode --root .</code></pre><p>Use MCPSense 0.5.0 
 ];
 
 export const releases = [
+  {
+    version: '0.5.1', status: 'Released', date: '2026-11-15', title: 'Set up in more assistants.',
+    intro: 'Connect MCPSense from VS Code or OpenCode, and see all five severities in MCP scans by default.',
+    items: [
+      'Add MCPSense directly from the setup guide in VS Code. The installer uses the published npm package and the project you select.',
+      'Use the terminal setup for OpenCode 1.x or its V2 configuration format.',
+      'MCP scans include informational findings by default. The findings panel shows the cutoff for scans that request one.',
+      'Run an offline, report-only check when a pull request changes .vscode/mcp.json.',
+    ],
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.5.1', label: 'Read the release notes',
+  },
   {
     version: '0.5.0', status: 'Released', date: '2026-11-11', title: 'The scanner, inside your assistant.',
     intro: 'A local MCP interface shares the CLI engine, with explicit permissions and stricter input interpretation.',
