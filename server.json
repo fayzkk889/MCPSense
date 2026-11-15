@@ -1,0 +1,38 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fayzkk889/mcpsense",
+  "title": "MCPSense",
+  "description": "Inspect MCP configurations, tool metadata, and changes from your coding assistant.",
+  "repository": {
+    "url": "https://github.com/fayzkk889/MCPSense",
+    "source": "github"
+  },
+  "websiteUrl": "https://mcpsense.site/docs/#mcp",
+  "version": "0.5.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "mcpsense",
+      "version": "0.5.1",
+      "runtimeHint": "npx",
+      "runtimeArguments": [
+        {"type": "positional", "value": "--yes"},
+        {"type": "positional", "value": "--ignore-scripts"},
+        {"type": "positional", "value": "--registry=https://registry.npmjs.org/"}
+      ],
+      "packageArguments": [
+        {"type": "positional", "value": "mcp"},
+        {"type": "positional", "value": "serve"},
+        {
+          "type": "named",
+          "name": "--root",
+          "description": "Full path to the local project you approve for read-only inspection.",
+          "format": "filepath",
+          "isRequired": true
+        }
+      ],
+      "transport": {"type": "stdio"}
+    }
+  ]
+}
