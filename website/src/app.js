@@ -1,5 +1,8 @@
 import { compareVersions, releaseState } from './releases.js';
 import { setupInspectionMotion } from './motion.js';
+import { setupVSCodeInstall } from './vscode.js';
+
+document.querySelectorAll('[data-vscode-install]').forEach(setupVSCodeInstall);
 
 document.documentElement.classList.add('js');
 const toast = document.querySelector('.toast');

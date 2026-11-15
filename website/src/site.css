@@ -347,6 +347,16 @@ strong { font-weight: 600; }
 .prose .command pre { border: 0; font-size: 11px; padding: 18px; margin: 0; flex: 1; }
 .prose .command code { font-size: inherit; }
 .prose .install-widget .command { margin: 0; }
+.vscode-install { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+.vscode-install label, .vscode-status { grid-column: 1 / -1; }
+.vscode-install label { font-size: 13px; font-weight: 600; }
+.vscode-install input { min-width: 0; min-height: 46px; padding: 10px 12px; color: var(--text); background: #1d271c; border: 1px solid #48593e; border-radius: 4px; font: 13px var(--mono); }
+.prose .vscode-status { margin: 0; }
+.vscode-status:empty { display: none; }
+@media (max-width: 460px) {
+  .vscode-install { grid-template-columns: 1fr; }
+  .vscode-install .button { justify-self: start; }
+}
 .prose .install-widget p { padding: 12px 18px 16px; margin: 0; font-size: 10px; }
 .table-scroll { max-width: 100%; overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; margin: 25px 0; font-size: 12px; line-height: 1.8; text-align: left; }

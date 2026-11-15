@@ -1,0 +1,36 @@
+name: Review MCP configuration
+
+on:
+  pull_request:
+    paths:
+      - '.vscode/mcp.json'
+      - '.github/workflows/mcpsense.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Inspect the changed configuration offline
+        id: scan
+        if: hashFiles('.vscode/mcp.json') != ''
+        uses: fayzkk889/MCPSense@490049e8d13fcb77e7b4b788a35d26375fc42112 # v0.5.0
+        with:
+          target: .vscode/mcp.json
+          mode: config
+          version: '0.5.0'
+          offline: 'true'
+          sarif-upload: 'false'
+          fail-on: none
+      - name: Summarize the review
+        if: steps.scan.outcome == 'success'
+        env:
+          FINDINGS: ${{ steps.scan.outputs.findings-count }}
+        run: |
+          printf '### MCPSense configuration review\n\nFindings: **%s**. Run the same offline scan locally for details.\n' "$FINDINGS" >> "$GITHUB_STEP_SUMMARY"

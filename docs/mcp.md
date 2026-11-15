@@ -16,11 +16,12 @@ mcpsense mcp install --client copilot --root .
 mcpsense mcp install --client claude-code --root .
 mcpsense mcp install --client claude-desktop --root .
 mcpsense mcp install --client codex --root .
+mcpsense mcp install --client opencode --root .
 ```
 
-Restart the assistant, approve its MCPSense connection, and ask:
+Restart the assistant, approve its MCPSense connection if prompted, and ask it to run `mcpsense_status`. To try the same first scan in any client, use a disposable project as the approved root and run `mcpsense init --example` in that project. Then ask:
 
-> Check my MCP configuration. Discover configurations in the approved project, ask me to select the one to inspect, and explain the findings, coverage, and what remains unassessed.
+Call `mcpsense_scan` on `mcp.json` in manifest mode, offline. Report the findings and what was inspected.
 
 Setup preserves other servers and settings, keeps an exact private backup of an existing configuration, and prints its location. Running the same setup twice does not rewrite it. A different existing `mcpsense` entry is preserved for manual review. Setup does not silently expand its permissions or change its approved project.
 
@@ -28,12 +29,17 @@ Default locations: Cursor uses `~/.cursor/mcp.json`; VS Code uses the approved p
 
 VS Code currently forwards eligible `.vscode/mcp.json` entries to its Copilot runtime. `--client copilot` writes the direct portable Copilot configuration instead. The [VS Code format reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration) explains that distinction; Claude Desktop locations follow the [official local-server guide](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
 
-For another location, add `--config /path/to/settings`. For another client, use `--client generic --config /path/to/settings.json`. JSON client files must be valid JSON; files containing comments, invalid settings, symlinks, or incompatible Codex inline tables are preserved with an error. Generate a snippet and merge it in your editor:
+OpenCode uses the selected project's `opencode.json` or `opencode.jsonc`. Use `--client opencode` for OpenCode 1.x and `--client opencode-v2` for the [V2 configuration format](https://opencode.ai/docs/mcp-servers/). If both files exist, pass `--config` with the one your project uses. With MCPSense 0.5.0, use the generic snippet below and place the executable followed by its arguments in OpenCode's local server `command` array.
+
+For another location, add `--config /path/to/settings`. JSON client files must be valid JSON; files containing comments, invalid settings, symlinks, or incompatible Codex inline tables are preserved with an error. Generate a snippet and merge it in your editor:
 
 ```sh
 mcpsense mcp config --client cursor --root .
 mcpsense mcp config --client codex --root .
+mcpsense mcp config --client opencode --root .
 ```
+
+For any assistant with local stdio MCP support, generate a portable `command` and `args` pair with `mcpsense mcp config --client generic --root .` and place it in the assistant's MCP settings. Pass each argument as its own value. If the assistant has a terminal but lacks local MCP support, run `mcpsense scan <path> --offline --severity info --format json` in the project.
 
 The npm route needs Node.js 22+/npm, with no Go compiler or MCPSense `.exe`. The independent Go route needs Go 1.22+, with no Node/npm. Use a persistent global npm installation for setup: temporary `npx` cache paths would freeze an obsolete copy and are rejected. For this preview, build a persistent native binary from the checkout, or build the npm runtime and install the resulting local tarball as described below.
 
@@ -59,7 +65,7 @@ Examples:
 
 > Compare `before.json` with `after.json`. Only claim a resolution if their assessed coverage is comparable.
 
-Scans default to all registered checks, minimum severity low, offline operation, and no baseline handling. `checks`, `exclude`, `severity`, explicit `dependencies`, and all supported CLI scan modes are available. Select `format: "json"`, `"sarif"`, or `"cli"`; every completed scan also supplies its structured report. CLI display-only/compatibility flags are classified in the parity test. The CLI's unimplemented `--probe` is not advertised as a working MCP feature. Version checks and package updates remain terminal maintenance commands.
+MCP scans default to all registered checks and severities, offline operation, and no baseline handling. Use `severity` to set a minimum when you want a narrower report. The findings panel displays that minimum when the scan omitted lower severities. `checks`, `exclude`, explicit `dependencies`, and all supported CLI scan modes are available. Select `format: "json"`, `"sarif"`, or `"cli"`; every completed scan also supplies its structured report. CLI display-only/compatibility flags are classified in the parity test. The CLI's unimplemented `--probe` is not advertised as a working MCP feature. Version checks and package updates remain terminal maintenance commands.
 
 Supporting MCP Apps hosts can show a local findings panel with severity filters and expandable remediation. Other hosts receive the same structured and text report. The view has no network access and renders finding text as text. It does not change permissions or approve fixes.
 

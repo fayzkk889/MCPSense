@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const mcpClients = "cursor, vscode, copilot, claude-code, claude-desktop, codex, opencode, opencode-v2 or generic"
+
 func mcpSetupCmd(install bool) *cobra.Command {
 	client, root, config := "generic", ".", ""
 	network, execute, private, write := false, false, false, false
@@ -60,12 +62,23 @@ func mcpSetupCmd(install bool) *cobra.Command {
 			entry["type"] = "stdio"
 		case "codex":
 			key = "mcp_servers"
+		case "opencode", "opencode-v2":
+			key = "mcp"
+			if client == "opencode-v2" {
+				key = "mcp.servers"
+			}
+			entry = map[string]interface{}{"type": "local", "command": append([]string{program}, args...)}
 		default:
-			return fmt.Errorf("client must be cursor, vscode, copilot, claude-code, claude-desktop, codex or generic")
+			return fmt.Errorf("client must be %s", mcpClients)
 		}
 		if !install {
+			servers := map[string]interface{}{"mcpsense": entry}
+			document := map[string]interface{}{key: servers}
+			if key == "mcp.servers" {
+				document = map[string]interface{}{"mcp": map[string]interface{}{"servers": servers}}
+			}
 			if client == "codex" {
-				encoded, err := toml.Marshal(map[string]interface{}{key: map[string]interface{}{"mcpsense": entry}})
+				encoded, err := toml.Marshal(document)
 				if err != nil {
 					return err
 				}
@@ -74,7 +87,13 @@ func mcpSetupCmd(install bool) *cobra.Command {
 			}
 			encoder := json.NewEncoder(cmd.OutOrStdout())
 			encoder.SetIndent("", "  ")
-			return encoder.Encode(map[string]interface{}{key: map[string]interface{}{"mcpsense": entry}})
+			return encoder.Encode(document)
+		}
+		if config == "" && (client == "opencode" || client == "opencode-v2") {
+			config, err = openCodeProjectConfig(absolute)
+			if err != nil {
+				return err
+			}
 		}
 		if config == "" {
 			home, err := os.UserHomeDir()
@@ -128,18 +147,18 @@ func mcpSetupCmd(install bool) *cobra.Command {
 			return err
 		}
 		if changed {
-			fmt.Fprintf(cmd.OutOrStdout(), "Connected MCPSense %s in %s\n", version, config)
+			fmt.Fprintf(cmd.OutOrStdout(), "Configured MCPSense %s in %s\n", version, config)
 		} else {
 			fmt.Fprintln(cmd.OutOrStdout(), "MCPSense already has this configuration.")
 		}
 		if backup != "" {
 			fmt.Fprintf(cmd.OutOrStdout(), "Original configuration backup: %s\n", backup)
 		}
-		fmt.Fprintf(cmd.OutOrStdout(), "Approved project: %s\nRestart the client, approve the mcpsense connection, then ask: Check my MCP configuration.\n", absolute)
+		fmt.Fprintf(cmd.OutOrStdout(), "Approved project: %s\nRestart the client, approve the mcpsense connection if prompted, then ask it to run mcpsense_status.\n", absolute)
 		fmt.Fprintln(cmd.OutOrStdout(), "CLI and MCP use this same installed engine. After mcpsense update, restart the MCP connection to load the new release.")
 		return nil
 	}}
-	command.Flags().StringVar(&client, "client", "generic", "cursor, vscode, copilot, claude-code, claude-desktop, codex or generic")
+	command.Flags().StringVar(&client, "client", "generic", mcpClients)
 	command.Flags().StringVar(&root, "root", ".", "Project directory the assistant is permitted to inspect")
 	if install {
 		command.Flags().StringVar(&config, "config", "", "Override the client's configuration file path")
@@ -149,6 +168,23 @@ func mcpSetupCmd(install bool) *cobra.Command {
 	command.Flags().BoolVar(&private, "allow-private-network", false, "Grant optional private/loopback endpoints")
 	command.Flags().BoolVar(&write, "allow-write", false, "Grant explicit report exports and reviewed baseline changes")
 	return command
+}
+
+func openCodeProjectConfig(root string) (string, error) {
+	jsonPath := filepath.Join(root, "opencode.json")
+	jsoncPath := filepath.Join(root, "opencode.jsonc")
+	_, jsonErr := os.Lstat(jsonPath)
+	_, jsoncErr := os.Lstat(jsoncPath)
+	if jsonErr != nil && !os.IsNotExist(jsonErr) || jsoncErr != nil && !os.IsNotExist(jsoncErr) {
+		return "", fmt.Errorf("could not check the OpenCode project settings paths")
+	}
+	if jsoncErr == nil {
+		if jsonErr == nil {
+			return "", fmt.Errorf("both OpenCode settings files exist; select the active file explicitly with --config")
+		}
+		return jsoncPath, nil
+	}
+	return jsonPath, nil
 }
 
 // installMCPConfig serializes our installers with an exclusive lock, validates
@@ -190,12 +226,38 @@ func installMCPConfig(path, key string, entry map[string]interface{}, isTOML boo
 	} else {
 		document = map[string]interface{}{}
 	}
+	parent := document
+	if key == "mcp.servers" {
+		key = "servers"
+		if value, ok := document["mcp"]; ok {
+			var valid bool
+			parent, valid = value.(map[string]interface{})
+			if !valid {
+				return "", false, fmt.Errorf("existing OpenCode MCP section is invalid; configuration preserved")
+			}
+			if _, nested := parent[key]; !nested && len(parent) > 0 {
+				return "", false, fmt.Errorf("existing OpenCode MCP settings do not use mcp.servers; review the client version before modifying them")
+			}
+		} else {
+			parent = map[string]interface{}{}
+			document["mcp"] = parent
+		}
+	}
 	servers := map[string]interface{}{}
-	if value, ok := document[key]; ok {
+	if value, ok := parent[key]; ok {
 		var valid bool
 		servers, valid = value.(map[string]interface{})
 		if !valid {
 			return "", false, fmt.Errorf("existing server section is invalid; configuration preserved")
+		}
+	}
+	if key == "mcp" {
+		if nested, ok := servers["servers"].(map[string]interface{}); ok {
+			_, kind := nested["type"].(string)
+			_, enabled := nested["enabled"].(bool)
+			if !kind && !enabled {
+				return "", false, fmt.Errorf("existing OpenCode settings use mcp.servers; use --client opencode-v2")
+			}
 		}
 	}
 	if value, ok := servers["mcpsense"]; ok {
@@ -229,7 +291,7 @@ func installMCPConfig(path, key string, entry map[string]interface{}, isTOML boo
 		}
 	} else {
 		servers["mcpsense"] = entry
-		document[key] = servers
+		parent[key] = servers
 		data, err = json.MarshalIndent(document, "", "  ")
 		if err != nil {
 			return "", false, err

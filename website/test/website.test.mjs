@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { releaseState, compareVersions, versionParts } from '../src/releases.js';
 import { product } from '../content.mjs';
+import { vscodeInstallUrl } from '../src/vscode.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 execFileSync(process.execPath, [join(root,'build.mjs')]);
@@ -16,6 +17,26 @@ async function files(dir) {
 }
 const output = await files(dist);
 const htmlFiles = output.filter(x=>x.endsWith('.html'));
+
+test('VS Code installer pins the published package and passes the chosen folder only to the editor', async () => {
+  const docs = await readFile(join(dist,'docs/index.html'),'utf8');
+  assert.match(docs, /<form class="vscode-install" data-vscode-install="[\d.]+" hidden>/);
+  assert.match(docs, /<input id="vscode-project" type="text" required/);
+  for (const root of ['C:\\dev\\project with spaces', '/home/me/project ü']) {
+    const url = new URL(vscodeInstallUrl(root, product.stable));
+    assert.equal(url.protocol, 'vscode:');
+    assert.equal(url.pathname, 'mcp/install');
+    const config = JSON.parse(decodeURIComponent(url.search.slice(1)));
+    assert.deepEqual(config, {
+      name: 'mcpsense', type: 'stdio', command: 'npx', cwd: '${userHome}',
+      args: ['--yes', '--ignore-scripts', '--registry=https://registry.npmjs.org/', `--package=mcpsense@${product.stable}`, '--', 'mcpsense', 'mcp', 'serve', '--root', root],
+    });
+  }
+  for (const invalid of ['', '.', '/', 'C:\\', 'project', '//host/share', '/work/../project', '/work/${env:HOME}', 'C:\\work\\a&b']) {
+    assert.throws(() => vscodeInstallUrl(invalid, product.stable), /full path/);
+  }
+  assert.throws(() => vscodeInstallUrl('/work/project', 'latest'), /version is unavailable/);
+});
 
 test('every published page has a title, description, language, one main heading and accessible navigation', async () => {
   assert.ok(htmlFiles.length >= 8);

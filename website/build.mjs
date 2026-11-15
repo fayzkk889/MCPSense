@@ -74,7 +74,7 @@ for (const [file,title,description,path,body,current] of pages) {
   await mkdir(dirname(join(out,file)),{recursive:true});
   await writeFile(join(out,file),layout(title,description,path,body,current));
 }
-for (const file of ['site.css','app.js','releases.js','motion.js','favicon.svg']) await copyFile(join(root,'src',file),join(out,'assets',file));
+for (const file of ['site.css','app.js','releases.js','motion.js','vscode.js','favicon.svg']) await copyFile(join(root,'src',file),join(out,'assets',file));
 await mkdir(join(out,'assets','fonts'),{recursive:true});
 for (const file of ['ibm-plex-sans-latin.woff2','OFL.txt']) await copyFile(join(root,'src','fonts',file),join(out,'assets','fonts',file));
 await writeFile(join(out,'assets','release.json'),JSON.stringify(product,null,2)+'\n');

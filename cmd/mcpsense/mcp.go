@@ -91,7 +91,7 @@ func mcpTools(policy mcpPolicy) []mcpserver.Tool {
 	scan := map[string]interface{}{
 		"target":                    stringProperty("User-selected file, directory, HTTP URL, or executable. Local paths are relative to the approved root."),
 		"mode":                      stringProperty("Same scan modes as the CLI.", scanModeNames()...),
-		"severity":                  stringProperty("Minimum reported severity, default low.", severityNames()...),
+		"severity":                  stringProperty("Minimum reported severity. Defaults to info to include every severity.", severityNames()...),
 		"checks":                    list("Run only these check IDs. Cannot combine with exclude."),
 		"exclude":                   list("Skip these check IDs. Cannot combine with checks."),
 		"dependencies":              stringProperty("Optional explicitly selected npm v2/v3 lockfile."),
@@ -384,7 +384,7 @@ func (p mcpPolicy) scan(ctx context.Context, input mcpScanArgs, accept bool) (mc
 		input.Mode = "auto"
 	}
 	if input.Severity == "" {
-		input.Severity = "low"
+		input.Severity = models.SeverityInfo.String()
 	}
 	if input.Protocol == "" {
 		input.Protocol = "auto"
