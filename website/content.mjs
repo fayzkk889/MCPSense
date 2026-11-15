@@ -2,8 +2,8 @@ export const product = {
   name: 'MCPSense',
   origin: 'https://mcpsense.site',
   github: 'https://github.com/fayzkk889/MCPSense',
-  stable: '0.5.0',
-  verified: '2026-11-11',
+  stable: '0.5.1',
+  verified: '2026-11-15',
   candidate: null,
 };
 
@@ -23,6 +23,7 @@ mcpsense mcp install --client vscode --root .</code></pre><p>Use MCPSense 0.5.0 
 }</code></pre><blockquote>Call <code>mcpsense_scan</code> with <code>target: "review-mcp.json"</code>, <code>mode: "config"</code>, and <code>offline: true</code>. Tell me the finding ID, why it matters, and what the scan did not assess. Leave the file unchanged.</blockquote><p>The published 0.5.0 package returned one high-severity finding, <code>SEC-016</code>, for the plain HTTP URL. The scanner inspected the local file with no network connection to the example address.</p>`],
       ['Change the URL and scan again', `<p>In the sample file, change <code>http://</code> to <code>https://</code>. Ask for the same offline scan. In the test run, the finding cleared and the report had zero findings. That confirms the scan recognized the change in the file. Server behavior, authentication and tool responses still need separate review.</p><p>The example was reproduced on Windows using the published npm package and the official MCP SDK over stdio. On the original file, the MCP and terminal reports agreed on findings and coverage. Your assistant may phrase the explanation differently.</p>`],
       ['Try one config you maintain', `<p>Choose a supported MCP config inside your approved project. Ask for an offline scan and read the findings alongside the unassessed coverage. Follow your organization’s policy before giving an assistant access to project data.</p><p><a href="https://github.com/fayzkk889/MCPSense/issues/new?title=MCPSense%20scan%20feedback">Tell us whether you finished the scan or where you got stuck →</a> Keep your config, server addresses, full report and secrets private.</p>`],
+      ['Review MCP config changes on GitHub', `<p>If your team reviews MCP configuration in pull requests, the report-only workflow runs an offline scan and adds a findings count to the job summary. The pilot includes a disposable sample and an optional free setup session for your first review.</p><p><a href="${product.github}/issues/42">Try the check on one pull request →</a></p>`],
     ],
     sources: [
       ['MCPSense 0.5.0 release', 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.5.0'],
@@ -151,6 +152,17 @@ mcpsense mcp install --client vscode --root .</code></pre><p>Use MCPSense 0.5.0 
 ];
 
 export const releases = [
+  {
+    version: '0.5.1', status: 'Released', date: '2026-11-15', title: 'Set up in more assistants.',
+    intro: 'Connect MCPSense from VS Code or OpenCode, and see all five severities in MCP scans by default.',
+    items: [
+      'Add MCPSense directly from the setup guide in VS Code. The installer uses the published npm package and the project you select.',
+      'Use the terminal setup for OpenCode 1.x or its V2 configuration format.',
+      'MCP scans include informational findings by default. The findings panel shows the cutoff for scans that request one.',
+      'Run an offline, report-only check when a pull request changes .vscode/mcp.json.',
+    ],
+    link: 'https://github.com/fayzkk889/MCPSense/releases/tag/v0.5.1', label: 'Read the release notes',
+  },
   {
     version: '0.5.0', status: 'Released', date: '2026-11-11', title: 'The scanner, inside your assistant.',
     intro: 'A local MCP interface shares the CLI engine, with explicit permissions and stricter input interpretation.',
