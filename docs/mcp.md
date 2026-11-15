@@ -43,6 +43,16 @@ For any assistant with local stdio MCP support, generate a portable `command` an
 
 The npm route needs Node.js 22+/npm, with no Go compiler or MCPSense `.exe`. The independent Go route needs Go 1.22+, with no Node/npm. Use a persistent global npm installation for setup: temporary `npx` cache paths would freeze an obsolete copy and are rejected. For this preview, build a persistent native binary from the checkout, or build the npm runtime and install the resulting local tarball as described below.
 
+### Connect the Cline CLI
+
+With Cline CLI and Node.js 22+ installed, replace the last argument with the full path to the local project you want to inspect. Keep the quotes around the path, including on Windows.
+
+```sh
+cline mcp install mcpsense --yes -- npx --yes --ignore-scripts --registry=https://registry.npmjs.org/ --package=mcpsense@0.5.1 -- mcpsense mcp serve --root "/absolute/path/to/your/project"
+```
+
+Cline saves the connection in its MCP settings. MCPSense runs offline and read-only within the selected project. Start a Cline session and ask for `mcpsense_status` to confirm the root and version before scanning. This command pins the npm package to 0.5.1. Update the package version in the connection when you want to move to a newer release.
+
 ## What you can ask
 
 | Tool | Purpose |
