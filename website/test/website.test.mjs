@@ -76,6 +76,25 @@ test('all internal links, fragments, scripts and styles resolve in the upload fo
   for (const [,path] of app.matchAll(/from '([^']+)'/g)) await stat(resolve(dist,'assets',path));
 });
 
+test('pilot campaign paths preserve the runnable sample and point search engines to one page', async () => {
+  const pilot = await readFile(join(dist,'pilot','index.html'),'utf8');
+  const sitemap = await readFile(join(dist,'sitemap.xml'),'utf8');
+  assert.match(sitemap, /<loc>https:\/\/mcpsense\.site\/pilot\/<\/loc>/);
+  for (const channel of ['x', 'linkedin', 'partner', 'outreach']) {
+    const landing = await readFile(join(dist,'pilot',channel,'index.html'),'utf8');
+    assert.equal(landing, pilot, channel);
+    assert.ok(!sitemap.includes(`/pilot/${channel}/`), channel);
+  }
+  assert.match(pilot, /rel="canonical" href="https:\/\/mcpsense\.site\/pilot\/"/);
+  for (const protocol of ['http', 'https']) {
+    const filename = `sample-${protocol}.json`;
+    const sample = JSON.parse(await readFile(join(dist,'pilot',filename),'utf8'));
+    assert.deepEqual(sample, { mcpServers: { sample: { url: `${protocol}://example.invalid/mcp` } } });
+    assert.ok(pilot.includes(`href="/pilot/${filename}" download`));
+    assert.ok(pilot.includes(`mcpsense scan ./${filename} --mode config --offline --no-baseline`));
+  }
+});
+
 test('release display requires two valid, matching public release channels', () => {
   const github = {tag_name:'v0.4.1',draft:false,prerelease:false};
   assert.deepEqual(releaseState({version:'0.4.1'},github),{agrees:true,npmVersion:'0.4.1',githubVersion:'0.4.1'});
